@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.StudentQuestionAnswerMapper">
+
+    <select id="getStudentCourseOrPaperQuestionInfoList" resultType="modelBeanMap">
+        select question.*, user_answer.question_points question_mark, user_answer.answer as user_answer, user_answer.enclosure, user_answer.is_right, user_answer.comment,
+        user_answer.mark as answer_mark
+        from question_info question, user_question_answer user_answer
+        where question.id = user_answer.question_info_id
+        and user_answer.student_id = #{studentId} and
+        <if test="courseId != null and courseId != ''">
+            and user_answer.course_id = #{courseId}
+        </if>
+
+        <if test="testPaperId != null and testPaperId != ''">
+            and user_answer.test_paper_info_id = #{testPaperId}
+        </if>
+    </select>
+
+    <select id="getStudentCourseQuestionByCourseId" resultType="modeBeanMap">
+        select question_answer.*,question.question_type from user_question_answer question_answer left join question_info question on
+        question_answer.question_info_id = question.id where question_answer.question_info_id in
+        (
+          select question_info_id from course_question_info where course_id = #{courseId}
+        )
+        and question_answer.student_id = #{studentId} and question_answer.course_id = #{courseId}
+    </select>
+
+    <!-- 试卷试题答案信息列表 -->
+    <select id="getStudentCourseQuestionByPaperId" parameterType="Integer" resultType="modeBeanMap">
+        select question.*, question_answer.answer as userInfoAnswer, question_answer.enclosure, question_answer.correct_status,
+        question_answer.mark from question_info question, user_question_answer question_answer
+        where question.id = question_answer.question_info_id
+        and question.id in (
+          select question_info_id from test_paper_question_info where test_paper_info_id = #{paperInfoId}
+        ) and question_answer.test_paper_info_id = #{paperInfoId} and question_answer.student_id = #{studentId}
+    </select>
+
+</mapper>

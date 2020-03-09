@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.CourseQuestionInfoMapper">
+
+    <update id="updateStudentQuestionMark" parameterType="map">
+        update user_question_answer set mark = #{mark}, correct_status = #{correct_status}, comment = #{comment}
+        where student_id = #{studentId} and question_info_id = #{questionInfoId}
+        <if test="test_paper_info_id != null and test_paper_info_id != ''">
+            and test_paper_info_id = #{test_paper_info_id}
+        </if>
+    </update>
+
+    <select id="getCourseQuestionList" resultType="modelBeanMap">
+        select question.*,
+        subject.name as subject_name,
+        course_question.mark,
+        course_question.sort,
+        course_question.course_id
+        from question_info question inner join course_question_info course_question on
+        question.id = course_question.question_info_id
+        inner join subject_info subject on question.subject_id = subject.id
+        <where>
+            <if test="category != null and category != ''">
+                and question.category  = #{category}
+            </if>
+
+            <if test="question_type != null and question_type != ''">
+                and question.type = #{questionType}
+            </if>
+
+            <if test="courseId != null and courseId != ''">
+                and course_question.course_id = #{courseId}
+            </if>
+
+            <if test="subjectId != null and subjectId != ''">
+                and question.subject_id = #{subjectId}
+            </if>
+
+            <if test="questionType != null and questionType != ''">
+                and question.question_type = #{questionType}
+            </if>
+            order by course_question.sort desc
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.school.StudentInfoMapper">
+
+    <select id="queryList" resultType="modelBeanMap">
+        select student.*,
+        school.name as school_name from student_info student left join school_info school on student.school_id = school.id
+        left join user_info user on student.id = user.student_id
+        <where>
+            <if test="keyWord != null and keyWord != ''">
+                <bind name="searchName" value="'%' + keyWord + '%'"/>
+                and (student.name like #{searchName} or student.mobile like #{searchName})
+            </if>
+            <if test="gradeType != null and gradeType !=''">
+                and student.grade_type = ${gradeType}
+            </if>
+
+            <if test="schoolId != null and schoolId != ''">
+                and student.school_id = ${schoolId}
+            </if>
+        </where>
+        order by user.last_login_time desc
+    </select>
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from student_info where id = #{id}
+    </delete>
+</mapper>

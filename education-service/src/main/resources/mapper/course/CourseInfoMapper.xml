@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.CourseInfoMapper">
+
+    <select id="queryList" resultType="modeBeanMap">
+        select course.*, subject.name as subject_name from course_info course, subject_info subject
+        <where>
+            course.subject_id = subject.id
+            <!-- 所属阶段 -->
+            <if test="schoolType != null and schoolType != ''">
+                and course.school_type = ${schoolType}
+            </if>
+            <!-- 年级 -->
+            <if test="gradeType != null and gradeType != ''">
+                and course.grade_type = ${gradeType}
+            </if>
+
+            <if test="subjectId != null and subjectId != ''">
+                and course.subject_id = ${subjectId}
+            </if>
+
+            <!-- 课程名称 -->
+            <if test="keyWord != null and keyWord != ''">
+                <bind name="searchName" value="'%' + keyWord + '%'"/>
+                and (course.name like #{searchName} or subject.name like #{searchName})
+            </if>
+
+            <if test="parentId != null and parentId != ''">
+                and course.parent_id = #{parentId}
+            </if>
+        </where>
+        order by course.sort asc
+    </select>
+
+    <insert id="course.info.save" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="map">
+        insert into course_info
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
+
+    <update id="course.info.update" parameterType="map">
+        update course_info
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
+    <select id="findById" parameterType="Integer" resultType="modeBeanMap">
+        select * from course_info where id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+package com.education.mapper.course;
+
+import com.education.common.base.BaseMapper;
+import com.education.common.model.ModelBeanMap;
+
+import java.util.List;
+
+/**
+ * @author zengjintao
+ * @version 1.0
+ * @create_at 2020/3/9 15:59
+ */
+public interface TestPaperInfoMapper extends BaseMapper {
+
+    List<ModelBeanMap> findByTestPaperInfoId(Integer testPaperInfoId);
+}

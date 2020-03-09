@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.TestPaperInfoMapper">
+
+    <select id="queryList" resultType="modelBeanMap">
+        select paper.*, subject.name as subject_name from test_paper_info paper left join subject_info subject on paper.subject_id = subject.id
+        <where>
+            <if test="testPaperIds != null and testPaperIds.size() > 0">
+                and paper.id in
+                <foreach collection="testPaperIds" open="(" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+
+            <if test="keyWord != null and keyWord != ''">
+                <bind name="searchName" value="'%' + keyWord + '%'"/>
+                and (paper.name like #{searchName} or subject.name like #{searchName})
+            </if>
+
+            <if test="gradeType != null and gradeType != ''">
+                and paper.grade_type = #{gradeType}
+            </if>
+
+            <if test="subjectId != null and subjectId != ''">
+                and paper.subject_id = #{subjectId}
+            </if>
+        </where>
+        order by paper.sort desc
+    </select>
+
+    <select id="findById" resultType="map">
+        select * from test_paper_info where id = #{id}
+    </select>
+
+</mapper>
