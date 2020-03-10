@@ -5,7 +5,6 @@
     <select id="queryList" resultType="modelBeanMap">
         select student.*,
         school.name as school_name from student_info student left join school_info school on student.school_id = school.id
-        left join user_info user on student.id = user.student_id
         <where>
             <if test="keyWord != null and keyWord != ''">
                 <bind name="searchName" value="'%' + keyWord + '%'"/>
@@ -24,5 +23,16 @@
 
     <delete id="deleteById" parameterType="Integer">
         delete from student_info where id = #{id}
+    </delete>
+
+    <delete id="deleteByIdOrSchoolId" parameterType="map">
+        delete from student_info
+        <if test="studentId != null and studentId != ''">
+            and id = #{studentId}
+        </if>
+
+        <if test="schoolId != null and schoolId != ''">
+            and school_id = #{schoolId}
+        </if>
     </delete>
 </mapper>

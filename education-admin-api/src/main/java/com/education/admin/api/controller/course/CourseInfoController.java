@@ -65,38 +65,11 @@ public class CourseInfoController extends BaseController {
         return courseService.saveOrUpdate(updateFlag, courseInfoMap);
     }
 
-    @GetMapping("getParentCourseList")
-    public Result getParentCourseList() {
-        return courseService.getParentCourseList();
-    }
-
-    /**
-     * 获取课程父类id
-     * @param courseId
-     * @return
-     */
-    @GetMapping("getParentId")
-    @ApiOperation("根据id获取父类课程")
-    public List<Integer> getParentId(Integer courseId) {
-        List<Integer> parentIds = courseService.getParentId(courseId);
-        parentIds.add(courseId);
-        return parentIds;
-    }
-
-    @GetMapping("findById")
-    @ApiOperation("根据id获取课程信息")
-    /*@ParamsValidate(params = {
-        @Param(name = "id", message = "课程id不能为空"),
-    }, paramsType= ParamsType.JSON_DATA)*/
-    public Map findById(Integer id) {
-        return courseService.findById(id);
-    }
 
     @DeleteMapping
     @RequiresPermissions("system:course:deleteById")
     @ApiOperation("删除课程接口")
     public ResultCode deleteById(@RequestBody ModelBeanMap modelBeanMap) {
-        // params.put("operation", "课程" + modelBeanMap.get("name"));
         return courseService.deleteById(modelBeanMap);
     }
 }

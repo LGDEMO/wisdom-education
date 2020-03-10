@@ -17,7 +17,7 @@
         </if>
     </select>
 
-    <select id="getStudentCourseQuestionByCourseId" resultType="modeBeanMap">
+    <select id="getStudentCourseQuestionByCourseId" resultType="modelBeanMap">
         select question_answer.*,question.question_type from user_question_answer question_answer left join question_info question on
         question_answer.question_info_id = question.id where question_answer.question_info_id in
         (
@@ -27,13 +27,30 @@
     </select>
 
     <!-- 试卷试题答案信息列表 -->
-    <select id="getStudentCourseQuestionByPaperId" parameterType="Integer" resultType="modeBeanMap">
+    <select id="getStudentCourseQuestionByPaperId" parameterType="Integer" resultType="modelBeanMap">
         select question.*, question_answer.answer as userInfoAnswer, question_answer.enclosure, question_answer.correct_status,
-        question_answer.mark from question_info question, user_question_answer question_answer
+        question_answer.mark from question_info question, student_question_answer question_answer
         where question.id = question_answer.question_info_id
         and question.id in (
           select question_info_id from test_paper_question_info where test_paper_info_id = #{paperInfoId}
         ) and question_answer.test_paper_info_id = #{paperInfoId} and question_answer.student_id = #{studentId}
     </select>
 
+    <select id="getStudentQuestionAnswerInfo" resultType="modelBeanMap">
+        select * from student_question_answer
+        <where>
+            <if test="courseId != null and courseId != ''">
+                course_id = #{courseId}
+            </if>
+
+            <if test="questionInfoId != null and questionInfoId != ''">
+                question_info_id = #{questionInfoId}
+            </if>
+
+            <if test="testPaperInfoId != null and testPaperInfoId != ''">
+                test_paper_info_id = #{testPaperInfoId}
+            </if>
+        </where>
+       limit 1
+    </select>
 </mapper>

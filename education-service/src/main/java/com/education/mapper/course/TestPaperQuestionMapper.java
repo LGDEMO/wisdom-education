@@ -14,5 +14,9 @@ public interface TestPaperQuestionMapper extends BaseMapper {
     int updatePaperQuestionSort(Map params);
     int updatePaperQuestionMark(Map params);
 
+    int delete(Map params);
+
+    int deletePaperQuestion(Map params);
+
     Integer getTestPaperInfoSum(Integer testPaperInfoId);
 }

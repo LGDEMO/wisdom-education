@@ -3,9 +3,7 @@ package com.education.common.model;
 
 import com.alibaba.fastjson.util.TypeUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 封装map 类型转换
@@ -13,7 +11,7 @@ import java.util.Set;
  * @version 1.0
  * @create 2018/11/8 11:26
  **/
-public class ModelBeanMap extends HashMap {
+public class ModelBeanMap extends LinkedHashMap {
 
     public static ModelBeanMap create() {
         return new ModelBeanMap();
@@ -95,6 +93,26 @@ public class ModelBeanMap extends HashMap {
     public <T> List<T> getList(Object key) {
         Object object = get(key);
         return object == null ? null : (List<T>) get(key);
+    }
+
+    public List<ModelBeanMap> getModelBeanMapList(Object key) {
+        Object object = get(key);
+        if (!(object instanceof List)) {
+            throw new ClassCastException(key + "values can not cast to List" );
+        }
+        List list = (List)object;
+        List<ModelBeanMap> result = new ArrayList<>();
+        list.forEach(item -> {
+            if (item instanceof Map) {
+                ModelBeanMap modelBeanMap = new ModelBeanMap();
+                Map data = (Map)item;
+                data.keySet().forEach(mapKey -> {
+                    modelBeanMap.put(mapKey, data.get(mapKey));
+                });
+                result.add(modelBeanMap);
+            }
+        });
+        return result;
     }
 
     public <T> Set<T> getSet(Object key) {

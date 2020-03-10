@@ -11,9 +11,14 @@ import com.education.common.utils.NumberUtils;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.ResultCode;
 import com.education.common.utils.RichHtmlHandler;
+import com.education.mapper.course.CourseQuestionInfoMapper;
 import com.education.mapper.course.QuestionInfoMapper;
+import com.education.mapper.course.StudentQuestionAnswerMapper;
+import com.education.mapper.course.TestPaperQuestionMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -25,6 +30,31 @@ import java.util.*;
 @Service
 @Slf4j
 public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
+
+    @Autowired
+    private StudentQuestionAnswerMapper studentQuestionAnswerMapper;
+    @Autowired
+    private CourseQuestionInfoMapper courseQuestionInfoMapper;
+    @Autowired
+    private TestPaperQuestionMapper testPaperQuestionMapper;
+
+    @Override
+    @Transactional
+    public ResultCode deleteById(ModelBeanMap modelBeanMap) {
+        try {
+            modelBeanMap.put("questionInfoId", modelBeanMap.getInt("id"));
+            ModelBeanMap result = studentQuestionAnswerMapper.getStudentQuestionAnswerInfo(modelBeanMap);
+            if (ObjectUtils.isNotEmpty(result)) {
+                return new ResultCode(ResultCode.FAIL, "试题已被使用.无法删除");
+            }
+            courseQuestionInfoMapper.delete(modelBeanMap);
+            testPaperQuestionMapper.delete(modelBeanMap);
+            return new ResultCode(ResultCode.SUCCESS, "删除试题成功");
+        } catch (Exception e) {
+            log.error("删除试题失败", e);
+            throw new BusinessException(new ResultCode(ResultCode.FAIL, "删除试题失败"));
+        }
+    }
 
     public ResultCode saveOrUpdate(ModelBeanMap questionInfoMap) {
         String message = "";
@@ -78,13 +108,8 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
     }
 
     public void parserQuestionContentForDoc(ModelBeanMap questionMap, List<ModelBeanMap> dataList, int number, int exportType) {
-        String content = (String) questionMap.get("content");
-        if (content.startsWith("<p>") || content.startsWith("div")) {
-            content = "<p>" + number + "、" + content.substring("<p>".length(), content.length());
-        } else {
-            content =  number + "、" + content;
-        }
-        // StringBuilder sb = new StringBuilder(number + "、" + (String) questionMap.get("content"));
+        String content = questionMap.getStr("content");
+        StringBuilder sb = new StringBuilder(number + "、" + content);
         RichHtmlHandler handler = new RichHtmlHandler(content);
 
         handler.setDocSrcLocationPrex("file:///C:/8595226D");
@@ -116,7 +141,6 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
         params.put("imagesBase64String", handledBase64Block);
         params.put("options", null);
         if (ObjectUtils.isNotEmpty(questionMap.get("options"))) {
-            //   List<Map> optionsList = (List<Map>)questionMap.get("options");
             params.put("options", (List<Map>)questionMap.get("options"));
         }
         String questionTypeName = EnumConstants.QuestionType.getName((Integer) questionMap.get("question_type"));

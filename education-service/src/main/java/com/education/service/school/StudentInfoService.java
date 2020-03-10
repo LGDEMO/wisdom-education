@@ -43,6 +43,16 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
             "学生姓名", "头像", "就读学校", "性别", "年龄", "年级", "家庭住址", "联系电话", "父亲姓名", "母亲姓名"
     };
 
+    @Override
+    public ResultCode deleteById(ModelBeanMap studentInfoMap) {
+        try {
+
+        } catch (Exception e) {
+
+        }
+        return super.deleteById(studentInfoMap.getInt("id"));
+    }
+
     public ResultCode exportExcel(Map params)  {
         List<String> column = new ArrayList<>();
         column.add("name");

@@ -1,11 +1,15 @@
 package com.education.service.school;
 import com.education.common.base.BaseService;
 import com.education.common.exception.BusinessException;
+import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.DateUtils;
 import com.education.common.utils.Md5Utils;
 import com.education.common.utils.ResultCode;
 import com.education.mapper.school.SchoolInfoMapper;
+import com.education.mapper.school.StudentInfoMapper;
+import com.education.mapper.system.SystemAdminMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,10 @@ import java.util.*;
 public class SchoolService extends BaseService<SchoolInfoMapper> {
 
     private static final String PRINCIPAL = "校长";
+    @Autowired
+    private SystemAdminMapper systemAdminMapper;
+    @Autowired
+    private StudentInfoMapper studentInfoMapper;
 
     @Transactional
     public ResultCode saveOrUpdate(boolean updateFlag, String operationDesc, Map params) {
@@ -60,16 +68,12 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
     }
 
     @Transactional
-    public ResultCode deleteById(Map params) {
+    public ResultCode deleteById(ModelBeanMap schoolInfoMap) {
         try {
-            params.put("operation", "删除学校" + params.get("name"));
-            /*super.deleteById(params); // 删除学校
-            sqlSessionTemplate.delete("system.admin.deleteBySchoolId", params.get("id"));
-            super.saveSystemLog("删除学校" + params.get("name") + "校长账号");
-            sqlSessionTemplate.delete("user.info.deleteBySchoolId", params.get("id"));
-            super.saveSystemLog("删除学校" + params.get("name") + "学生账号");
-            sqlSessionTemplate.delete("student.info.deleteBySchoolId", params.get("id"));
-            super.saveSystemLog("删除学校" + params.get("name") + "所有学员");*/
+            super.deleteById(schoolInfoMap); // 删除学校
+            systemAdminMapper.deleteBySchoolId(schoolInfoMap.getInt("id"));
+            schoolInfoMap.put("schoolId", schoolInfoMap.getInt("id"));
+            studentInfoMapper.deleteByIdOrSchoolId(schoolInfoMap);
             return new ResultCode(ResultCode.SUCCESS, "删除成功");
         } catch (Exception e) {
             log.error("删除学校异常", e);

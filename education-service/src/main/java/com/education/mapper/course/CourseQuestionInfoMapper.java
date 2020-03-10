@@ -19,4 +19,8 @@ public interface CourseQuestionInfoMapper extends BaseMapper {
      * @return
      */
     List<ModelBeanMap> getCourseQuestionList(Map params);
+
+    int delete(Map params);
+
+    // int deleteByCourseIdOrPaperId(Map params);
 }

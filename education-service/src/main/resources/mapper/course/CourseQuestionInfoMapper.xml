@@ -43,4 +43,17 @@
         </where>
     </select>
 
+    <delete id="delete" parameterType="map">
+        delete from course_question_info where
+        <where>
+            <if test="courseId != null and courseId != ''">
+                and course_id = #{courseId}
+            </if>
+
+            <if test="questionInfoId != null and questionInfoId != ''">
+                and question_info_id = #{questionInfoId}
+            </if>
+        </where>
+    </delete>
+
 </mapper>

@@ -21,6 +21,35 @@
         where id = #{params.id}
     </update>
 
+    <select id="queryList" resultType="modelBeanMap">
+        select exam.*,
+        subject.name AS subject_name,
+        student.sex,
+        student.name AS student_name,
+        paper.name AS paper_name,
+        paper.mark paper_mark,
+        paper.exam_number from exam_info exam, student_info student, test_paper_info paper, subject_info subject where
+        exam.student_id = student.id and exam.test_paper_info_id = paper.id and exam.subject_id = subject.id
+        <if test="keyWord != null and keyWord != ''">
+            <bind name="searchName" value="'%' + keyWord + '%'"/>
+            and (paper.name like #{searchName} or subject.name like #{searchName}
+            or student.name like #{searchName})
+        </if>
+
+        <if test="gradeType != null and gradeType != ''">
+            and student.grade_type = #{gradeType}
+        </if>
+
+        <if test="subjectId != null and subjectId != ''">
+            and subject.id = #{subjectId}
+        </if>
+
+        <if test="schoolId != null and schoolId != ''">
+            and student.school_id = #{schoolId}
+        </if>
+        group by paper.id order by exam.id desc
+    </select>
+
     <select id="findByPaperId" resultType="modelBeanMap">
         select * from exam_info where student_id = #{studentId} and test_paper_info_id = #{testPaperId} limit 1
     </select>

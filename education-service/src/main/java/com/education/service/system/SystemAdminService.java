@@ -42,7 +42,7 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
     @Override
     public Result pagination(Map params) {
         Result result = super.pagination(params);
-        List<ModelBeanMap> dataList = ((ModelBeanMap)result.getData()).getList("dataList");
+        List<ModelBeanMap> dataList = ((ModelBeanMap)result.getData()).getModelBeanMapList("dataList");
         for (ModelBeanMap admin : dataList) {
             List<ModelBeanMap> roleList = systemAdminRoleService.findRoleListByAdminId(admin.getInt("id"));
             List<Integer> roleIds = new ArrayList<>();

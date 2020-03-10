@@ -2,7 +2,6 @@ package com.education.mapper.course;
 
 import com.education.common.base.BaseMapper;
 import com.education.common.model.ModelBeanMap;
-
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +25,10 @@ public interface StudentQuestionAnswerMapper extends BaseMapper {
      * @return
      */
     int updateStudentQuestionMark(Map params);
+
+   // ModelBeanMap findByCourseId(Integer courseId);
+
+    ModelBeanMap getStudentQuestionAnswerInfo(Map params);
 
     /**
      * 根据课程id 获取试题答案信息列表

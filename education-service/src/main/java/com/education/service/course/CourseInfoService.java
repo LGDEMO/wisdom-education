@@ -1,15 +1,18 @@
 package com.education.service.course;
 
 import com.education.common.base.BaseService;
+import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.mapper.course.CourseInfoMapper;
 import com.education.mapper.course.CourseQuestionInfoMapper;
+import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.SubjectInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -29,8 +32,29 @@ public class CourseInfoService extends BaseService<CourseInfoMapper> {
     private SubjectInfoMapper subjectInfoMapper;
     @Autowired
     private CourseInfoMapper courseInfoMapper;
+    @Autowired
+    private StudentQuestionAnswerMapper studentQuestionAnswerMapper;
 
-/*
+    @Override
+    @Transactional
+    public ResultCode deleteById(Integer id) {
+        try {
+            Map params = new HashMap<>();
+            params.put("courseId", id);
+            Map result = studentQuestionAnswerMapper.getStudentQuestionAnswerInfo(params);
+            if (ObjectUtils.isNotEmpty(result)) {
+                return new ResultCode(ResultCode.FAIL, "课程已被使用,无法删除");
+            }
+            super.deleteById(id);
+            courseQuestionInfoMapper.delete(params);
+            return new ResultCode(ResultCode.SUCCESS, "删除成功");
+        } catch (Exception e) {
+            logger.error("删除课程异常", e);
+            throw new BusinessException(new ResultCode(ResultCode.FAIL, "删除课程异常"));
+        }
+    }
+
+    /*
     public List<Map> courseTreeList(Map params) {
         String sqlId = (String) params.get("sqlId");
         List<Map> data = mapper.treeList(); //sqlSessionTemplate.selectList(sqlId, params);

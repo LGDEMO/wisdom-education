@@ -20,4 +20,25 @@
     <select id="getTestPaperInfoSum" parameterType="Integer" resultType="Integer">
         select ifnull(sum(mark), 0) as mark from test_paper_question_info where test_paper_info_id = #{testPaperInfoId}
     </select>
+
+    <delete id="delete" parameterType="map">
+        delete from test_paper_question_info
+        <where>
+            <if test="testPaperInfoId != null and testPaperInfoId != ''">
+                and test_paper_info_id = #{testPaperInfoId}
+            </if>
+
+            <if test="questionInfoId != null and questionInfoId != ''">
+                and question_info_id = #{questionInfoId}
+            </if>
+        </where>
+    </delete>
+
+    <delete id="deletePaperQuestion" parameterType="map">
+        delete from test_paper_question_info where test_paper_info_id = #{testPaperInfoId}
+        and question_info_id in
+        <foreach collection="questionIds" item="id"  open="(" close=")" separator=",">
+            ${id}
+        </foreach>
+    </delete>
 </mapper>

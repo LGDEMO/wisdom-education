@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.education.mapper.course.CourseInfoMapper">
 
-    <select id="queryList" resultType="modeBeanMap">
+    <select id="queryList" resultType="modelBeanMap">
         select course.*, subject.name as subject_name from course_info course, subject_info subject
         <where>
             course.subject_id = subject.id
@@ -32,7 +32,7 @@
         order by course.sort asc
     </select>
 
-    <insert id="course.info.save" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="map">
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="map">
         insert into course_info
         <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
             ${key}
@@ -43,7 +43,7 @@
         </foreach>
     </insert>
 
-    <update id="course.info.update" parameterType="map">
+    <update id="update" parameterType="map">
         update course_info
         <foreach collection="params.keys" item="key" open="set" separator="," >
             ${key} = #{params[${key}]}
@@ -51,7 +51,11 @@
         where id = #{params.id}
     </update>
 
-    <select id="findById" parameterType="Integer" resultType="modeBeanMap">
+    <select id="findById" parameterType="Integer" resultType="modelBeanMap">
         select * from course_info where id = #{id}
     </select>
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from course_info where id  = #{id}
+    </delete>
 </mapper>

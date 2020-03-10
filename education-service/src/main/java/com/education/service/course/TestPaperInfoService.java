@@ -10,6 +10,7 @@ import com.education.common.utils.*;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.TestPaperInfoMapper;
 import com.education.mapper.course.TestPaperQuestionMapper;
+import com.education.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +28,14 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
 
     private static final String TEST_PAPER_TEMPLATE = "temp.ftl";
 
-   // @Autowired
-  //  private ModeService modeService;
+    @Autowired
+    private DocumentService documentService;
     @Autowired
     private QuestionInfoService questionInfoService;
     @Autowired
     private TestPaperQuestionMapper testPaperQuestionMapper;
-
+    @Autowired
+    private StudentQuestionAnswerService studentQuestionAnswerService;
     @Autowired
     private StudentQuestionAnswerMapper studentQuestionAnswerMapper;
     /**
@@ -94,12 +96,11 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
     public ResultCode updateQuestionMarkForPaper(Map params) {
         try {
             params.put("update_date", new Date());
+            // 更新试卷试题分数
             testPaperQuestionMapper.updatePaperQuestionMark(params);
-          //  sqlSessionTemplate.update("test.paper.question.info.updateMark", params);
-            //获取试卷总分
+            //重新计算试卷总分
             int id = (int) params.get("testPaperInfoId");
             Integer paperMark = testPaperQuestionMapper.getTestPaperInfoSum(id);
-          //  Integer paperMark = sqlSessionTemplate.selectOne("test.paper.question.info.getMarkSum", id);
             params.clear();
             params.put("id", id);
             params.put("mark", paperMark);
@@ -107,14 +108,14 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
             return new ResultCode(ResultCode.SUCCESS, "分数修改成功");
         } catch (Exception e) {
             logger.error("修改试题分数异常", e);
-            throw new BusinessException(new ResultCode(ResultCode.SUCCESS, "修改失败"));
+            throw new BusinessException(new ResultCode(ResultCode.FAIL, "修改试题分数异常"));
         }
     }
 
 
-    public ResultCode deleteQuestionForPaper(Map params) {
+    public ResultCode deletePaperQuestion(Map params) {
         try {
-           // sqlSessionTemplate.delete("test.paper.question.info.deleteByPaperId", params);
+            testPaperQuestionMapper.deletePaperQuestion(params);
             return new ResultCode(ResultCode.SUCCESS, "移除试题成功");
         } catch (Exception e) {
             logger.error("移除试题失败", e);
@@ -128,26 +129,26 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
             List<String> subjectNames = (List<String>) requestBody.get("subjectNames");
             Map params = new HashMap<>();
             params.put("testPaperIds", testPaperIds);
-            List<Map> testPaperList = mapper.queryList(params);;
+            List<ModelBeanMap> testPaperList = mapper.queryList(params);;
             String id = ObjectUtils.generateUuId();
             String savePath = FileUtils.getUploadPath() + "html" + File.separator + id + File.separator;
             for (int i = 0; i < testPaperList.size(); i++) {
-                Map testPaper = testPaperList.get(i);
+                ModelBeanMap testPaper = testPaperList.get(i);
                 Integer testPaperInfoId = (Integer) testPaper.get("id");
                 List<ModelBeanMap> questionList = mapper.findByTestPaperInfoId(testPaperInfoId); //sqlSessionTemplate.selectList("questions.info.findByIds", testPaperInfoId);
                 Set<Integer> questionTypes = questionList.stream()
-                        .map(item -> (Integer)item.get("question_type"))
+                        .map(item -> item.getInt("question_type"))
                         .collect(Collectors.toSet());
                 Map data = new HashMap<>();
-                List<Map> newQuestionList = new ArrayList<>();
+                List<ModelBeanMap> newQuestionList = new ArrayList<>();
                 int num = 1;
                 for (Integer type : questionTypes) {
-                    Map questionMap = new HashMap<>();
+                    ModelBeanMap questionMap = new ModelBeanMap();
                     questionMap.put("questionTypeName", NumberUtils.numberToChinese(num) + "、" + EnumConstants.QuestionType.getName(type));
-                    List<Map> questionMapList = new ArrayList<>();
+                    List<ModelBeanMap> questionMapList = new ArrayList<>();
                     // 遍历所有的试题类型
                     questionList.forEach(question -> {
-                        Integer value = (Integer) question.get("question_type");
+                        Integer value = question.getInt("question_type");
                         if (type == value) {
                             questionMapList.add(question);
                         }
@@ -157,11 +158,11 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
                     num++;
                 }
 
-               // modeService.exportDocForPaper(data, newQuestionList);
+                documentService.exportDocForPaper(data, newQuestionList);
                 BaseTemplate enjoyTemplate = new FreeMarkerTemplate(TEST_PAPER_TEMPLATE, savePath);
-                data.put("title", testPaper.get("name"));
+                data.put("title", testPaper.getStr("name"));
                 data.put("subjectName", subjectNames.get(i));
-                String testPaperName = (String) testPaper.get("name");
+                String testPaperName = testPaper.getStr("name");
                 String charName = SpellUtils.getSpellHeadChar(testPaperName);
                 enjoyTemplate.generateTemplate(data, charName + ".doc");
             }
@@ -193,19 +194,19 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
     }
 
 
-    public ResultCode commitPaperQuestion(Map params) {
+
+    public ResultCode commitPaperQuestion(ModelBeanMap testPaperInfoMap) {
         try {
-           /* List<Map> userInfoAnswerQuestionList = (List<Map>) params.get("userInfoAnswerList");
-            Integer modeId = (Integer) params.get("modeId");
-            String result = modeService.batchSaveUserAnswer(userInfoAnswerQuestionList, modeId, 0, params); // 保存错题记录
-            Integer mark = (Integer) params.get("mark");
+            List<ModelBeanMap> userInfoAnswerQuestionList = testPaperInfoMap.getModelBeanMapList("userInfoAnswerList");
+            Integer courseId = testPaperInfoMap.getInt("courseId");
+            String result = studentQuestionAnswerService.batchSaveUserAnswer(userInfoAnswerQuestionList, courseId, testPaperInfoMap); // 保存错题记录
+            Integer mark = testPaperInfoMap.getInt("mark");
             return new ResultCode(ResultCode.SUCCESS, ObjectUtils.isNotEmpty(result) ?
                     "提交成功,你本次考试非主观题成绩为" + mark + "分," + result
-                    : "提交成功,你本次考试非主观题成绩为" + mark + "分");*/
+                    : "提交成功,你本次考试非主观题成绩为" + mark + "分");
         } catch (Exception e) {
             logger.error("提交考试信息异常,", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, "提交失败, 请稍后再试"));
         }
-        return null;
     }
 }

@@ -4,6 +4,7 @@ import com.education.common.base.ApiController;
 import com.education.common.constants.EnumConstants;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.JwtToken;
+import com.education.common.model.ModelBeanMap;
 import com.education.common.model.online.OnlineUser;
 import com.education.common.utils.IpUtils;
 import com.education.common.utils.RequestUtils;
@@ -14,9 +15,11 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.modelmbean.ModelMBean;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -42,9 +45,9 @@ public class LoginController extends ApiController {
      * @return
      */
     @PostMapping("/login")
-    public Result login(@RequestBody Map requestBody, HttpSession session) {
-        String loginName = (String)requestBody.get("userName");
-        String password = (String)requestBody.get("password");
+    public Result login(@RequestBody ModelBeanMap requestBody, HttpSession session) {
+        String loginName = requestBody.getStr("userName");
+        String password = requestBody.getStr("password");
         Result result = systemAdminService.login(loginName, password);
         if (result.isSuccess()) {
             String token = adminJwtToken.createToken(systemAdminService.getUserId(), 24 * 60 * 60 * 1000 * 5); // 默认缓存5天

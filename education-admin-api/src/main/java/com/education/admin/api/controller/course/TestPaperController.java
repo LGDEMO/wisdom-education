@@ -77,8 +77,18 @@ public class TestPaperController extends BaseController {
      * @return
      */
     @DeleteMapping("deleteQuestionForPaper")
-    public ResultCode deleteQuestionForPaper(@RequestBody ModelBeanMap testPaperQuestionInfoMap) {
-        return testPaperInfoService.deleteQuestionForPaper(testPaperQuestionInfoMap);
+    public ResultCode deletePaperQuestion(@RequestBody ModelBeanMap testPaperQuestionInfoMap) {
+        return testPaperInfoService.deletePaperQuestion(testPaperQuestionInfoMap);
+    }
+
+    /**
+     * 提交试卷接口
+     * @param testPaperInfoMap
+     * @return
+     */
+    @PostMapping("commitPaperQuestion")
+    public ResultCode commitPaperQuestion (@RequestBody ModelBeanMap testPaperInfoMap) {
+        return testPaperInfoService.commitPaperQuestion(testPaperInfoMap);
     }
 
     /**

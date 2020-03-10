@@ -66,8 +66,7 @@ public class QuestionController extends BaseController {
      */
     @DeleteMapping
     @RequiresPermissions("system:question:deleteById")
-    public ResultCode delete(@RequestBody ModelBeanMap questionInfoMap) {
-       // params.put("operation", "试题" + questionInfoMap.get("id"));
+    public ResultCode deleteById(@RequestBody ModelBeanMap questionInfoMap) {
         return questionInfoService.deleteById(questionInfoMap);
     }
 
