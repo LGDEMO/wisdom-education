@@ -1,41 +1,66 @@
-# wisdom-education
-
-#### 介绍
-{**以下是码云平台说明，您可以替换此简介**
-码云是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用码云实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
-
-#### 软件架构
-软件架构说明
-
-
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+<p align="center">
+  <img src="https://img.shields.io/badge/Avue-2.1.0-green.svg" alt="Build Status">
+  <img src="https://img.shields.io/badge/Spring%20Cloud-Greenwich.SR3-blue.svg" alt="Coverage Status">
+  <img src="https://img.shields.io/badge/Spring%20Boot-2.1.9.RELEASE-blue.svg" alt="Downloads">
+</p>
+ 
+**Pig Microservice Architecture**   
+   
+- 基于 SpringBoot + Mybatis + Shiro + mysql + redis构建的智慧云智能教育平台 
+- 基于数据驱动视图的理念封装 element-ui，即使没有 vue 的使用经验也能快速上手  
+- 提供 lambda 、stream api 、webflux 的生产实践   
 
 
+<a href="http://pig4cloud.com/doc/pig" target="_blank">部署文档</a> | <a target="_blank" href="http://avue.top"> 前端解决方案</a> | <a target="_blank" href="https://gitee.com/log4j/pig/releases/v1.3.2"> 1.0  版本</a> | <a target="_blank" href="http://pigx.pig4cloud.com"> PigX在线体验</a>
+    
+![](https://images.gitee.com/uploads/images/2019/0330/065147_85756aea_410595.png)
+
+#### 快速构架微服务应用  
+
+<img src="https://images.gitee.com/uploads/images/2019/0823/120112_98bb9619_410595.gif"/>  
+   
+#### 核心依赖 
 
 
-#### 码云特技
+依赖 | 版本
+---|---
+Spring Boot |  2.2.5.RELEASE  
+Mybatis | 3.4.6  
+Mysql | 5.7
+Element-UI | 2.13.0
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+### 系统特色
+支持填空题、综合题、选择题等多种试题类型的录入
+支持数学公式的插入同时也支持通过excel 导入试题
+支持系统自动评分、教师后台批阅学员试卷
+可以将试卷试题导出word或者html,并且支持试题图片导出word
+集成了百度地图和百度富文本编辑器
+   
+#### 模块说明
+```lua
+pig-ui  -- https://gitee.com/log4j/pig-ui
+
+pig
+├── education-admin-api -- 管理后台api模块
+└── education-common -- 系统公共模块 
+├── education-service -- 业务层模块[8888]
+├── education-student-api -- 学生端api模块
+
+	 
+```
+#### 提交反馈
+
+1. 欢迎提交 issue，请写清楚遇到问题的原因，开发环境，复显步骤。
+
+2. 不接受`功能请求`的 issue，功能请求可能会被直接关闭。  
+
+3. <a href="mailto:pig4cloud@qq.com">pig4cloud@qq.com</a>    
+
+4. <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2270033969&site=qq&menu=yes"> 个人QQ: 2270033969</a>
+
+#### 开源协议
+
+
+![](https://images.gitee.com/uploads/images/2019/0330/065147_e07bc645_410595.png)
+
+
