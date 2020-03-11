@@ -52,11 +52,15 @@ education
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194945_3b2ed607_1526010.png "P67Y6%0X}FR~2$KSG7RZXBO.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194953_0584ae6c_1526010.png "VETIX%NRF8V`)12DI0L[2ZP.png")
 ```
-### qq交流群
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195324_02a1b710_1526010.png "temp_qrcode_share_1072042422.png")
-### 赞助
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195343_65d0cb1e_1526010.jpeg "1583927530267.jpg")
+#### qq交流群
 
+```
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195324_02a1b710_1526010.png "temp_qrcode_share_1072042422.png")
+```
+#### 赞助
+```
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195343_65d0cb1e_1526010.jpeg "1583927530267.jpg")
+```
 #### 提交反馈
 
 1. 欢迎提交 issue，请写清楚遇到问题的原因，开发环境，复显步骤。
