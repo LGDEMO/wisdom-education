@@ -33,7 +33,6 @@ public class StudentQuestionAnswerService extends BaseService<StudentQuestionAns
     @Transactional
     public String batchSaveUserAnswer(List<ModelBeanMap> questionList, Integer courseId, ModelBeanMap paperInfo) {
         int mark = 0;
-     //   int testPaperId = 0;
         if (ObjectUtils.isNotEmpty(questionList)) {
             List<ModelBeanMap> userQuestionAnswerList = new ArrayList<>(questionList.size());
             Date now = new Date();
@@ -101,11 +100,8 @@ public class StudentQuestionAnswerService extends BaseService<StudentQuestionAns
                 params.put("grade_type", getFrontUserInfo().get("grade_type"));
                 paperInfo.put("mark", mark);
                 examInfoMapper.save(params);
-               // super.save("exam.info.save", params);
-                // 更新参考人数
-                //
-                //int testPaperId = paperInfo.get("testPaperId");
-                //  paperInfo.clear();
+
+
                 paperInfo = testPaperInfoMapper.findById(paperInfo.getInt("testPaperId"));
                // paperInfo = sqlSessionTemplate.selectOne("test.paper.info.findById",  paperInfo.get("testPaperId"));
                 int examNumber = (int) paperInfo.get("exam_number");
@@ -113,11 +109,12 @@ public class StudentQuestionAnswerService extends BaseService<StudentQuestionAns
                 testPaperInfoMapper.update(paperInfo);
                // super.update("test.paper.info.update", paperInfo);
                 result = "本次考试系统判分" + mark;
+            } else {
+                result = "本次练习非选择题或判断题得分" + mark;
             }
             Map data = new HashMap();
             data.put("list", userQuestionAnswerList);
             studentQuestionAnswerMapper.batchSave(data);
-            result = "本次练习非选择题或判断题得分" + mark;
             return result;
         }
         return null;

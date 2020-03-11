@@ -8,4 +8,5 @@ import com.education.common.base.BaseMapper;
  * @create_at 2020/3/9 15:58
  */
 public interface CourseInfoMapper extends BaseMapper {
+
 }

@@ -4,20 +4,21 @@ import com.education.common.annotation.Param;
 import com.education.common.annotation.ParamsType;
 import com.education.common.annotation.ParamsValidate;
 import com.education.common.base.BaseController;
+import com.education.common.constants.MapperPageMethod;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
+import com.education.mapper.course.CourseQuestionInfoMapper;
 import com.education.service.course.CourseInfoService;
+import com.education.service.course.CourseQuestionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +34,8 @@ public class CourseInfoController extends BaseController {
 
     @Autowired
     private CourseInfoService courseService;
+    @Autowired
+    private CourseQuestionService courseQuestionService;
 
     @GetMapping("list")
     @RequiresPermissions("system:course:list")
@@ -71,5 +74,33 @@ public class CourseInfoController extends BaseController {
     @ApiOperation("删除课程接口")
     public ResultCode deleteById(@RequestBody ModelBeanMap modelBeanMap) {
         return courseService.deleteById(modelBeanMap);
+    }
+
+    /**
+     * 修改模式试题分数或排序
+     * @param courseQuestionMap
+     * @return
+     */
+    @PostMapping("updateCourseQuestionSortOrMark")
+    @ApiOperation("修改模式试题分数或排序")
+    public ResultCode updateCourseQuestionSortOrMark(@RequestBody ModelBeanMap courseQuestionMap) {
+        return courseService.updateCourseQuestionSortOrMark(courseQuestionMap);
+    }
+
+    @GetMapping("getCourseQuestionList")
+    public Result<ModelBeanMap> getCourseQuestionList(@RequestParam Map params) {
+        return courseQuestionService.pagination(params, CourseQuestionInfoMapper.class, MapperPageMethod.GET_COURSE_QUESTION_LIST);
+    }
+
+    /**
+     * 关联试题
+     * @param modelBeanMap
+     * @return
+     */
+    @PostMapping("relevanceQuestion")
+    @RequiresPermissions(value = "system:mode:relevanceQuestion")
+    @ApiOperation("关联试题")
+    public ResultCode relevanceQuestion(@RequestBody ModelBeanMap modelBeanMap) {
+        return courseQuestionService.relevanceQuestion(modelBeanMap);
     }
 }

@@ -20,7 +20,15 @@ public interface CourseQuestionInfoMapper extends BaseMapper {
      */
     List<ModelBeanMap> getCourseQuestionList(Map params);
 
+    List<ModelBeanMap> getCourseQuestionAnswerList(Map params);
+
     int delete(Map params);
+
+    int updateCourseQuestionMark(Map params);
+
+    int updateCourseQuestionSort(Map params);
+
+    long getStudyNumberByCourse(Integer courseId);
 
     // int deleteByCourseIdOrPaperId(Map params);
 }

@@ -1,0 +1,1 @@
+package com.education.task;/** * 上课微信模板消息推送 * @author zengjintao * @create 2019/5/17 16:20 * @since 1.0 **/public class StudyTemplateMsg extends BaseTask {    @Override    public void run() {    }}

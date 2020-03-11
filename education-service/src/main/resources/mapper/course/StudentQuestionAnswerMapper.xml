@@ -5,7 +5,7 @@
     <select id="getStudentCourseOrPaperQuestionInfoList" resultType="modelBeanMap">
         select question.*, user_answer.question_points question_mark, user_answer.answer as user_answer, user_answer.enclosure, user_answer.is_right, user_answer.comment,
         user_answer.mark as answer_mark
-        from question_info question, user_question_answer user_answer
+        from question_info question, student_question_answer user_answer
         where question.id = user_answer.question_info_id
         and user_answer.student_id = #{studentId} and
         <if test="courseId != null and courseId != ''">
@@ -18,7 +18,7 @@
     </select>
 
     <select id="getStudentCourseQuestionByCourseId" resultType="modelBeanMap">
-        select question_answer.*,question.question_type from user_question_answer question_answer left join question_info question on
+        select question_answer.*,question.question_type from student_question_answer question_answer left join question_info question on
         question_answer.question_info_id = question.id where question_answer.question_info_id in
         (
           select question_info_id from course_question_info where course_id = #{courseId}
@@ -53,4 +53,25 @@
         </where>
        limit 1
     </select>
+
+    <select id="getStudentAnswerPaperList" resultType="modelBeanMap">
+        select paper_info.id, paper_info.exam_number, paper_info.mark paper_mark, paper_info.name, subject.name subject_name, exam.* from test_paper_info paper_info, exam_info exam, subject_info subject
+        where paper_info.id = exam.test_paper_info_id and
+        exam.subject_id = subject.id and exam.student_id = #{studentId}
+        <if test="subjectId != null and subjectId != ''">
+            and exam.subject_id = #{subjectId}
+        </if>
+    </select>
+
+    <insert id="batchSave" parameterType="map">
+        insert into student_question_answer(student_id, question_info_id, course_id, answer,
+        create_date, test_paper_info_id, enclosure, mark, question_points, correct_status) values
+        <foreach collection="list" separator="," item="item">
+            (
+            #{item.studentId}, #{item.questionInfoId}, #{item.courseId},  #{item.answer},
+            #{item.create_date}, #{item.test_paper_info_id}, #{item.enclosure},
+            #{item.mark}, #{item.question_points}, #{item.correct_status}
+            )
+        </foreach>
+    </insert>
 </mapper>

@@ -2,8 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.education.mapper.course.CourseQuestionInfoMapper">
 
+    <insert id="batchSave" parameterType="map">
+        insert into course_question_info(question_info_id, course_id) values
+        <foreach collection="list" separator="," item="item">
+            (${item.question_info_id}, ${item.course_id})
+        </foreach>
+    </insert>
+
     <update id="updateStudentQuestionMark" parameterType="map">
-        update user_question_answer set mark = #{mark}, correct_status = #{correct_status}, comment = #{comment}
+        update srudent_question_answer set mark = #{mark}, correct_status = #{correct_status}, comment = #{comment}
         where student_id = #{studentId} and question_info_id = #{questionInfoId}
         <if test="test_paper_info_id != null and test_paper_info_id != ''">
             and test_paper_info_id = #{test_paper_info_id}
@@ -44,7 +51,7 @@
     </select>
 
     <delete id="delete" parameterType="map">
-        delete from course_question_info where
+        delete from course_question_info
         <where>
             <if test="courseId != null and courseId != ''">
                 and course_id = #{courseId}
@@ -56,4 +63,31 @@
         </where>
     </delete>
 
+
+    <sql id="updateCourseQuestionSortOrMark">
+        where course_id = #{course_id} and question_info_id = #{questionInfoId}
+    </sql>
+
+    <update id="updateCourseQuestionMark" parameterType="map">
+        update course_question_info set mark = #{mark}
+        <include refid="updateCourseQuestionSortOrMark"></include>
+    </update>
+
+    <update id="updateCourseQuestionSort" parameterType="map">
+        update course_question_info set sort = #{sort}
+        <include refid="updateCourseQuestionSortOrMark"></include>
+    </update>
+
+    <select id="getStudyNumberByCourse" resultType="long">
+        select count(1) number from (select * from student_question_answer where course_id = #{courseId} group by student_id) a
+    </select>
+
+    <select id="getCourseQuestionAnswerList" resultType="modelBeanMap">
+       select question_answer.*,question.question_type from student_question_answer question_answer left join question_info question on
+        question_answer.question_info_id = question.id where question_answer.question_info_id in
+        (
+          select question_info_id from course_question_info where course_id = #{courseId}
+        )
+        and question_answer.student_id = #{studentId} and question_answer.course_id = #{courseId}
+    </select>
 </mapper>

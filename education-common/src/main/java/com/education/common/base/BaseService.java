@@ -1,16 +1,19 @@
 package com.education.common.base;
 
 import com.education.common.cache.EhcacheBean;
+import com.education.common.component.SpringBeanManager;
 import com.education.common.constants.Constants;
 import com.education.common.constants.EnumConstants;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.FrontUserInfoSession;
 import com.education.common.model.ModelBeanMap;
+import com.education.common.model.PagingBounds;
 import com.education.common.utils.*;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,31 +40,47 @@ public abstract class BaseService<M extends BaseMapper> {
     protected EhcacheBean ehcacheBean;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private static final String DEFAULT_MAPPER_PAGE_METHOD_NAME = "queryList";
+
     /**
      * 分页查询
      * @param params
      * @return
      */
     public Result<ModelBeanMap> pagination(Map params) {
+       return pagination(params, null, DEFAULT_MAPPER_PAGE_METHOD_NAME);
+    }
+
+    private PagingBounds getPagingBounds(Map params) {
+        PagingBounds pagingBounds = new PagingBounds();
+        if (ObjectUtils.isNotEmpty(params.get("offset"))) {
+            pagingBounds.setOffset(Integer.valueOf((String) params.get("offset")));
+        }
+        if (ObjectUtils.isNotEmpty(params.get("limit"))) {
+            pagingBounds.setOffset(Integer.valueOf((String) params.get("limit")));
+        }
+        return pagingBounds;
+    }
+
+    public Result<ModelBeanMap> pagination(Map params, Class<? extends BaseMapper> mapperClass, String mapperMethod) {
         Result result = null;
         try {
-            Integer offset = PageRowBounds.NO_ROW_OFFSET;
-            Integer limit = PageRowBounds.NO_ROW_LIMIT;
-
-            if (ObjectUtils.isNotEmpty(params.get("offset"))) {
-                offset = Integer.valueOf((String) params.get("offset"));
+            PagingBounds pagingBounds = getPagingBounds(params);
+            Page<ModelBeanMap> page = PageHelper.offsetPage(pagingBounds.getOffset(), pagingBounds.getLimit());
+            Object pageResult = null;
+            if (ObjectUtils.isEmpty(mapperClass)) {
+                pageResult = mapper.queryList(params);
+            } else {
+                Method method = mapperClass.getMethod(mapperMethod, Map.class);
+                BaseMapper mapperBean = SpringBeanManager.getBean(mapperClass);
+                pageResult = method.invoke(mapperBean, params);
             }
-            if (ObjectUtils.isNotEmpty(params.get("limit"))) {
-                limit = Integer.valueOf((String) params.get("limit"));
-            }
-            Page<ModelBeanMap> page = PageHelper.offsetPage(offset, limit);
-            List<ModelBeanMap> dataList = mapper.queryList(params);
             ModelBeanMap dataMap = new ModelBeanMap();
-            dataMap.put("dataList", dataList);
+            dataMap.put("dataList", pageResult);
             dataMap.put("total", page.getTotal());
             result = new Result(ResultCode.SUCCESS, dataMap);
         } catch (Exception e) {
-            result = new Result(ResultCode.FAIL);
+            result = new Result(ResultCode.FAIL, "获取数据异常");
             logger.error("获取数据异常", e);
         }
         return result;
@@ -95,6 +115,7 @@ public abstract class BaseService<M extends BaseMapper> {
             throw new BusinessException(new ResultCode(ResultCode.FAIL, "操作异常"));
         }
     }
+
 
     public ResultCode deleteById(ModelBeanMap modelBeanMap) {
         return deleteById(modelBeanMap.getInt("id"));

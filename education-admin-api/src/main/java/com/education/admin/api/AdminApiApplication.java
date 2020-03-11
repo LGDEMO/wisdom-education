@@ -1,9 +1,12 @@
 package com.education.admin.api;
 
+import com.baidu.ueditor.ConfigManager;
+import com.education.common.utils.FileUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 
 
 /**
@@ -15,14 +18,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
    {
        "com.education.admin.api",
        "com.education.common",
-       "com.education.service"
+       "com.education.service",
+       "com.education.init",
+       "com.education.task",
+       "com.education.webSocket"
    }
 )
 @MapperScan("com.education.mapper")
 public class AdminApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AdminApiApplication.class, args);
+        ApplicationContext applicationContext = SpringApplication.run(AdminApiApplication.class, args);
+        Environment environment = applicationContext.getEnvironment();
+        String uploadPath = environment.getProperty("file.uploadPath");
+        FileUtils.setUploadPath(uploadPath);
+        String configFileName = environment.getProperty("ueditor.configFileName");
+        ConfigManager.setConfigFileName(configFileName);
     }
 
 }

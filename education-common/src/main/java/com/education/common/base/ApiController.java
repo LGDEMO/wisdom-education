@@ -1,12 +1,24 @@
 package com.education.common.base;
 
-import com.education.common.constants.Constants;
+import com.baidu.ueditor.ActionEnter;
+import com.education.common.model.Captcha;
+import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.PathKit;
 import com.education.common.utils.ResultCode;
 import com.education.common.utils.SpellUtils;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpSession;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +28,15 @@ import java.util.Set;
  * @version 1.0
  * @create_at 2020/3/8 11:33
  */
+@RestController
+@Slf4j
 public class ApiController extends BaseController {
+
+    @RequestMapping(value = "/ueditor/exec", method = { RequestMethod.GET, RequestMethod.POST })
+    public String exec(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Content-Type" , "text/html");
+        return new ActionEnter(request, PathKit.getWebRootPath()).exec();
+    }
 
     protected static final Set<String> excelTypes = new HashSet<String>() {
         {
@@ -27,17 +47,97 @@ public class ApiController extends BaseController {
         }
     };
 
-    protected Object checkCode(HttpSession session, Map params) {
-        String code = (String)params.get("code");
-        String sessionImageCode = (String)session.getAttribute(Constants.IMAGE_CODE);
-        if (!code.equalsIgnoreCase(sessionImageCode)) {
-            params.put("code", ResultCode.FAIL);
-            params.put("message", "验证码错误");
-            return params;
+    @Value("${file.uploadPath}")
+    private String baseUploadPath;
+
+    // 上传文件类型
+    private static final int VIDEO_FILE = 1;
+    private static final int IMAGE_FILE = 2;
+    private static final int OTHER_FILE = 3;
+
+    private static final Set<String> videoTypes = new HashSet<String>() {
+        {
+            add("video/mp4");
+            add("video/x-ms-wmv");
+            add("video/mpeg4");
+            add("video/avi");
+            add("video/mpeg");
+            add("video/3gp");
+        }
+    };
+
+    /**
+     * 文件上传api 接口
+     * @param file
+     * @param uploadFileType
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "upload/{uploadFileType}", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map uploadFile(@RequestParam MultipartFile file, @PathVariable int uploadFileType) throws IOException {
+        String result = null;
+        String contentType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+        String suffix = "." + FilenameUtils.getExtension(fileName);
+        String message = null;
+        Map resultMap = new HashMap<>();
+        switch (uploadFileType) {
+            case VIDEO_FILE :
+                if (file.getSize() > 500 * 1024 * 1024) {
+                    resultMap.put("code", ResultCode.FAIL);
+                    resultMap.put("message", "视频大小不能超过500MB");
+                    return resultMap;
+                }
+                result = beforeUploadVideo(contentType, fileName);
+                message = "视频";
+                break;
+            case IMAGE_FILE :
+                result = beforeUploadImage(suffix);
+                message = "图片";
+                break;
+            case OTHER_FILE :
+                result = beforeUploadOtherFile(fileName);
+                break;
+        }
+
+        if (ObjectUtils.isNotEmpty(result)) {
+            try {
+                String basePath = baseUploadPath + result;
+                File filePath = new File(basePath);
+                if (!filePath.getParentFile().exists()) {
+                    filePath.getParentFile().mkdirs();
+                }
+                file.transferTo(filePath);
+                resultMap.put("code", ResultCode.SUCCESS);
+                resultMap.put("message", message + "上传成功");
+                resultMap.put("url", result);
+            } catch (Exception e) {
+                resultMap.put("code", ResultCode.FAIL);
+                resultMap.put("message", message + "文件上传失败");
+                log.error(message + "上传失败", e);
+            }
+        } else {
+            resultMap.put("code", ResultCode.FAIL);
+            resultMap.put("message", message + "文件格式错误,请更换文件");
+        }
+        return resultMap;
+    }
+
+
+    private String beforeUploadVideo(String contentType, String fileName) {
+        if (videoTypes.contains(contentType)) {
+            return "/videos/" + ObjectUtils.generateFileByTime() + ObjectUtils.generateUuId() + "/" + fileName;
         }
         return null;
     }
 
+    private String beforeUploadImage(String suffix) {
+        return "/images/" + ObjectUtils.generateFileByTime() + ObjectUtils.generateUuId() + suffix;
+    }
+
+    private String beforeUploadOtherFile(String fileName) {
+        return "/others/" + ObjectUtils.generateFileByTime() + ObjectUtils.generateUuId() + "/" + fileName;
+    }
 
     /**
      * 获取汉字拼音
@@ -49,5 +149,18 @@ public class ApiController extends BaseController {
     @ApiImplicitParam(name = "keyWord", value = "关键词", required = true, dataType = "string")
     public String getSpell(@RequestParam(defaultValue = "") String keyWord) {
         return SpellUtils.getSpellHeadChar(keyWord);
+    }
+
+
+    /**
+     * 生成验证码
+     * @param request
+     * @param response
+     */
+    @GetMapping("/image")
+    @ApiOperation("生成验证码接口")
+    public void image(HttpServletRequest request, HttpServletResponse response){
+        Captcha captcha = new Captcha();
+        captcha.render(request, response);
     }
 }

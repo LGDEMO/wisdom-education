@@ -1,5 +1,6 @@
 package com.education.common.base;
 
+import com.education.common.annotation.MapperPage;
 import com.education.common.model.ModelBeanMap;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,6 +18,7 @@ public interface BaseMapper<T> {
 
     ModelBeanMap findById(Integer id);
 
+    @MapperPage
     List<ModelBeanMap> queryList(Map params);
 
     int save(@Param("params") Map params);

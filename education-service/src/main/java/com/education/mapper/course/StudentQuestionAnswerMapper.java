@@ -12,12 +12,17 @@ import java.util.Map;
  */
 public interface StudentQuestionAnswerMapper extends BaseMapper {
 
+    String GET_STUDENT_ANSWER_PAPER_LIST = "getStudentAnswerPaperList";
+    String GET_STUDENT_ERROR_QUESTION_LIST = "getStudentErrorQuestionList";
+
     /**
      * 获取学员课程或试卷试题答案信息列表
      * @param params
      * @return
      */
     List<ModelBeanMap> getStudentCourseOrPaperQuestionInfoList(Map params);
+
+    List<ModelBeanMap> getStudentAnswerPaperList(Map params);
 
     /**
      * 修改学员答题得分
@@ -38,4 +43,11 @@ public interface StudentQuestionAnswerMapper extends BaseMapper {
     List<ModelBeanMap> getStudentCourseQuestionByCourseId(Map params);
 
     List<ModelBeanMap> getStudentCourseQuestionByPaperId(Map params);
+
+    /**
+     * 获取学员错题本列表
+     * @param params
+     * @return
+     */
+    List<ModelBeanMap> getStudentErrorQuestionList(Map params);
 }

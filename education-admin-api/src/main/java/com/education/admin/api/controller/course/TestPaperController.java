@@ -119,4 +119,9 @@ public class TestPaperController extends BaseController {
     public ResultCode export(@RequestBody ModelBeanMap testPaperInfoMap) {
         return testPaperInfoService.exportTestPaper(testPaperInfoMap);
     }
+
+    @GetMapping("getPaperQuestionList")
+    public Result getPaperQuestionList(@RequestParam Map params) {
+        return testPaperInfoService.getPaperQuestionList(params);
+    }
 }

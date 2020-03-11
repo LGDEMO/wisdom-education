@@ -18,8 +18,27 @@
                 and student.school_id = ${schoolId}
             </if>
         </where>
-        order by user.last_login_time desc
+        order by student.id desc
     </select>
+
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="map">
+        insert into student_info
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="map">
+        update student_info
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
 
     <delete id="deleteById" parameterType="Integer">
         delete from student_info where id = #{id}
@@ -35,4 +54,20 @@
             and school_id = #{schoolId}
         </if>
     </delete>
+
+    <select id="findByLoginName" resultType="modelBeanMap">
+           select
+        student.id student_id,
+         student.disabled_flag,
+         student.head_img,
+         student.grade_type,
+         student.password,
+          student.encrypt,
+          student.login_ip,
+          student.login_count,
+         student.name as student_name,
+         school.name as school_name, case student.sex
+        when 1 then '男' when 2 then '女' else '未知' end sex from student_info student
+        left join school_info school on student.school_id = school.id where student.login_name = #{loginName}
+    </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.education.service.course;
 
 import com.education.common.base.BaseService;
 import com.education.common.constants.EnumConstants;
+import com.education.common.constants.MapperPageMethod;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.template.BaseTemplate;
@@ -135,7 +136,9 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
             for (int i = 0; i < testPaperList.size(); i++) {
                 ModelBeanMap testPaper = testPaperList.get(i);
                 Integer testPaperInfoId = (Integer) testPaper.get("id");
-                List<ModelBeanMap> questionList = mapper.findByTestPaperInfoId(testPaperInfoId); //sqlSessionTemplate.selectList("questions.info.findByIds", testPaperInfoId);
+                params.put("testPaperInfoId", testPaperInfoId);
+                params.put("orderBy", "question_type");
+                List<ModelBeanMap> questionList = testPaperQuestionMapper.getPaperQuestionList(params);
                 Set<Integer> questionTypes = questionList.stream()
                         .map(item -> item.getInt("question_type"))
                         .collect(Collectors.toSet());
@@ -208,5 +211,9 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
             logger.error("提交考试信息异常,", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, "提交失败, 请稍后再试"));
         }
+    }
+
+    public Result getPaperQuestionList(Map params) {
+        return pagination(params, TestPaperQuestionMapper.class, MapperPageMethod.GET_TEST_PAPER_QUESTION_LIST);
     }
 }

@@ -2,12 +2,13 @@ package com.education.service.school;
 import com.education.common.base.BaseService;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.DateUtils;
 import com.education.common.utils.Md5Utils;
 import com.education.common.utils.ResultCode;
 import com.education.mapper.school.SchoolInfoMapper;
 import com.education.mapper.school.StudentInfoMapper;
 import com.education.mapper.system.SystemAdminMapper;
+import com.education.mapper.system.SystemAdminRoleMapper;
+import com.education.mapper.system.SystemRoleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,36 +31,29 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
     private SystemAdminMapper systemAdminMapper;
     @Autowired
     private StudentInfoMapper studentInfoMapper;
+    @Autowired
+    private SystemRoleMapper systemRoleMapper;
+    @Autowired
+    private SystemAdminRoleMapper systemAdminRoleMapper;
 
     @Transactional
-    public ResultCode saveOrUpdate(boolean updateFlag, String operationDesc, Map params) {
+    @Override
+    public ResultCode saveOrUpdate(boolean updateFlag, ModelBeanMap schoolMap) {
         String message = "";
         try {
-            checkParams(params);
-            params.remove("sqlId");
             if (updateFlag) {
-                checkParams(params);
-                if (params.containsKey("add_account_number")) {
-                    int addAccountNumber = (int) params.get("add_account_number");
-                    int beforeUpdateAccountNumber = (int) params.get("old_account_number");
-                    Integer schoolId = (Integer) params.get("id");
-                    String simplicity = (String) params.get("simplicity");
-                    this.createUserAccount(addAccountNumber, simplicity, beforeUpdateAccountNumber, schoolId, true);
-                    params.remove("add_account_number");
-                    params.remove("old_account_number");
-                }
+                checkParams(schoolMap);
                 message = "修改";
-                super.update(params);
+                super.update(schoolMap);
             } else {
                 Date now = new Date();
-                params.put("create_date", now);
-                params.put("update_date", now);
-                Integer schoolId = super.save(params);
+                schoolMap.put("create_date", now);
+                schoolMap.put("update_date", now);
+                Integer schoolId = super.save(schoolMap);
                 message = "添加";
-                params.put("schoolId", schoolId);
-                createPrincipalAndStudentAccount(params);
+                schoolMap.put("schoolId", schoolId);
+                createPrincipalAccount(schoolMap);
             }
-            this.saveSystemLog(message + "学校" + params.get("name"));
             return new ResultCode(ResultCode.SUCCESS, message + "学校成功");
         } catch (Exception e) {
             log.error(message + "学校失败", e);
@@ -82,18 +76,16 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
     }
 
     /**
-     * 创建校长学生账号
+     * 创建校长后台账号
      * @param params
      */
-    private void createPrincipalAndStudentAccount(Map params) {
+    private void createPrincipalAccount(Map params) {
         String simplicity = (String)params.get("simplicity");
         Integer schoolId = (Integer)params.get("schoolId");
         Date now = new Date();
-      //  String schoolName = (String) params.get("name");
-        Integer accountNumber = (Integer) params.get("account_number");
+        String principalName = (String)params.get("principal_name");
         // 创建三个校长账号
         for (int i = 1; i <= 3; i++) {
-            String principalName = (String)params.get("principal_name");
             params.clear();
             params.put("login_name", simplicity + i);
             params.put("name", principalName);
@@ -104,54 +96,15 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
             params.put("school_id", schoolId);
             params.put("create_date", now);
             params.put("update_date", now);
-         //   int adminId = super.save("system.admin.save", params);
-        //    Map roleMap = sqlSessionTemplate.selectOne("system.role.findByName", PRINCIPAL);
+            Integer adminId = systemAdminMapper.save(params);
+            Map roleMap =systemRoleMapper.findByRoleName(PRINCIPAL);
             params.clear();
-         //   params.put("admin_id", adminId);
-         //   params.put("role_id", roleMap.get("id"));
-          //  super.save("system.admin.role.save", params); // 关联校长账号角色权限
+            params.put("admin_id", adminId);
+            params.put("role_id", roleMap.get("id"));
+            systemAdminRoleMapper.save(params);// 关联校长账号角色权限
         }
-        this.createUserAccount(accountNumber, simplicity, accountNumber, schoolId, false);
     }
 
-    /**
-     * @param accountNumber 账号数量
-     * @param simplicity 学校简称
-     * @param beforeUpdateAccountNumber 修改之前的学员账号数量
-     * @param schoolId 学校id
-     * @param addFlag 是否在之前的账号基础上添加账号
-     */
-    private void createUserAccount(int accountNumber, String simplicity,
-                                   int beforeUpdateAccountNumber,
-                                   Integer schoolId, boolean addFlag) {
-        // 由于学员账号是由学校简称后面加数字依次递增
-        List<String> accountList = new ArrayList<>();
-        int offset = 0;
-        if (addFlag) {
-            offset = beforeUpdateAccountNumber;
-        }
-        for (int i = 0; i < accountNumber; i++) {
-            accountList.add(simplicity + (offset + 1)); // 以学校简称开头随机生成100个账户名
-            offset++;
-        }
-
-        List<Map> userInfoList = new ArrayList<>();
-        Iterator<String> iterator = accountList.iterator();
-        while (iterator.hasNext()) {
-            Map userInfo = new HashMap<>();
-            String account = iterator.next();
-            userInfo.put("school_id", schoolId);
-            userInfo.put("login_name", account);
-            String salt = Md5Utils.encodeSalt(Md5Utils.generatorKey());
-            userInfo.put("encrypt", salt);
-            userInfo.put("password", Md5Utils.getMd5(account, salt));
-            userInfo.put("create_date", new Date());
-            userInfo.put("invalid_date", DateUtils.getAfterYearDate(1));
-         //   userInfo.put("activate_code", super.getActivateCode("user.info.findByActivateCode", "activate_code"));
-            userInfoList.add(userInfo);
-        }
-       // sqlSessionTemplate.insert("user.info.batchInsert", userInfoList);
-    }
 
     public List<Map> getSchoolPosition() {
         return null;

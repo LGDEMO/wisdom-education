@@ -41,4 +41,30 @@
             ${id}
         </foreach>
     </delete>
+
+    <select id="getPaperQuestionList" resultType="modelBeanMap">
+        select question.*, testPaperQuestion.sort paper_question_sort, '' as userInfoAnswer, subject.name as subject_name, testPaperQuestion.mark from question_info
+        question,
+        subject_info subject, test_paper_question_info testPaperQuestion where question.subject_id = subject.id
+        and question.id = testPaperQuestion.question_info_id and testPaperQuestion.test_paper_info_id = #{testPaperInfoId}
+        <if test="questionType != null and questionType != ''">
+            and question.question_type = #{questionType}
+        </if>
+        order by
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                testPaperQuestion.sort
+            </otherwise>
+        </choose>
+        asc
+    </select>
+
+    <select id="findByTestPaperInfoId" resultType="modelBeanMap">
+       select * from question_info where id in (
+          select question_info_id from test_paper_question_info where test_paper_info_id = #{testPaperInfoId}
+        ) order by question_type asc
+    </select>
 </mapper>

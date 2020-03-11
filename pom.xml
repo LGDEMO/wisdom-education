@@ -32,6 +32,7 @@
     <module>education-admin-api</module>
     <module>education-service</module>
     <module>education-common</module>
+    <module>education-student-api</module>
   </modules>
 
   <dependencies>

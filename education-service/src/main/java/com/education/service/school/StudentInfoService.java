@@ -3,23 +3,25 @@ package com.education.service.school;
 import com.education.common.base.BaseService;
 import com.education.common.constants.Constants;
 import com.education.common.constants.EnumConstants;
+import com.education.common.constants.MapperPageMethod;
 import com.education.common.exception.BusinessException;
-import com.education.common.model.AdminUserSession;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.model.StudentInfo;
-import com.education.common.utils.ExcelKit;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.RequestUtils;
-import com.education.common.utils.ResultCode;
+import com.education.common.model.*;
+import com.education.common.model.online.OnlineUser;
+import com.education.common.model.online.OnlineUserManager;
+import com.education.common.utils.*;
 import com.education.mapper.course.ExamInfoMapper;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.TestPaperInfoMapper;
 import com.education.mapper.school.StudentInfoMapper;
+import com.education.service.WebSocketMessageService;
 import com.education.service.course.QuestionInfoService;
+import com.education.task.BaseTask;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.Cookie;
 import java.util.*;
 
 /**
@@ -38,6 +40,13 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
     private ExamInfoMapper examInfoMapper;
     @Autowired
     private TestPaperInfoMapper testPaperInfoMapper;
+    @Autowired
+    private JwtToken frontJwtToken;
+    @Autowired
+    private WebSocketMessageService webSocketMessageService;
+    @Autowired
+    private OnlineUserManager onlineUserManager;
+
 
     private static final String STUDENT_EXCEL_TITLE[] = new String[]{
             "学生姓名", "头像", "就读学校", "性别", "年龄", "年级", "家庭住址", "联系电话", "父亲姓名", "母亲姓名"
@@ -88,15 +97,6 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         return new ResultCode(ResultCode.SUCCESS, "数据导入失败");
     }
 
-
-
-
-/*    public ResultCode deleteById(ModelBeanMap studentInfo) {
-        return mapper.deleteById(studentInfo.getInt("id"));
-    }*/
-
-
-
     @Transactional
     public ResultCode saveOrUpdate(boolean updateFlag, ModelBeanMap studentInfoMap) {
         try {
@@ -118,9 +118,6 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         }
         return new ResultCode(ResultCode.FAIL, "操作异常");
     }
-
-
-
 
     public List<ModelBeanMap> getStudentCourseOrPaperQuestionInfoList(Map params) {
         try {
@@ -242,5 +239,179 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
             logger.error("批改试题异常", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, "批改试题异常"));
         }
+    }
+
+    /**
+     * 修改学员密码
+     * @param params
+     * @return
+     */
+    public ResultCode resettingFrontUserPassword(Map params) {
+        try {
+            String newPassword = (String)params.get("newPassword");
+            String password = (String)params.get("password");
+            String confirmPassword = (String)params.get("confirmPassword");
+            if (!newPassword.equals(confirmPassword)) {
+                return new ResultCode(ResultCode.FAIL, "密码与确认密码不一致");
+            }
+            Map userInfo = getFrontUserInfo();
+            String encrypt = (String)userInfo.get("encrypt");
+            password = Md5Utils.getMd5(password, encrypt);
+            String userPassword = (String)userInfo.get("password");
+            if (!password.equals(userPassword)) {
+                return new ResultCode(ResultCode.FAIL, "密码输入错误");
+            }
+            password = Md5Utils.getMd5(newPassword, encrypt);
+            Integer userInfoId = (Integer) params.get("id");
+            params.clear();
+            params.put("password", password);
+            params.put("id", userInfoId);
+            mapper.update(params);
+            return new ResultCode(ResultCode.SUCCESS, "密码修改成功, 退出后请用新密码登录");
+        } catch (Exception e) {
+            logger.error("密码修改失败", e);
+        }
+        return new ResultCode(ResultCode.SUCCESS, "密码修改失败");
+    }
+
+    public Result<ModelBeanMap> getPaperHistory(Map params) {
+        try {
+            Integer studentId = (Integer) getFrontUserInfo().get("student_id");
+            params.put("studentId", studentId);
+            return super.pagination(params, StudentQuestionAnswerMapper.class,
+                    StudentQuestionAnswerMapper.GET_STUDENT_ANSWER_PAPER_LIST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Result getStudentErrorQuestionList(Map params) {
+        params.put("studentId", getFrontUserInfo().get("student_id"));
+        return super.pagination(params, StudentQuestionAnswerMapper.class,
+                StudentQuestionAnswerMapper.GET_STUDENT_ERROR_QUESTION_LIST);
+    }
+
+    public Result doLogin(Map params) {
+        String loginName = (String) params.get("userName");
+        ModelBeanMap studentInfoMap = mapper.findByLoginName(loginName);
+        Map resultMap = new HashMap<>();
+        Result result = new Result(ResultCode.SUCCESS, "登录成功");
+        if (ObjectUtils.isEmpty(studentInfoMap)) {
+            result.setCode(ResultCode.FAIL);
+            result.setMessage("用户不存在");
+            return result;
+        } else {
+            if (studentInfoMap.getBoolean("disabled_flag")) {
+                result.setCode(ResultCode.FAIL);
+                result.setMessage("账号已被禁用");
+                return result;
+            }
+            String password = (String) params.get("password");
+            boolean rememberMe = (boolean) params.get("checked"); // 是否记住密码
+            String dataBasePassword = (String) studentInfoMap.get("password");
+            String encrypt = (String) studentInfoMap.get("encrypt");
+            if (dataBasePassword.equals(Md5Utils.getMd5(password, encrypt))) {
+                this.setFrontUserInfoSession(studentInfoMap, rememberMe, resultMap);
+                result.setData(resultMap);
+            } else {
+                result.setCode(ResultCode.FAIL);
+                result.setMessage("用户名或密码错误");
+            }
+            return result;
+        }
+    }
+
+    private String getOrCreateSessionId(boolean rememberMe) {
+        return getOrCreateSessionId(Constants.SESSION_NAME, rememberMe);
+    }
+
+    public String getOrCreateSessionId(String cookieName, boolean rememberMe) {
+        Cookie cookie = RequestUtils.getCookie(cookieName);
+        if (ObjectUtils.isNotEmpty(cookie) && rememberMe) {
+            if (rememberMe) {
+                int maxAge = cookie.getMaxAge();
+                if (maxAge < Constants.SESSION_TIME_OUT) {
+                    RequestUtils.createCookie(cookieName, cookie.getValue(), 0);  // 先删除这个cookie
+                    return this.createNewCookie(cookieName, true); // 然后创建新的同名cookie
+                }
+            }
+            return cookie.getValue();
+        }
+        String sessionId = NumberUtils.getUUID();
+        int timeOut = Constants.DEFAULT_SESSION_TIME_OUT; // 默认会话cookie关闭浏览器时过期
+        if (rememberMe) {
+            timeOut = Constants.SESSION_TIME_OUT;
+        }
+        RequestUtils.createCookie(cookieName, sessionId, timeOut);
+        return sessionId;
+    }
+
+    private String createNewCookie(String cookieName, boolean rememberMe) {
+        String sessionId = NumberUtils.getUUID();
+        int timeOut = Constants.DEFAULT_SESSION_TIME_OUT; // 默认会话cookie关闭浏览器时过期
+        if (rememberMe) {
+            timeOut = Constants.SESSION_TIME_OUT;
+        }
+        RequestUtils.createCookie(cookieName, sessionId, timeOut);
+        return sessionId;
+    }
+
+    public void logout() {
+        FrontUserInfoSession userInfoSession = getFrontUserInfoSession();
+        if (ObjectUtils.isEmpty(userInfoSession)) {
+            return;
+        }
+     //   Integer studentId = (Integer) userInfoSession.getUserInfoMap().get("student_id");
+    //    String studentName = (String) userInfoSession.getUserInfoMap().get("student_name");
+       // onlineUserManager.removeOnlineUser(userInfoSession.getUserId());
+        // 推送模板消息
+     //   BaseTask<Map> studyTemplateMsg = new StudyTemplateMsg(sqlSessionTemplate);
+      /*  studyTemplateMsg.put("studentId", studentId);
+        studyTemplateMsg.put("student_name", studentName);
+        studyTemplateMsg.put("login_status", EnumConstants.LoginStatus.LOGIN_OUT.getValue());
+        studyTemplateMsg.put("templateId", Constants.STUDY_STATUS_TEMPLATE_MESSAGE_ID);
+        taskManager.execute(studyTemplateMsg);*/
+        RequestUtils.clearCookie(Constants.SESSION_NAME);
+        ehcacheBean.remove(Constants.USER_INFO_CACHE, userInfoSession.getSessionId()); // 删除用户缓存
+    }
+
+
+    private void setFrontUserInfoSession(Map userInfoMap, boolean rememberMe, Map resultMap) {
+        FrontUserInfoSession userInfoSession = new FrontUserInfoSession();
+        userInfoSession.setUserInfoMap(userInfoMap);
+        String sessionId = getOrCreateSessionId(rememberMe);
+        userInfoSession.setSessionId(sessionId);
+        ehcacheBean.put(Constants.USER_INFO_CACHE, sessionId, userInfoSession);
+        String token = frontJwtToken.createToken(userInfoMap.get("student_id"), Constants.SESSION_TIME_OUT * 60 * 1000); // 默认缓存5天
+        Map userCacheMap = new HashMap();
+        Integer gradeType = (Integer) userInfoMap.get("grade_type");
+        String gradeName = BaseTask.getGradeName(gradeType); //BaseTask.getGradeName(gradeType);
+        userCacheMap.put("gradeName", gradeName);
+        userCacheMap.put("gradeType", gradeType);
+        userCacheMap.put("school_name", userInfoMap.get("school_name"));
+        userCacheMap.put("sex", userInfoMap.get("sex"));
+        userCacheMap.put("name", userInfoMap.get("student_name"));
+        userCacheMap.put("head_img", userInfoMap.get("head_img"));
+        userCacheMap.put("studentId", userInfoMap.get("student_id"));
+        resultMap.put("code", ResultCode.SUCCESS);
+        resultMap.put("token", token);
+        resultMap.put("sessionId", sessionId);
+        resultMap.put("message", "登录成功");
+        resultMap.put("userInfo", userCacheMap);
+        webSocketMessageService.checkOnlineUser(userInfoSession.getUserId(), EnumConstants.PlatformType.WEB_FRONT);
+        OnlineUser nowOnlineUser = new OnlineUser(userInfoSession.getUserId(), sessionId, EnumConstants.PlatformType.WEB_FRONT);
+        nowOnlineUser.setFrontUserInfoSession(userInfoSession);
+        onlineUserManager.addOnlineUser(userInfoSession.getUserId(), nowOnlineUser);
+        // 更新用户登录信息
+        Map loginLog = new HashMap<>();
+        Date now = new Date();
+        loginLog.put("last_login_time", now);
+        loginLog.put("login_ip", IpUtils.getAddressIp(RequestUtils.getRequest()));
+        int loginCount = (int) userInfoMap.get("login_count");
+        loginLog.put("login_count", ++loginCount);
+        loginLog.put("update_date", now);
+        loginLog.put("id", userInfoMap.get("student_id"));
+        mapper.update(loginLog);
     }
 }
