@@ -40,15 +40,13 @@ Element-UI | 2.13.0
 
 ```lua
 
-- 管理后台前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education
-- 学生端前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education
+- 管理后台前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education-admin-front
+- 学生端前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education-front
 - 
 - education
 - ├── education-admin-api-- 管理后台api模块
 - └── education-common -- 系统公共模块 业务层模块服务注册与发现[8761]
-- ├── education-student-api-- 学生端api模块
-- 	
-
+- ├── education-student-api-- 学生端api模块	
 
 #### 项目运行截图 
 ```
@@ -72,6 +70,8 @@ Element-UI | 2.13.0
 1. 欢迎提交 issue，请写清楚遇到问题的原因，开发环境，复显步骤。
 
 2. 不接受`功能请求`的 issue，功能请求可能会被直接关闭。  
+
+3. 欢迎喜欢研究做开源的小伙伴加入我的团队
 
 3. <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2270033969&site=qq&menu=yes"> 个人QQ: 1913188966</a>
 
