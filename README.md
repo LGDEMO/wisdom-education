@@ -24,26 +24,32 @@ Element-UI | 2.13.0
 
 ### 系统特色
 
-
-- 
 - 支持填空题、综合题、选择题等多种试题类型的录入
 - 支持数学公式的插入同时也支持通过excel 导入试题
 - 支持系统自动评分、教师后台批阅学员试卷
 - 可以将试卷试题导出word或者html,并且支持试题图片导出word
 - 集成了百度地图和百度富文本编辑器
 
+### 项目演示地址
+
+- 管理后台  http://180.76.146.67:8002 （admin 123456）
+- 学生端   http://180.76.146.67:8002 （student 123456）
+
 
 #### 模块说明
 
 ```lua
-管理后台前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education
-学生端前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education
 
-education
-├── education-admin-api-- 管理后台api模块
-└── education-common -- 系统公共模块 业务层模块服务注册与发现[8761]
-├── education-student-api-- 学生端api模块
-	
+- 管理后台前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education
+- 学生端前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education
+- 
+- education
+- ├── education-admin-api-- 管理后台api模块
+- └── education-common -- 系统公共模块 业务层模块服务注册与发现[8761]
+- ├── education-student-api-- 学生端api模块
+- 	
+
+
 #### 项目运行截图 
 ```
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194825_34662cb0_1526010.png "]06ZXGQ[2~7S3_28H5XZD}9.png")
