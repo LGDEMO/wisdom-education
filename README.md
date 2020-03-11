@@ -35,14 +35,28 @@ Element-UI | 2.13.0
 
 #### 模块说明
 
-education
-├── education-admin-api -- 管理后台api模块
-└── education-common -- 系统公共模块 
-├── education-service -- 业务层模块[8888]
-├── education-student-api -- 学生端api模块
+```lua
+管理后台前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education
+学生端前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education
 
-	 
+education
+├── education-admin-api-- 管理后台api模块
+└── education-common -- 系统公共模块 业务层模块服务注册与发现[8761]
+├── education-student-api-- 学生端api模块
+	
+#### 项目运行截图 
 ```
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194825_34662cb0_1526010.png "]06ZXGQ[2~7S3_28H5XZD}9.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194921_bd7bc565_1526010.png "_QG(`5{@F690KF[O$ECXBVU.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194934_9d82c452_1526010.png "0UX7[[}L@8`9QVG~1JZRJ73.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194945_3b2ed607_1526010.png "P67Y6%0X}FR~2$KSG7RZXBO.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194953_0584ae6c_1526010.png "VETIX%NRF8V`)12DI0L[2ZP.png")
+```
+### qq交流群
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195324_02a1b710_1526010.png "temp_qrcode_share_1072042422.png")
+### 赞助
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195343_65d0cb1e_1526010.jpeg "1583927530267.jpg")
+
 #### 提交反馈
 
 1. 欢迎提交 issue，请写清楚遇到问题的原因，开发环境，复显步骤。
