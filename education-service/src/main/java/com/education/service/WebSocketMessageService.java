@@ -1,14 +1,12 @@
 package com.education.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.education.common.base.BaseService;
 import com.education.common.constants.EnumConstants;
 import com.education.common.model.online.OnlineUser;
 import com.education.common.model.online.OnlineUserManager;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.ResultCode;
 import com.education.task.TaskManager;
-import com.education.task.ThreadManager;
 import com.education.webSocket.SystemWebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

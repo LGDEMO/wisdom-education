@@ -6,20 +6,22 @@ import com.education.common.model.AdminUserSession;
 import com.education.common.model.JwtToken;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.model.online.OnlineUser;
+import com.education.common.model.online.OnlineUserManager;
 import com.education.common.utils.IpUtils;
 import com.education.common.utils.RequestUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
+import com.education.service.WebSocketMessageService;
 import com.education.service.system.SystemAdminService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.management.modelmbean.ModelMBean;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -38,6 +40,10 @@ public class LoginController extends ApiController {
     private SystemAdminService systemAdminService;
     @Autowired
     private JwtToken adminJwtToken;
+    @Autowired
+    private WebSocketMessageService webSocketMessageService;
+    @Autowired
+    private OnlineUserManager onlineUserManager;
 
     /**
      * 管理员登录接口
@@ -52,7 +58,7 @@ public class LoginController extends ApiController {
         if (result.isSuccess()) {
             String token = adminJwtToken.createToken(systemAdminService.getUserId(), 24 * 60 * 60 * 1000 * 5); // 默认缓存5天
             AdminUserSession userSession = systemAdminService.getAdminUserSession();
-        //    webSocketMessageService.checkOnlineUser(userSession.getUserId(), EnumConstants.PlatformType.WEB_ADMIN);
+            webSocketMessageService.checkOnlineUser(userSession.getUserId(), EnumConstants.PlatformType.WEB_ADMIN);
             systemAdminService.loadPermission(userSession);
             requestBody.remove("password");
             requestBody.put("token", token);
@@ -80,11 +86,24 @@ public class LoginController extends ApiController {
             String sessionId = session.getId();
             OnlineUser nowOnlineUser = new OnlineUser(userSession.getUserId(), sessionId, EnumConstants.PlatformType.WEB_ADMIN);
             nowOnlineUser.setAdminUserSession(userSession);
-          //  onlineUserManager.addOnlineUser(userId, nowOnlineUser);
+            onlineUserManager.addOnlineUser(userId, nowOnlineUser);
             systemAdminService.saveSystemLog(loginName + "登录系统");
        }
         result.setData(requestBody);
         return result;
+    }
+
+    /**
+     * 系统退出
+     * @return
+     */
+    @PostMapping("logout")
+    @ApiOperation(value="系统退出接口", notes="用户退出接口")
+    public ResultCode logout() {
+        onlineUserManager.removeOnlineUser(systemAdminService.getUserId());
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return new ResultCode(ResultCode.SUCCESS, "退出成功");
     }
 
     @GetMapping("unAuth")

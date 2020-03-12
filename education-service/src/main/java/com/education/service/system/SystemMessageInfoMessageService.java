@@ -1,14 +1,14 @@
 package com.education.service.system;
 
-import com.education.mapper.system.SystemLogMapper;
+import com.education.mapper.system.SystemMessageInfoMapper;
 import com.education.service.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
  * @author zengjintao
  * @version 1.0
- * @create_at 2020/3/8 14:04
+ * @create_at 2020/3/12 14:06
  */
 @Service
-public class SystemLogService extends BaseService<SystemLogMapper> {
+public class SystemMessageInfoMessageService extends BaseService<SystemMessageInfoMapper> {
 }

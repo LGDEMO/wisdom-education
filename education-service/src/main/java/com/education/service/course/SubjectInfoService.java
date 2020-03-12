@@ -1,11 +1,11 @@
 package com.education.service.course;
 
-import com.education.common.base.BaseService;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.ResultCode;
 import com.education.mapper.course.QuestionInfoMapper;
 import com.education.mapper.course.SubjectInfoMapper;
+import com.education.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;

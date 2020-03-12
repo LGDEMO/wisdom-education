@@ -1,7 +1,10 @@
 package com.education.admin.api.controller.system;
 
 import com.education.common.base.ApiController;
+import com.education.common.utils.Result;
+import com.education.service.system.HomeService;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,10 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "首页数据接口")
 public class HomeController extends ApiController {
 
+    @Autowired
+    private HomeService homeService;
+
     @GetMapping
-    public String test() {
-        return "success";
+    public Result test() {
+        return homeService.homeData();
     }
-
-
 }

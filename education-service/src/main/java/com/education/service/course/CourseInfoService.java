@@ -1,7 +1,5 @@
 package com.education.service.course;
 
-import com.education.common.base.BaseService;
-import com.education.common.constants.EnumConstants;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
@@ -11,8 +9,8 @@ import com.education.mapper.course.CourseInfoMapper;
 import com.education.mapper.course.CourseQuestionInfoMapper;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.SubjectInfoMapper;
-import com.jfinal.i18n.Res;
-import org.apache.commons.lang.StringUtils;
+
+import com.education.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,5 +1,6 @@
-package com.education.common.base;
+package com.education.service;
 
+import com.education.common.base.BaseMapper;
 import com.education.common.cache.EhcacheBean;
 import com.education.common.component.SpringBeanManager;
 import com.education.common.constants.Constants;
@@ -10,16 +11,14 @@ import com.education.common.model.FrontUserInfoSession;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.model.PagingBounds;
 import com.education.common.utils.*;
+import com.education.task.TaskManager;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageRowBounds;
-import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -36,6 +35,8 @@ public abstract class BaseService<M extends BaseMapper> {
 
     @Autowired
     protected M mapper;
+    @Autowired
+    protected TaskManager taskManager;
     @Autowired
     protected EhcacheBean ehcacheBean;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());

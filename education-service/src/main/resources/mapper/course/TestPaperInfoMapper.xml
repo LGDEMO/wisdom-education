@@ -47,8 +47,6 @@
         order by paper.sort desc
     </select>
 
-
-
     <select id="findById" resultType="modelBeanMap">
         select * from test_paper_info where id = #{id}
     </select>
@@ -77,5 +75,4 @@
         </choose>
         order by paper.sort desc
     </select>
-
 </mapper>

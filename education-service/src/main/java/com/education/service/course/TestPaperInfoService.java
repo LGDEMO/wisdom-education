@@ -1,6 +1,5 @@
 package com.education.service.course;
 
-import com.education.common.base.BaseService;
 import com.education.common.constants.EnumConstants;
 import com.education.common.constants.MapperPageMethod;
 import com.education.common.exception.BusinessException;
@@ -11,6 +10,7 @@ import com.education.common.utils.*;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.TestPaperInfoMapper;
 import com.education.mapper.course.TestPaperQuestionMapper;
+import com.education.service.BaseService;
 import com.education.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

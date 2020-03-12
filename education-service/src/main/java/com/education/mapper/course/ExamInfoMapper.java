@@ -15,7 +15,7 @@ public interface ExamInfoMapper extends BaseMapper {
 
     String GET_STUDENT_LIST_BY_EXAM_ID = "getStudentListByExamId";
 
-    ModelBeanMap findByPaperId(Integer paperId);
+    ModelBeanMap findByPaperIdAndStudentId(Map params);
 
     List<ModelBeanMap> getStudentListByExamId(Map params);
 }

@@ -1,9 +1,7 @@
 package com.education.service.school;
 
-import com.education.common.base.BaseService;
 import com.education.common.constants.Constants;
 import com.education.common.constants.EnumConstants;
-import com.education.common.constants.MapperPageMethod;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.*;
 import com.education.common.model.online.OnlineUser;
@@ -13,9 +11,11 @@ import com.education.mapper.course.ExamInfoMapper;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.TestPaperInfoMapper;
 import com.education.mapper.school.StudentInfoMapper;
+import com.education.service.BaseService;
 import com.education.service.WebSocketMessageService;
 import com.education.service.course.QuestionInfoService;
 import com.education.task.BaseTask;
+import com.education.task.StudentMessageTask;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -152,15 +152,16 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
     }
 
     @Transactional
-    public Map correctStudentQuestionAnswer(Map params) {
+    public Map correctStudentQuestionAnswer(ModelBeanMap params) {
         try {
             Integer studentId = (Integer) params.get("studentId");
             Integer modeId = (Integer) params.get("modeId");
             Integer testPaperId = (Integer) params.get("testPaperId");
-            List<Map> studentQuestionList = (List<Map>) params.get("studentQuestionList");
+            List<ModelBeanMap> studentQuestionList = params.getModelBeanMapList("studentQuestionList");
             Map data = new HashMap<>();
             int mark = 0;
-            for (Map question : studentQuestionList) {
+            String examName = null;
+            for (ModelBeanMap question : studentQuestionList) {
                 Integer questionType = (Integer) question.get("question_type");
                 if (questionType == EnumConstants.QuestionType.FILL_QUESTION .getValue()
                         || questionType == EnumConstants.QuestionType.CALCULATION_QUESTION.getValue()
@@ -172,18 +173,12 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
                     data.put("mark", question.get("answer_mark"));
                     data.put("question_points", question.get("mark"));
                     data.put("is_right", question.get("is_right"));
-                    Object answerMark = question.get("answer_mark");
-                    // 不知到什么情况，answer_mark 参数值有时候是 int,有时候是String, 没办法，先这样解决下
-                    if (answerMark instanceof String) {
-                        mark += Integer.valueOf((String)question.get("answer_mark"));
-                    } else if (answerMark instanceof Integer) {
-                        mark += (Integer) question.get("answer_mark");
-                    }
+                    mark += question.getInt("answer_mark");
                     data.put("comment", question.get("comment"));
                     data.put("test_paper_info_id", question.get("testPaperId"));
                     studentQuestionAnswerMapper.updateStudentQuestionMark(data);
                 } else {
-                    mark += (Integer) question.get("answer_mark");
+                    mark += question.getInt("answer_mark");
                 }
             }
 
@@ -192,13 +187,12 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
                 data.clear();
                 data.put("testPaperId", testPaperId);
                 data.put("studentId", studentId);
-                Map examInfo = examInfoMapper.findByPaperId(testPaperId); //sqlSessionTemplate.selectOne("exam.info.findByPaperId", data);
+                Map examInfo = examInfoMapper.findByPaperIdAndStudentId(data); //sqlSessionTemplate.selectOne("exam.info.findByPaperId", data);
                 if (ObjectUtils.isNotEmpty(examInfo) && (boolean)examInfo.get("correct_flag")) {
                     params.put("code", ResultCode.FAIL);
                     params.put("message", "该试卷已批改,请勿重复提交");
                     return params;
                 }
-
                 Integer examMark = (Integer) examInfo.get("mark");
                 mark += examMark;
                 data.clear();
@@ -206,29 +200,17 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
                 data.put("mark", mark);
                 data.put("correct_flag", true);
                 examInfoMapper.update(data);
-                // 清除错题本记录
-                Map paperInfo = testPaperInfoMapper.findById(testPaperId); //sqlSessionTemplate.selectOne("test.paper.info.findById", testPaperId);
-                Integer type = (Integer) paperInfo.get("type");
-                if (type == EnumConstants.ExamType.ERROR_EXAM.getValue()) {
-                    // Map question = studentQuestionList.get(0);
-                    // Integer languagePointsId = (Integer) question.get("language_points_id");
-                    if (mark >= Constants.MIN_PASS_MARK) {
-                        // 清除错题
-                        Integer questionInfoId = (Integer) paperInfo.get("error_question_info_id");
-                       // this.clearErrorQuestionByQuestionInfoId(questionInfoId, studentId);
-                        //  this.clearErrorQuestionByLanguagePointsId(languagePointsId);
-                    }
-                }
             }
             // 发送答题成绩分数模板消息
-           /* BaseTask studyTemplateMsg = new StudyTemplateMsg(sqlSessionTemplate);
-            studyTemplateMsg.put("studentId", studentId);
-            studyTemplateMsg.put("modeId", modeId);
+            BaseTask studyTemplateMsg = new StudentMessageTask();
+            studyTemplateMsg.put("student_id", studentId);
             studyTemplateMsg.put("mark", mark);
-            studyTemplateMsg.put("testPaperId", testPaperId);
-            studyTemplateMsg.put("templateId", Constants.STUDY_SOURCE_TEMPLATE_MESSAGE_ID);
-            studyTemplateMsg.put("mark", mark);
-            taskManager.execute(studyTemplateMsg);*/
+            studyTemplateMsg.put("admin_id", getAdminUser().get("id"));
+            ModelBeanMap paperInfo = testPaperInfoMapper.findById(testPaperId);
+            studyTemplateMsg.put("content", "您参加的考试【" + paperInfo.getStr("name") + "】已被管理员" + getAdminUser().get("login_name") + "批改，快去查看吧");
+            studyTemplateMsg.put("create_date", new Date());
+            studyTemplateMsg.put("test_paper_info_id", testPaperId);
+            taskManager.execute(studyTemplateMsg);
             params.put("code", ResultCode.SUCCESS);
             params.put("message", "操作成功, 该学员本次共得到" + mark + "分");
             return params;

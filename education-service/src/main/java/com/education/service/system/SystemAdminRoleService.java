@@ -1,8 +1,8 @@
 package com.education.service.system;
 
-import com.education.common.base.BaseService;
 import com.education.common.model.ModelBeanMap;
 import com.education.mapper.system.SystemAdminRoleMapper;
+import com.education.service.BaseService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

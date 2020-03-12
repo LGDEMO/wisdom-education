@@ -1,6 +1,5 @@
 package com.education.service.system;
 
-import com.education.common.base.BaseService;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.MapTreeUtils;
@@ -8,6 +7,7 @@ import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.mapper.system.SystemMenuMapper;
+import com.education.service.BaseService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

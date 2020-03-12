@@ -15,7 +15,6 @@ public interface TestPaperInfoMapper extends BaseMapper {
 
     String FIND_LIST_BY_SUBJECT_IDS = "findListBySubjectIds";
 
-    List<ModelBeanMap> findByTestPaperInfoId(Integer testPaperInfoId);
 
     List<ModelBeanMap> findListBySubjectIds(Map params);
 

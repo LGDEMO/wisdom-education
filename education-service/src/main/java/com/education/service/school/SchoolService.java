@@ -1,5 +1,4 @@
 package com.education.service.school;
-import com.education.common.base.BaseService;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.Md5Utils;
@@ -9,6 +8,7 @@ import com.education.mapper.school.StudentInfoMapper;
 import com.education.mapper.system.SystemAdminMapper;
 import com.education.mapper.system.SystemAdminRoleMapper;
 import com.education.mapper.system.SystemRoleMapper;
+import com.education.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

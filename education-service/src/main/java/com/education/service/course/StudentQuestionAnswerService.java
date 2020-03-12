@@ -1,6 +1,5 @@
 package com.education.service.course;
 
-import com.education.common.base.BaseService;
 import com.education.common.constants.EnumConstants;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
@@ -8,6 +7,7 @@ import com.education.common.utils.ResultCode;
 import com.education.mapper.course.ExamInfoMapper;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.TestPaperInfoMapper;
+import com.education.service.BaseService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

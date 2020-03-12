@@ -50,13 +50,16 @@
         group by paper.id order by exam.id desc
     </select>
 
-    <select id="findByPaperId" resultType="modelBeanMap">
-        select * from exam_info where student_id = #{studentId} and test_paper_info_id = #{testPaperId} limit 1
+    <select id="findByPaperIdAndStudentId" resultType="modelBeanMap">
+        select exam.*, paper.name paper_name from exam_info exam, test_paper_info paper where
+         exam.test_paper_info_id = paper.id and
+         student_id = #{studentId} and test_paper_info_id = #{testPaperId} limit 1
     </select>
 
     <select id="getStudentListByExamId" resultType="modelBeanMap">
-        select student.id student_id, student.name student_name, student.sex, exam.* from student_info student, exam_info exam
-        where student.id = exam.student_id and exam.test_paper_info_id = #{testPaperId}
+        select subject.name subject_name, student.id student_id, student.name student_name, student.sex, exam.* from student_info student, exam_info exam,
+        subject_info subject
+        where student.id = exam.student_id and subject.id = exam.subject_id and exam.test_paper_info_id = #{testPaperId}
         <if test="orderBy != null and orderBy != ''">
             AND exam.correct_flag = 1 ORDER BY mark DESC
         </if>

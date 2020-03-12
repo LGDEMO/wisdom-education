@@ -68,6 +68,10 @@
         ) order by question_type asc
     </select>
 
+    <select id="findById" resultType="modelBeanMap">
+        select * from test_paper_info where id = #{id}
+    </select>
+
     <update id="updatePaperQuestionMark" parameterType="map">
         update test_paper_question_info set mark = #{mark}
         <include refid="updateCourseQuestionSortOrMark"></include>
