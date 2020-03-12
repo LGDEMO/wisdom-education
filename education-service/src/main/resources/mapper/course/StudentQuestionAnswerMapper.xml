@@ -7,7 +7,7 @@
         user_answer.mark as answer_mark
         from question_info question, student_question_answer user_answer
         where question.id = user_answer.question_info_id
-        and user_answer.student_id = #{studentId} and
+        and user_answer.student_id = #{studentId}
         <if test="courseId != null and courseId != ''">
             and user_answer.course_id = #{courseId}
         </if>

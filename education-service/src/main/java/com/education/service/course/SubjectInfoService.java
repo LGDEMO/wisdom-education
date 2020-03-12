@@ -36,7 +36,7 @@ public class SubjectInfoService extends BaseService<SubjectInfoMapper> {
         return super.deleteById(subjectMap);
     }
 
-    public List<Map> findListByGradeType() {
+    public List<ModelBeanMap> findListByGradeType() {
         Map userInfo = getFrontUserInfo();
         Integer gradeType = (Integer) userInfo.get("grade_type");
         Map params = new HashMap<>();

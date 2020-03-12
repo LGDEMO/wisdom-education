@@ -47,8 +47,35 @@
         order by paper.sort desc
     </select>
 
-    <select id="findById" resultType="map">
+
+
+    <select id="findById" resultType="modelBeanMap">
         select * from test_paper_info where id = #{id}
+    </select>
+
+    <select id="findListBySubjectIds" resultType="modelBeanMap">
+        select paper.*, subject.name as subject_name from test_paper_info paper
+        left join subject_info subject on paper.subject_id = subject.id
+        where paper.id not in (select test_paper_info_id from exam_info where student_id = #{studentId})
+        <if test="gradeType != null and gradeType != ''">
+            and paper.grade_type = #{gradeType}
+        </if>
+
+        <choose>
+            <when test="subjectId != null and subjectId != ''">
+                and paper.subject_id = #{subjectId}
+            </when>
+
+            <otherwise>
+                <if test="subjectIds != null and subjectIds.size() > 0">
+                    and paper.subject_id in
+                    <foreach collection="subjectIds" close=")" open="(" separator="," item="id">
+                        #{id}
+                    </foreach>
+                </if>
+            </otherwise>
+        </choose>
+        order by paper.sort desc
     </select>
 
 </mapper>

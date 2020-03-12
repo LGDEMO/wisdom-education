@@ -233,7 +233,7 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
         Map<Integer, Object> userQuestionAnswerMap = new HashMap<>();
         if (ObjectUtils.isNotEmpty(userQuestionAnswerList)) {
             userQuestionAnswerList.forEach(item -> {
-                String answer = (String) item.get("answer");
+                String userInfoAnswer = (String) item.get("userInfoAnswer");
                 Integer questionInfoId = (Integer) item.get("question_info_id");
                 if (ObjectUtils.isEmpty(questionInfoId)) {
                     questionInfoId = (Integer) item.get("id");
@@ -244,12 +244,13 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
                 userAnswerInfo.setCorrectStatus((Integer) item.get("correct_status"));
                 userAnswerInfo.setComment((String)item.get("comment"));
                 if ((Integer) item.get("question_type") == EnumConstants.QuestionType.MULTIPLE_QUESTION.getValue()) {
-                    if (ObjectUtils.isNotEmpty(answer)) {
-                        String answerArray[] = ObjectUtils.spilt(answer);
+                    String enclosure = item.getStr("enclosure");
+                    if (ObjectUtils.isNotEmpty(enclosure)) {
+                        String answerArray[] = ObjectUtils.spilt(enclosure);
                         userAnswerInfo.setUserAnswer(answerArray);
                     }
                 } else {
-                    userAnswerInfo.setUserAnswer(answer);
+                    userAnswerInfo.setUserAnswer(userInfoAnswer);
                 }
                 String enclosure = (String) item.get("enclosure");
                 if (ObjectUtils.isNotEmpty(enclosure)) {

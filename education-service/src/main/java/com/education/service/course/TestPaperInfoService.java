@@ -181,7 +181,7 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
 
 
     public void parseQuestion(Integer paperInfoId, Map dataMap) {
-        List<ModelBeanMap> questionList = (List<ModelBeanMap>) dataMap.get("data");
+        List<ModelBeanMap> questionList = (List<ModelBeanMap>) dataMap.get("dataList");
         if (ObjectUtils.isNotEmpty(questionList)) {
             // 获取试卷试题
             Map params = new HashMap<>();

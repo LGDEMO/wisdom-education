@@ -38,4 +38,9 @@ public class ExamInfoController extends BaseController {
         }
         return examInfoService.pagination(params);
     }
+
+    @GetMapping("getStudentExamQuestionList")
+    public Result<ModelBeanMap> getStudentExamQuestionList(@RequestParam Map params) {
+        return null;
+    }
 }

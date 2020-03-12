@@ -146,7 +146,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
             }
             return userAnswerQuestionList;
         } catch (Exception e) {
-            logger.error("获取模式试题异常", e);
+            logger.error("获取试卷试题异常", e);
         }
         return null;
     }
