@@ -74,4 +74,34 @@
             )
         </foreach>
     </insert>
+
+
+    <select id="getStudentErrorQuestionList" resultType="modelBeanMap">
+        select question.id, question.question_type, question.subject_id, question.school_type,
+        question.grade_type, question.content, question.answer, question.analysis,
+        question.summarize, question.question_type,
+        question.video_url, question.options, question.question_type, question_answer.question_points,
+        question_answer.mark, question_answer.create_date, question_answer.answer as user_answer,
+        question_answer.enclosure, question_answer.create_date as do_question_time from question_info question,
+        student_question_answer question_answer where question.id = question_answer.question_info_id
+        <if test="subjectId != null and subjectId != ''">
+            and question.subject_id = #{subjectId}
+        </if>
+        and question_answer.correct_status = 0
+        and question_answer.student_id = #{studentId}
+
+        <if test="startTime != null and startTime != ''">
+            and question_answer.create_date &gt;= #{startTime}
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            and question_answer.create_date &lt;= #{startTime}
+        </if>
+
+        <if test="keyWord != null and keyWord != ''">
+            <bind name="searchName" value="'%' + keyWord + '%'"/>
+            and question.content like #{searchName}
+        </if>
+        order by question_answer.id desc
+    </select>
 </mapper>
