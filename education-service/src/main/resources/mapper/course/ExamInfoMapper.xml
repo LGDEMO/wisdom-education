@@ -10,7 +10,7 @@
         values
         <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
             #{value}
-        </foreach>
+        </foreach>getStudentPaperList
     </insert>
 
     <update id="update" parameterType="map">
@@ -27,6 +27,8 @@
         student.sex,
         student.name AS student_name,
         paper.name AS paper_name,
+        paper.correct_number,
+        (paper.exam_number - paper.correct_number) no_correct_number,
         paper.mark paper_mark,
         paper.exam_number from exam_info exam, student_info student, test_paper_info paper, subject_info subject where
         exam.student_id = student.id and exam.test_paper_info_id = paper.id and exam.subject_id = subject.id
@@ -60,6 +62,15 @@
         select subject.name subject_name, student.id student_id, student.name student_name, student.sex, exam.* from student_info student, exam_info exam,
         subject_info subject
         where student.id = exam.student_id and subject.id = exam.subject_id and exam.test_paper_info_id = #{testPaperId}
+        <if test="studentName != null and studentName != ''">
+            <bind name="searchName" value="'%' + studentName + '%'"/>
+            and student.name like #{searchName}
+        </if>
+
+        <if test="correctFlag != null and correctFlag != ''">
+            and exam.correct_flag = #{correctFlag}
+        </if>
+
         <if test="orderBy != null and orderBy != ''">
             AND exam.correct_flag = 1 ORDER BY mark DESC
         </if>

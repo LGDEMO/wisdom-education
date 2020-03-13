@@ -1,7 +1,7 @@
 package com.education.service.course;
 
-import com.education.common.base.BaseService;
 import com.education.mapper.course.ExamInfoMapper;
+import com.education.service.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
