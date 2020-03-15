@@ -1,6 +1,7 @@
 package com.education.common.utils;
 
 import org.apache.commons.codec.binary.Base64;
+import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -129,11 +130,21 @@ public class WordImageConvertor {
 	}
 	
 	
-	private static String generateImageBodyBlockStyleAttr(String imageFilePath, int height,int width){
+	private static String generateImageBodyBlockStyleAttr(String imageFilePath, int height, int width) {
 		InputStream inputStream = null;
 		if (imageFilePath.startsWith("http")) {
 			inputStream = RequestUtils.getInputStreamFromUrl(imageFilePath);
-		} else {
+		} else if (imageFilePath.contains("data:image/")) {
+			BASE64Decoder decoder = new BASE64Decoder();
+			try {
+				imageFilePath = imageFilePath.replaceAll("data:image/png;base64,","");
+				byte[] decoderBytes = decoder.decodeBuffer(imageFilePath);
+				inputStream = new ByteArrayInputStream(decoderBytes);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
 			try {
 				inputStream = new FileInputStream(imageFilePath);
 			} catch (FileNotFoundException e) {
