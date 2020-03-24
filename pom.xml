@@ -33,6 +33,8 @@
     <module>education-service</module>
     <module>education-common</module>
     <module>education-student-api</module>
+      <module>education-mapper</module>
+    <module>education-event</module>
   </modules>
 
   <dependencies>
@@ -60,12 +62,12 @@
       <version>4.8</version>
     </dependency>
 
-    <!--<dependency>
+    <dependency>
         <groupId>io.jboot</groupId>
         <artifactId>jboot</artifactId>
         <version>2.3.2</version>
         <scope>provided</scope>
-    </dependency>-->
+    </dependency>
 
     <dependency>
       <groupId>org.javassist</groupId>

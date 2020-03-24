@@ -80,6 +80,10 @@ public class AppTest
                      FileOutputStream write = new FileOutputStream(new File(path
                                      + imgName));
                      byte[] decoderBytes = decoder.decodeBuffer(base64);
+                     InputStream inputStream = new ByteArrayInputStream(decoderBytes);
+                     BufferedImage sourceImg = ImageIO.read(inputStream);
+                 System.err.println(sourceImg.getHeight());
+                 System.err.println(sourceImg.getWidth());
                      write.write(decoderBytes);
                      write.close();
                  } catch (IOException e) {
@@ -90,7 +94,7 @@ public class AppTest
     public static void main(String[] args) throws IOException {
 
 
-        String baseImg64 ="iVBORw0KGgoAAAANSUhEUgAAADwAAAA1CAYAAAAd84i6AAACTElEQVRoQ+3ZzatNURzG8c81IFEiI4rykkSRZOAfMDCTt6IURSkDeUmRdzcxEJGUlyJzAyYGkjIgE8LES0ZGDDCgEP1q3Trl5pxu7d/t7LtWnU7tvc/e6/t71llrPc8eMMbawBjjVYHbrnhVuCrcsgrUId0yQf/BqQpXhVtWgewhPRGb8AtfsRJX8CarrtnAO/ASjwvgTOzHYXzJgM4EDnUHcQMvClwcO4TreNc24CjubqzCnqL0QmzEaXxvG3DwTMOJAnke33C1fGfwptvDUDkmqi1YgdfYi48ptKQDr8UsXMBUHMUybG7jf3g6zuA4PhRFJ+FcmcQuZqicOUvPK7C78LkDLtblWJ6iGI23TOBYgk7hDh51KHwMNzuWqkahM4GHZumt+IG3ZeK6jyf40yhpuXk2cAbTf59RgUddgoY7kKHwFMSnlxYGolETkQG8BIt7oS376+c9XjuiyzKAR9Sxpn5UgZuqbMd9l2IDXmE5LrU58ZiPs9hXIMMxhVvaiU8JxU53SxEALChBQBj+cEy3cBn32gYce+lwRr9L4hHby6Fj79toHsaXKGfCMMCRYB7Ez6ZVzp6l12A9tpeYdgZul+Qjcq5QvdGWDRyG/yTu4gHWlaEc9jBsYgz3Rls2cMCMw1xMLiofwVO0LvEYTrnZuIYDeNaotKPkh1cjIp5tJamMeGdOCejj9UvjLXtIB1zAPsSi8o4pFE4J4aOa2cCNK9jtARW4W4X6/XxVuN8V7Nb/qnC3CvX7+apwvyvYrf9V4W4V6vfzY07hv0NjWjYc8NWrAAAAAElFTkSuQmCC".replaceAll("data:image/png;base64,","");/*截取图片字符....xyz*/
+        String baseImg64 ="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA1CAYAAAAd84i6AAACTElEQVRoQ+3ZzatNURzG8c81IFEiI4rykkSRZOAfMDCTt6IURSkDeUmRdzcxEJGUlyJzAyYGkjIgE8LES0ZGDDCgEP1q3Trl5pxu7d/t7LtWnU7tvc/e6/t71llrPc8eMMbawBjjVYHbrnhVuCrcsgrUId0yQf/BqQpXhVtWgewhPRGb8AtfsRJX8CarrtnAO/ASjwvgTOzHYXzJgM4EDnUHcQMvClwcO4TreNc24CjubqzCnqL0QmzEaXxvG3DwTMOJAnke33C1fGfwptvDUDkmqi1YgdfYi48ptKQDr8UsXMBUHMUybG7jf3g6zuA4PhRFJ+FcmcQuZqicOUvPK7C78LkDLtblWJ6iGI23TOBYgk7hDh51KHwMNzuWqkahM4GHZumt+IG3ZeK6jyf40yhpuXk2cAbTf59RgUddgoY7kKHwFMSnlxYGolETkQG8BIt7oS376+c9XjuiyzKAR9Sxpn5UgZuqbMd9l2IDXmE5LrU58ZiPs9hXIMMxhVvaiU8JxU53SxEALChBQBj+cEy3cBn32gYce+lwRr9L4hHby6Fj79toHsaXKGfCMMCRYB7Ez6ZVzp6l12A9tpeYdgZul+Qjcq5QvdGWDRyG/yTu4gHWlaEc9jBsYgz3Rls2cMCMw1xMLiofwVO0LvEYTrnZuIYDeNaotKPkh1cjIp5tJamMeGdOCejj9UvjLXtIB1zAPsSi8o4pFE4J4aOa2cCNK9jtARW4W4X6/XxVuN8V7Nb/qnC3CvX7+apwvyvYrf9V4W4V6vfzY07hv0NjWjYc8NWrAAAAAElFTkSuQmCC".replaceAll("data:image/png;base64,","");/*截取图片字符....xyz*/
 
         decodeBase64ToImage(baseImg64, "D:\\", "test.png");
 

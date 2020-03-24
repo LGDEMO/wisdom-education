@@ -1,21 +1,22 @@
 package com.education.service.course;
 
-import com.education.common.exception.BusinessException;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.Result;
-import com.education.common.utils.ResultCode;
-import com.education.mapper.course.CourseInfoMapper;
-import com.education.mapper.course.CourseQuestionInfoMapper;
-import com.education.mapper.course.StudentQuestionAnswerMapper;
-import com.education.mapper.course.SubjectInfoMapper;
-
-import com.education.service.BaseService;
+import com.education.mapper.common.exception.BusinessException;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.Result;
+import com.education.mapper.common.utils.ResultCode;
+import com.education.mapper.mapper.course.CourseInfoMapper;
+import com.education.mapper.mapper.course.CourseQuestionInfoMapper;
+import com.education.mapper.mapper.course.StudentQuestionAnswerMapper;
+import com.education.mapper.mapper.course.SubjectInfoMapper;
+import com.education.mapper.service1.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zengjintao

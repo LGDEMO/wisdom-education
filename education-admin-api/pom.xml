@@ -31,15 +31,17 @@
             <version>${service.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
-      <!--  <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>3.2.0</version>
-        </dependency>-->
+        <dependency>
+            <groupId>com.education.mapper</groupId>
+            <artifactId>education-mapper</artifactId>
+            <version>${service.version}</version>
+        </dependency>
 
-
-
+        <dependency>
+            <groupId>com.education.event</groupId>
+            <artifactId>education-event</artifactId>
+            <version>${service.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

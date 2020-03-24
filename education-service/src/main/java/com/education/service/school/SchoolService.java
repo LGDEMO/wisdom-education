@@ -1,8 +1,10 @@
 package com.education.service.school;
-import com.education.common.exception.BusinessException;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.Md5Utils;
-import com.education.common.utils.ResultCode;
+
+import com.education.mapper.common.exception.BusinessException;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.Md5Utils;
+import com.education.mapper.common.utils.ResultCode;
+
 import com.education.mapper.school.SchoolInfoMapper;
 import com.education.mapper.school.StudentInfoMapper;
 import com.education.mapper.system.SystemAdminMapper;
@@ -11,10 +13,13 @@ import com.education.mapper.system.SystemRoleMapper;
 import com.education.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 学校管理业务层
@@ -35,6 +40,8 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
     private SystemRoleMapper systemRoleMapper;
     @Autowired
     private SystemAdminRoleMapper systemAdminRoleMapper;
+    @Value("${lbs.key}")
+    private String lbsKey;
 
     @Transactional
     @Override
@@ -44,12 +51,16 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
             if (updateFlag) {
                 checkParams(schoolMap);
                 message = "修改";
-                super.update(schoolMap);
+                Integer result = super.update(schoolMap);
+                if (result > 0) {
+                    this.updateSchoolAddress(schoolMap.getInt("id"), schoolMap.getStr("lat"), schoolMap.getStr("lng"));
+                }
             } else {
                 Date now = new Date();
                 schoolMap.put("create_date", now);
                 schoolMap.put("update_date", now);
                 Integer schoolId = super.save(schoolMap);
+                this.updateSchoolAddress(schoolMap.getInt("id"), schoolMap.getStr("lat"), schoolMap.getStr("lng"));
                 message = "添加";
                 schoolMap.put("schoolId", schoolId);
                 createPrincipalAccount(schoolMap);
@@ -59,6 +70,15 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
             log.error(message + "学校失败", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, message + "学校失败"));
         }
+    }
+
+    private void updateSchoolAddress(Integer schoolId, String lat, String lng) {
+       /* BaseTask baseTask = new PositionTask(mapper);
+        baseTask.put("id", schoolId);
+        baseTask.put("lat", lat);
+        baseTask.put("key", lbsKey);
+        baseTask.put("lng", lng);
+        taskManager.execute(baseTask);*/
     }
 
     @Transactional

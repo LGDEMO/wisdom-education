@@ -36,6 +36,12 @@
             <groupId>com.education.common</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <artifactId>education-mapper</artifactId>
+            <groupId>com.education.mapper</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

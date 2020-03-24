@@ -1,16 +1,18 @@
 package com.education.admin.api.controller;
 
-import com.education.common.base.ApiController;
-import com.education.common.constants.EnumConstants;
-import com.education.common.model.AdminUserSession;
-import com.education.common.model.JwtToken;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.model.online.OnlineUser;
-import com.education.common.model.online.OnlineUserManager;
-import com.education.common.utils.IpUtils;
-import com.education.common.utils.RequestUtils;
-import com.education.common.utils.Result;
-import com.education.common.utils.ResultCode;
+import com.education.mapper.common.annotation.SystemLog;
+import com.education.mapper.common.base.ApiController;
+import com.education.mapper.common.constants.EnumConstants;
+import com.education.mapper.common.model.AdminUserSession;
+import com.education.mapper.common.model.JwtToken;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.model.online.OnlineUser;
+import com.education.mapper.common.model.online.OnlineUserManager;
+import com.education.mapper.common.utils.IpUtils;
+import com.education.mapper.common.utils.RequestUtils;
+import com.education.mapper.common.utils.Result;
+import com.education.mapper.common.utils.ResultCode;
+
 import com.education.service.WebSocketMessageService;
 import com.education.service.system.SystemAdminService;
 import io.swagger.annotations.Api;
@@ -51,6 +53,7 @@ public class LoginController extends ApiController {
      * @return
      */
     @PostMapping("/login")
+    @SystemLog(describe = "登录管理系统")
     public Result login(@RequestBody ModelBeanMap requestBody, HttpSession session) {
         String loginName = requestBody.getStr("userName");
         String password = requestBody.getStr("password");
@@ -99,6 +102,7 @@ public class LoginController extends ApiController {
      */
     @PostMapping("logout")
     @ApiOperation(value="系统退出接口", notes="用户退出接口")
+    @SystemLog(describe = "退出管理系统")
     public ResultCode logout() {
         onlineUserManager.removeOnlineUser(systemAdminService.getUserId());
         Subject subject = SecurityUtils.getSubject();

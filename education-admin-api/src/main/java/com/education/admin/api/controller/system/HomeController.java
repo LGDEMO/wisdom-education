@@ -1,7 +1,7 @@
 package com.education.admin.api.controller.system;
 
-import com.education.common.base.ApiController;
-import com.education.common.utils.Result;
+import com.education.mapper.common.base.ApiController;
+import com.education.mapper.common.utils.Result;
 import com.education.service.system.HomeService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;

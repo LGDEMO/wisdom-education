@@ -46,6 +46,7 @@ public class ShiroConfiguration {
 		shiroFilterFactoryBean.setLoginUrl("/system/unAuth");
 		Map<String, String> filterChainDefinitionMap = new HashMap<>();
 		// swagger-ui 配置
+		filterChainDefinitionMap.put("/redis", "anon");
 		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
 		filterChainDefinitionMap.put("/MP_verify_W2WeDnp77xFcTDlk.txt", "anon");
 		filterChainDefinitionMap.put("/swagger-resources", "anon");

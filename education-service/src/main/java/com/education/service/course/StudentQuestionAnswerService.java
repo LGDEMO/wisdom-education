@@ -1,13 +1,13 @@
 package com.education.service.course;
 
-import com.education.common.constants.EnumConstants;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.ResultCode;
-import com.education.mapper.course.ExamInfoMapper;
-import com.education.mapper.course.StudentQuestionAnswerMapper;
-import com.education.mapper.course.TestPaperInfoMapper;
-import com.education.service.BaseService;
+import com.education.mapper.common.constants.EnumConstants;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.ResultCode;
+import com.education.mapper.mapper.course.ExamInfoMapper;
+import com.education.mapper.mapper.course.StudentQuestionAnswerMapper;
+import com.education.mapper.mapper.course.TestPaperInfoMapper;
+import com.education.mapper.service1.BaseService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

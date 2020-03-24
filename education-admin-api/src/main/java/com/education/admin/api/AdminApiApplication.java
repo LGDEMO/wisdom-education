@@ -1,7 +1,7 @@
 package com.education.admin.api;
 
 import com.baidu.ueditor.ConfigManager;
-import com.education.common.utils.FileUtils;
+import com.education.mapper.common.utils.FileUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,10 +18,10 @@ import org.springframework.core.env.Environment;
    {
        "com.education.admin.api",
        "com.education.common",
-       "com.education.service",
-       "com.education.init",
+           "com.education.service"
+       /*"com.education.init",
        "com.education.task",
-       "com.education.webSocket"
+       "com.education.webSocket"*/
    }
 )
 @MapperScan("com.education.mapper")

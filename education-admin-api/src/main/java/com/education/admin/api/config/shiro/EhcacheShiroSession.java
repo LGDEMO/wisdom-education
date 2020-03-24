@@ -1,7 +1,7 @@
 package com.education.admin.api.config.shiro;
 
-import com.education.common.cache.EhcacheBean;
-import com.education.common.utils.ObjectUtils;
+import com.education.mapper.common.cache.EhcacheBean;
+import com.education.mapper.common.utils.ObjectUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;

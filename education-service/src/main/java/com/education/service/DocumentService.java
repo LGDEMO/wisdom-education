@@ -1,15 +1,15 @@
 package com.education.service;
 
-import com.education.common.model.ModelBeanMap;
-import com.education.common.template.BaseTemplate;
-import com.education.common.template.FreeMarkerTemplate;
-import com.education.common.utils.FileUtils;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.ResultCode;
-import com.education.common.utils.SpellUtils;
-import com.education.mapper.course.CourseInfoMapper;
-import com.education.mapper.course.CourseQuestionInfoMapper;
-import com.education.service.course.QuestionInfoService;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.template.BaseTemplate;
+import com.education.mapper.common.template.FreeMarkerTemplate;
+import com.education.mapper.common.utils.FileUtils;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.ResultCode;
+import com.education.mapper.common.utils.SpellUtils;
+import com.education.mapper.mapper.course.CourseInfoMapper;
+import com.education.mapper.mapper.course.CourseQuestionInfoMapper;
+import com.education.mapper.service1.course.QuestionInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

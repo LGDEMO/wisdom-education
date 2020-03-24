@@ -1,20 +1,21 @@
 package com.education.service.course;
 
-import com.education.common.constants.EnumConstants;
-import com.education.common.constants.MapperPageMethod;
-import com.education.common.exception.BusinessException;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.template.BaseTemplate;
-import com.education.common.template.FreeMarkerTemplate;
-import com.education.common.utils.*;
-import com.education.mapper.course.StudentQuestionAnswerMapper;
-import com.education.mapper.course.TestPaperInfoMapper;
-import com.education.mapper.course.TestPaperQuestionMapper;
-import com.education.service.BaseService;
-import com.education.service.DocumentService;
+import com.education.mapper.common.constants.EnumConstants;
+import com.education.mapper.common.constants.MapperPageMethod;
+import com.education.mapper.common.exception.BusinessException;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.template.BaseTemplate;
+import com.education.mapper.common.template.FreeMarkerTemplate;
+import com.education.mapper.common.utils.*;
+import com.education.mapper.mapper.course.StudentQuestionAnswerMapper;
+import com.education.mapper.mapper.course.TestPaperInfoMapper;
+import com.education.mapper.mapper.course.TestPaperQuestionMapper;
+import com.education.mapper.service1.BaseService;
+import com.education.mapper.service1.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
 
-    private static final String TEST_PAPER_TEMPLATE = "temp.ftl";
+    private static final String TEST_PAPER_TEMPLATE = "paper.ftl";
 
     @Autowired
     private DocumentService documentService;

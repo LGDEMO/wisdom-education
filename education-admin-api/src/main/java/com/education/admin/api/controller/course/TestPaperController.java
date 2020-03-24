@@ -1,10 +1,10 @@
 package com.education.admin.api.controller.course;
 
-import com.education.common.base.BaseController;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.Result;
-import com.education.common.utils.ResultCode;
+import com.education.mapper.common.base.BaseController;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.Result;
+import com.education.mapper.common.utils.ResultCode;
 import com.education.service.course.TestPaperInfoService;
 import io.swagger.annotations.ApiParam;
 import org.apache.shiro.authz.annotation.Logical;

@@ -1,11 +1,12 @@
 package com.education.service.course;
 
-import com.education.common.exception.BusinessException;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.ResultCode;
-import com.education.mapper.course.CourseQuestionInfoMapper;
-import com.education.service.BaseService;
+import com.education.mapper.common.exception.BusinessException;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.ResultCode;
+import com.education.mapper.mapper.course.CourseQuestionInfoMapper;
+import com.education.mapper.service1.BaseService;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

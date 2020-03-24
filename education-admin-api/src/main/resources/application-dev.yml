@@ -44,6 +44,14 @@ weChat:
 ## 文件上传根路径
 file:
   uploadPath: E:\\uploads\\
+lbs:
+  key: MYOBZ-OOEW3-KYC3G-YWDXA-DMQJ6-SPBMH
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
 
 mybatis:
   mapper-locations: mapper/**/*.xml

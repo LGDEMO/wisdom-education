@@ -1,12 +1,12 @@
 package com.education.service.school;
 
-import com.education.common.constants.Constants;
-import com.education.common.constants.EnumConstants;
-import com.education.common.exception.BusinessException;
-import com.education.common.model.*;
-import com.education.common.model.online.OnlineUser;
-import com.education.common.model.online.OnlineUserManager;
-import com.education.common.utils.*;
+import com.education.mapper.common.constants.Constants;
+import com.education.mapper.common.constants.EnumConstants;
+import com.education.mapper.common.exception.BusinessException;
+import com.education.mapper.common.model.*;
+import com.education.mapper.common.model.online.OnlineUser;
+import com.education.mapper.common.model.online.OnlineUserManager;
+import com.education.mapper.common.utils.*;
 import com.education.mapper.course.ExamInfoMapper;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.TestPaperInfoMapper;
@@ -14,8 +14,6 @@ import com.education.mapper.school.StudentInfoMapper;
 import com.education.service.BaseService;
 import com.education.service.WebSocketMessageService;
 import com.education.service.course.QuestionInfoService;
-import com.education.task.BaseTask;
-import com.education.task.StudentMessageTask;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

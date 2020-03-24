@@ -1,8 +1,8 @@
 package com.education.service.system;
 
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.ResultCode;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.ResultCode;
 import com.education.mapper.system.SystemMenuMapper;
 import com.education.mapper.system.SystemRoleMenuMapper;
 import com.education.service.BaseService;

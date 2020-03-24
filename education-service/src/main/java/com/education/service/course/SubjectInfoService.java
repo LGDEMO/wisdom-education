@@ -1,13 +1,14 @@
 package com.education.service.course;
 
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.ResultCode;
-import com.education.mapper.course.QuestionInfoMapper;
-import com.education.mapper.course.SubjectInfoMapper;
-import com.education.service.BaseService;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.ResultCode;
+import com.education.mapper.mapper.course.QuestionInfoMapper;
+import com.education.mapper.mapper.course.SubjectInfoMapper;
+import com.education.mapper.service1.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

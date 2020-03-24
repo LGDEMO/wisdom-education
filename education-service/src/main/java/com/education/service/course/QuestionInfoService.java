@@ -1,20 +1,20 @@
 package com.education.service.course;
 
 
-import com.education.common.constants.EnumConstants;
-import com.education.common.exception.BusinessException;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.model.QuestionInfo;
-import com.education.common.model.UserAnswerInfo;
-import com.education.common.utils.NumberUtils;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.ResultCode;
-import com.education.common.utils.RichHtmlHandler;
-import com.education.mapper.course.CourseQuestionInfoMapper;
-import com.education.mapper.course.QuestionInfoMapper;
-import com.education.mapper.course.StudentQuestionAnswerMapper;
-import com.education.mapper.course.TestPaperQuestionMapper;
-import com.education.service.BaseService;
+import com.education.mapper.common.constants.EnumConstants;
+import com.education.mapper.common.exception.BusinessException;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.model.QuestionInfo;
+import com.education.mapper.common.model.UserAnswerInfo;
+import com.education.mapper.common.utils.NumberUtils;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.ResultCode;
+import com.education.mapper.common.utils.RichHtmlHandler;
+import com.education.mapper.mapper.course.CourseQuestionInfoMapper;
+import com.education.mapper.mapper.course.QuestionInfoMapper;
+import com.education.mapper.mapper.course.StudentQuestionAnswerMapper;
+import com.education.mapper.mapper.course.TestPaperQuestionMapper;
+import com.education.mapper.service1.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,11 @@
 package com.education.admin.api.controller.course;
 
-import com.education.common.base.BaseController;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.Result;
-import com.education.common.utils.ResultCode;
+import com.education.mapper.common.annotation.SystemLog;
+import com.education.mapper.common.base.BaseController;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.Result;
+import com.education.mapper.common.utils.ResultCode;
 import com.education.service.course.SubjectInfoService;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -30,6 +31,7 @@ public class SubjectController extends BaseController {
 
     @GetMapping({"", "list"})
     @RequiresPermissions("system:subject:list")
+    @SystemLog(describe = "获取科目列表")
     public Result<ModelBeanMap> list(@RequestParam Map params) {
         return subjectInfoService.pagination(params);
     }

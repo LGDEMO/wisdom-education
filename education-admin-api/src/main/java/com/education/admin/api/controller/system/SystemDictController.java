@@ -1,7 +1,9 @@
 package com.education.admin.api.controller.system;
 
-import com.education.common.base.BaseController;
-import com.education.common.utils.Result;
+import com.education.mapper.common.base.BaseController;
+import com.education.mapper.common.utils.Result;
+
+import com.education.mapper.system.SystemDictMapper;
 import com.education.service.system.SystemDictService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +30,10 @@ public class SystemDictController extends BaseController {
     @GetMapping
     public Result list(@RequestParam Map params) {
         return systemDictService.pagination(params);
+    }
+
+    @GetMapping("listGroup")
+    public Result listGroup(@RequestParam Map params) {
+        return systemDictService.pagination(params, SystemDictMapper.class, SystemDictMapper.LIST_GROUP);
     }
 }

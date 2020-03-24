@@ -1,19 +1,19 @@
 package com.education.service;
 
-import com.education.common.base.BaseMapper;
-import com.education.common.cache.EhcacheBean;
-import com.education.common.component.SpringBeanManager;
-import com.education.common.constants.Constants;
-import com.education.common.constants.EnumConstants;
-import com.education.common.exception.BusinessException;
-import com.education.common.model.AdminUserSession;
-import com.education.common.model.FrontUserInfoSession;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.model.PagingBounds;
-import com.education.common.utils.*;
-import com.education.task.TaskManager;
+import com.education.mapper.common.base.BaseMapper;
+import com.education.mapper.common.cache.EhcacheBean;
+import com.education.mapper.common.component.SpringBeanManager;
+import com.education.mapper.common.constants.Constants;
+import com.education.mapper.common.constants.EnumConstants;
+import com.education.mapper.common.exception.BusinessException;
+import com.education.mapper.common.model.AdminUserSession;
+import com.education.mapper.common.model.FrontUserInfoSession;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.*;
+import com.education.service.task.TaskManager;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -52,22 +52,19 @@ public abstract class BaseService<M extends BaseMapper> {
        return pagination(params, null, DEFAULT_MAPPER_PAGE_METHOD_NAME);
     }
 
-    private PagingBounds getPagingBounds(Map params) {
-        PagingBounds pagingBounds = new PagingBounds();
-        if (ObjectUtils.isNotEmpty(params.get("offset"))) {
-            pagingBounds.setOffset(Integer.valueOf((String) params.get("offset")));
-        }
-        if (ObjectUtils.isNotEmpty(params.get("limit"))) {
-            pagingBounds.setOffset(Integer.valueOf((String) params.get("limit")));
-        }
-        return pagingBounds;
-    }
-
     public Result<ModelBeanMap> pagination(Map params, Class<? extends BaseMapper> mapperClass, String mapperMethod) {
         Result result = null;
         try {
-            PagingBounds pagingBounds = getPagingBounds(params);
-            Page<ModelBeanMap> page = PageHelper.offsetPage(pagingBounds.getOffset(), pagingBounds.getLimit());
+            Integer offset = RowBounds.NO_ROW_OFFSET;
+            Integer limit = RowBounds.NO_ROW_LIMIT;
+            if (ObjectUtils.isNotEmpty(params.get("offset"))) {
+                offset = Integer.valueOf((String) params.get("offset"));
+            }
+
+            if (ObjectUtils.isNotEmpty(params.get("limit"))) {
+                limit = Integer.valueOf((String) params.get("limit"));
+            }
+            Page<ModelBeanMap> page = PageHelper.offsetPage(offset, limit);
             Object pageResult = null;
             if (ObjectUtils.isEmpty(mapperClass)) {
                 pageResult = mapper.queryList(params);

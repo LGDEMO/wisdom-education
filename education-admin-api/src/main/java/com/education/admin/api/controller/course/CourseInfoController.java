@@ -1,15 +1,16 @@
 package com.education.admin.api.controller.course;
 
-import com.education.common.annotation.Param;
-import com.education.common.annotation.ParamsType;
-import com.education.common.annotation.ParamsValidate;
-import com.education.common.base.BaseController;
-import com.education.common.constants.MapperPageMethod;
-import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.Result;
-import com.education.common.utils.ResultCode;
-import com.education.mapper.course.CourseQuestionInfoMapper;
+import com.education.mapper.common.annotation.Param;
+import com.education.mapper.common.annotation.ParamsType;
+import com.education.mapper.common.annotation.ParamsValidate;
+import com.education.mapper.common.annotation.SystemLog;
+import com.education.mapper.common.base.BaseController;
+import com.education.mapper.common.constants.MapperPageMethod;
+import com.education.mapper.common.model.ModelBeanMap;
+import com.education.mapper.common.utils.ObjectUtils;
+import com.education.mapper.common.utils.Result;
+import com.education.mapper.common.utils.ResultCode;
+;
 import com.education.service.course.CourseInfoService;
 import com.education.service.course.CourseQuestionService;
 import io.swagger.annotations.Api;
@@ -40,6 +41,7 @@ public class CourseInfoController extends BaseController {
     @GetMapping("list")
     @RequiresPermissions("system:course:list")
     @ApiOperation(value = "课程管理列表接口")
+    @SystemLog(describe = "获取课程列表")
     public Result courseTreeList(@RequestParam Map params) {
         return courseService.pagination(params);
     }
@@ -54,6 +56,7 @@ public class CourseInfoController extends BaseController {
         @Param(name = "subject_id", message = "请选择科目")
     }, paramsType= ParamsType.JSON_DATA)
     @ApiOperation("课程添加修改接口")
+    @SystemLog(describe = "添加或修改课程")
     public ResultCode saveOrUpdate(@RequestBody ModelBeanMap courseInfoMap) {
         Integer id = courseInfoMap.getInt("id");
         boolean updateFlag = false;
@@ -72,6 +75,7 @@ public class CourseInfoController extends BaseController {
     @DeleteMapping
     @RequiresPermissions("system:course:deleteById")
     @ApiOperation("删除课程接口")
+    @SystemLog(describe = "删除课程")
     public ResultCode deleteById(@RequestBody ModelBeanMap modelBeanMap) {
         return courseService.deleteById(modelBeanMap);
     }
