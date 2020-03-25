@@ -1,17 +1,17 @@
 package com.education.admin.api.controller;
 
-import com.education.mapper.common.annotation.SystemLog;
-import com.education.mapper.common.base.ApiController;
-import com.education.mapper.common.constants.EnumConstants;
-import com.education.mapper.common.model.AdminUserSession;
-import com.education.mapper.common.model.JwtToken;
-import com.education.mapper.common.model.ModelBeanMap;
-import com.education.mapper.common.model.online.OnlineUser;
-import com.education.mapper.common.model.online.OnlineUserManager;
-import com.education.mapper.common.utils.IpUtils;
-import com.education.mapper.common.utils.RequestUtils;
-import com.education.mapper.common.utils.Result;
-import com.education.mapper.common.utils.ResultCode;
+import com.education.common.annotation.SystemLog;
+import com.education.common.base.ApiController;
+import com.education.common.constants.EnumConstants;
+import com.education.common.model.AdminUserSession;
+import com.education.common.model.JwtToken;
+import com.education.common.model.ModelBeanMap;
+import com.education.common.model.online.OnlineUser;
+import com.education.common.model.online.OnlineUserManager;
+import com.education.common.utils.IpUtils;
+import com.education.common.utils.RequestUtils;
+import com.education.common.utils.Result;
+import com.education.common.utils.ResultCode;
 
 import com.education.service.WebSocketMessageService;
 import com.education.service.system.SystemAdminService;
@@ -90,7 +90,7 @@ public class LoginController extends ApiController {
             OnlineUser nowOnlineUser = new OnlineUser(userSession.getUserId(), sessionId, EnumConstants.PlatformType.WEB_ADMIN);
             nowOnlineUser.setAdminUserSession(userSession);
             onlineUserManager.addOnlineUser(userId, nowOnlineUser);
-            systemAdminService.saveSystemLog(loginName + "登录系统");
+          //  systemAdminService.saveSystemLog(loginName + "登录系统");
        }
         result.setData(requestBody);
         return result;

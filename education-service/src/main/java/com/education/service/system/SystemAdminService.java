@@ -1,12 +1,12 @@
 package com.education.service.system;
 
-import com.education.mapper.common.constants.EnumConstants;
-import com.education.mapper.common.model.AdminUserSession;
-import com.education.mapper.common.model.ModelBeanMap;
-import com.education.mapper.common.utils.Md5Utils;
-import com.education.mapper.common.utils.ObjectUtils;
-import com.education.mapper.common.utils.Result;
-import com.education.mapper.common.utils.ResultCode;
+import com.education.common.constants.EnumConstants;
+import com.education.common.model.AdminUserSession;
+import com.education.common.model.ModelBeanMap;
+import com.education.common.utils.Md5Utils;
+import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.Result;
+import com.education.common.utils.ResultCode;
 
 import com.education.mapper.system.SystemAdminMapper;
 import com.education.mapper.system.SystemAdminRoleMapper;

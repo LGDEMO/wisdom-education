@@ -1,6 +1,6 @@
 package com.education.mapper.school;
 
-import com.education.mapper.common.base.BaseMapper;
+import com.education.common.base.BaseMapper;
 
 /**
  * @author zengjintao

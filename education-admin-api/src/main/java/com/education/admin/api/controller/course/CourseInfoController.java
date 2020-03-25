@@ -1,16 +1,17 @@
 package com.education.admin.api.controller.course;
 
-import com.education.mapper.common.annotation.Param;
-import com.education.mapper.common.annotation.ParamsType;
-import com.education.mapper.common.annotation.ParamsValidate;
-import com.education.mapper.common.annotation.SystemLog;
-import com.education.mapper.common.base.BaseController;
-import com.education.mapper.common.constants.MapperPageMethod;
-import com.education.mapper.common.model.ModelBeanMap;
-import com.education.mapper.common.utils.ObjectUtils;
-import com.education.mapper.common.utils.Result;
-import com.education.mapper.common.utils.ResultCode;
+import com.education.common.annotation.Param;
+import com.education.common.annotation.ParamsType;
+import com.education.common.annotation.ParamsValidate;
+import com.education.common.annotation.SystemLog;
+import com.education.common.base.BaseController;
+import com.education.common.constants.MapperPageMethod;
+import com.education.common.model.ModelBeanMap;
+import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.Result;
+import com.education.common.utils.ResultCode;
 ;
+import com.education.mapper.course.CourseQuestionInfoMapper;
 import com.education.service.course.CourseInfoService;
 import com.education.service.course.CourseQuestionService;
 import io.swagger.annotations.Api;

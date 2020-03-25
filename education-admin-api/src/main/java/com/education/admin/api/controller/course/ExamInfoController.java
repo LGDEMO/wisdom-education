@@ -1,9 +1,9 @@
 package com.education.admin.api.controller.course;
 
-import com.education.mapper.common.base.BaseController;
-import com.education.mapper.common.model.AdminUserSession;
-import com.education.mapper.common.model.ModelBeanMap;
-import com.education.mapper.common.utils.Result;
+import com.education.common.base.BaseController;
+import com.education.common.model.AdminUserSession;
+import com.education.common.model.ModelBeanMap;
+import com.education.common.utils.Result;
 import com.education.service.course.ExamInfoService;
 import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

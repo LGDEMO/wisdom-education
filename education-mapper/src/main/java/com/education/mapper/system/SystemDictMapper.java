@@ -1,6 +1,6 @@
 package com.education.mapper.system;
 
-import com.education.mapper.common.base.BaseMapper;
+import com.education.common.base.BaseMapper;
 
 import java.util.List;
 import java.util.Map;

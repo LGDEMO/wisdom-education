@@ -1,12 +1,12 @@
 package com.education.admin.api.controller.system;
 
-import com.education.mapper.common.annotation.Param;
-import com.education.mapper.common.annotation.ParamsType;
-import com.education.mapper.common.annotation.ParamsValidate;
-import com.education.mapper.common.base.ApiController;
-import com.education.mapper.common.model.ModelBeanMap;
-import com.education.mapper.common.utils.Result;
-import com.education.mapper.common.utils.ResultCode;
+import com.education.common.annotation.Param;
+import com.education.common.annotation.ParamsType;
+import com.education.common.annotation.ParamsValidate;
+import com.education.common.base.ApiController;
+import com.education.common.model.ModelBeanMap;
+import com.education.common.utils.Result;
+import com.education.common.utils.ResultCode;
 import com.education.service.system.SystemAdminService;
 import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.Logical;

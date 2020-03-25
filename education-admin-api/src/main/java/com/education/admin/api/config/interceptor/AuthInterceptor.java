@@ -3,8 +3,8 @@
  */
 package com.education.admin.api.config.interceptor;
 
-import com.education.mapper.common.interceptor.BaseInterceptor;
-import com.education.mapper.common.model.JwtToken;
+import com.education.common.interceptor.BaseInterceptor;
+import com.education.common.model.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

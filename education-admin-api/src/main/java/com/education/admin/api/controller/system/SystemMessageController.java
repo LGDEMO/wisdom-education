@@ -1,7 +1,7 @@
 package com.education.admin.api.controller.system;
 
-import com.education.mapper.common.base.BaseController;
-import com.education.mapper.common.utils.Result;
+import com.education.common.base.BaseController;
+import com.education.common.utils.Result;
 import com.education.service.system.SystemMessageInfoMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

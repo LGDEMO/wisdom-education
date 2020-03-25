@@ -1,9 +1,11 @@
 package com.education.service.school;
 
-import com.education.mapper.common.exception.BusinessException;
-import com.education.mapper.common.model.ModelBeanMap;
-import com.education.mapper.common.utils.Md5Utils;
-import com.education.mapper.common.utils.ResultCode;
+import com.education.event.BaseTask;
+import com.education.event.impl.PositionTask;
+import com.education.common.exception.BusinessException;
+import com.education.common.model.ModelBeanMap;
+import com.education.common.utils.Md5Utils;
+import com.education.common.utils.ResultCode;
 
 import com.education.mapper.school.SchoolInfoMapper;
 import com.education.mapper.school.StudentInfoMapper;
@@ -73,12 +75,12 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
     }
 
     private void updateSchoolAddress(Integer schoolId, String lat, String lng) {
-       /* BaseTask baseTask = new PositionTask(mapper);
+        BaseTask baseTask = new PositionTask(mapper);
         baseTask.put("id", schoolId);
         baseTask.put("lat", lat);
         baseTask.put("key", lbsKey);
         baseTask.put("lng", lng);
-        taskManager.execute(baseTask);*/
+        taskManager.execute(baseTask);
     }
 
     @Transactional

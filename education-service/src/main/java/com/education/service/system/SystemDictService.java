@@ -1,9 +1,13 @@
 package com.education.service.system;
 
 
+import com.education.common.model.ModelBeanMap;
+import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.ResultCode;
 import com.education.mapper.system.SystemDictMapper;
 import com.education.service.BaseService;
 import org.springframework.stereotype.Service;
+
 
 /**
  * @author zengjintao
@@ -12,4 +16,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SystemDictService extends BaseService<SystemDictMapper> {
+
+    public ResultCode saveOrUpdate(ModelBeanMap params) {
+      //  Integer type = (Integer) params.get("type");
+      //  params.remove("type");
+        boolean updateFlag = false;
+        if (ObjectUtils.isNotEmpty(params.get("id"))) {
+            updateFlag = true;
+        }
+        return super.saveOrUpdate(updateFlag, params);
+    }
 }

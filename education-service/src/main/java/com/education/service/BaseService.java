@@ -1,16 +1,16 @@
 package com.education.service;
 
-import com.education.mapper.common.base.BaseMapper;
-import com.education.mapper.common.cache.EhcacheBean;
-import com.education.mapper.common.component.SpringBeanManager;
-import com.education.mapper.common.constants.Constants;
-import com.education.mapper.common.constants.EnumConstants;
-import com.education.mapper.common.exception.BusinessException;
-import com.education.mapper.common.model.AdminUserSession;
-import com.education.mapper.common.model.FrontUserInfoSession;
-import com.education.mapper.common.model.ModelBeanMap;
-import com.education.mapper.common.utils.*;
-import com.education.service.task.TaskManager;
+import com.education.common.utils.*;
+import com.education.event.TaskManager;
+import com.education.common.base.BaseMapper;
+import com.education.common.cache.BaseCache;
+import com.education.common.component.SpringBeanManager;
+import com.education.common.constants.Constants;
+import com.education.common.constants.EnumConstants;
+import com.education.common.exception.BusinessException;
+import com.education.common.model.AdminUserSession;
+import com.education.common.model.FrontUserInfoSession;
+import com.education.common.model.ModelBeanMap;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.RowBounds;
@@ -19,7 +19,6 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public abstract class BaseService<M extends BaseMapper> {
     @Autowired
     protected TaskManager taskManager;
     @Autowired
-    protected EhcacheBean ehcacheBean;
+    protected BaseCache ehcacheBean;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String DEFAULT_MAPPER_PAGE_METHOD_NAME = "queryList";
@@ -50,6 +49,15 @@ public abstract class BaseService<M extends BaseMapper> {
      */
     public Result<ModelBeanMap> pagination(Map params) {
        return pagination(params, null, DEFAULT_MAPPER_PAGE_METHOD_NAME);
+    }
+
+    public Result<ModelBeanMap> paginationByCache(String cacheName, String key, Map params) {
+        Result<ModelBeanMap> result = ehcacheBean.get(cacheName, key);
+        if (ObjectUtils.isEmpty(result)) {
+            result = pagination(params);
+            ehcacheBean.put(cacheName, key, result);
+        }
+        return result;
     }
 
     public Result<ModelBeanMap> pagination(Map params, Class<? extends BaseMapper> mapperClass, String mapperMethod) {

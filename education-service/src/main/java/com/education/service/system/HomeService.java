@@ -1,8 +1,8 @@
 package com.education.service.system;
 
-import com.education.mapper.common.utils.ObjectUtils;
-import com.education.mapper.common.utils.Result;
-import com.education.mapper.common.utils.ResultCode;
+import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.Result;
+import com.education.common.utils.ResultCode;
 import com.education.service.school.StudentInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

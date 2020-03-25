@@ -1,7 +1,7 @@
 package com.education.service.system;
 
-import com.education.mapper.common.model.ModelBeanMap;
-import com.education.mapper.common.utils.Result;
+import com.education.common.model.ModelBeanMap;
+import com.education.common.utils.Result;
 import com.education.mapper.system.SystemMessageInfoMapper;
 import com.education.service.BaseService;
 import org.springframework.stereotype.Service;

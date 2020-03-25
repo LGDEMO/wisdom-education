@@ -1,7 +1,7 @@
 package com.education.mapper.course;
 
-import com.education.mapper.common.base.BaseMapper;
-import com.education.mapper.common.model.ModelBeanMap;
+import com.education.common.base.BaseMapper;
+import com.education.common.model.ModelBeanMap;
 
 /**
  * @author zengjintao

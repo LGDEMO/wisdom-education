@@ -1,12 +1,12 @@
 package com.education.service.school;
 
-import com.education.mapper.common.constants.Constants;
-import com.education.mapper.common.constants.EnumConstants;
-import com.education.mapper.common.exception.BusinessException;
-import com.education.mapper.common.model.*;
-import com.education.mapper.common.model.online.OnlineUser;
-import com.education.mapper.common.model.online.OnlineUserManager;
-import com.education.mapper.common.utils.*;
+import com.education.common.constants.Constants;
+import com.education.common.constants.EnumConstants;
+import com.education.common.exception.BusinessException;
+import com.education.common.model.*;
+import com.education.common.utils.*;
+import com.education.common.model.online.OnlineUser;
+import com.education.common.model.online.OnlineUserManager;
 import com.education.mapper.course.ExamInfoMapper;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.TestPaperInfoMapper;
@@ -200,7 +200,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
                 examInfoMapper.update(data);
             }
             // 发送答题成绩分数模板消息
-            BaseTask studyTemplateMsg = new StudentMessageTask();
+          /*  BaseTask studyTemplateMsg = new StudentMessageTask();
             studyTemplateMsg.put("student_id", studentId);
             studyTemplateMsg.put("mark", mark);
             studyTemplateMsg.put("admin_id", getAdminUser().get("id"));
@@ -208,7 +208,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
             studyTemplateMsg.put("content", "您参加的考试【" + paperInfo.getStr("name") + "】已被管理员" + getAdminUser().get("login_name") + "批改，快去查看吧");
             studyTemplateMsg.put("create_date", new Date());
             studyTemplateMsg.put("test_paper_info_id", testPaperId);
-            taskManager.execute(studyTemplateMsg);
+            taskManager.execute(studyTemplateMsg); */
             params.put("code", ResultCode.SUCCESS);
             params.put("message", "操作成功, 该学员本次共得到" + mark + "分");
             return params;
@@ -366,7 +366,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         String token = frontJwtToken.createToken(userInfoMap.get("student_id"), Constants.SESSION_TIME_OUT * 60 * 1000); // 默认缓存5天
         Map userCacheMap = new HashMap();
         Integer gradeType = (Integer) userInfoMap.get("grade_type");
-        String gradeName = BaseTask.getGradeName(gradeType); //BaseTask.getGradeName(gradeType);
+        String gradeName = null; //BaseTask.getGradeName(gradeType); //BaseTask.getGradeName(gradeType);
         userCacheMap.put("gradeName", gradeName);
         userCacheMap.put("gradeType", gradeType);
         userCacheMap.put("school_name", userInfoMap.get("school_name"));

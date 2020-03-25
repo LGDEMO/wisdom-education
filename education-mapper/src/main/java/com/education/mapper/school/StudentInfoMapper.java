@@ -1,7 +1,7 @@
 package com.education.mapper.school;
 
-import com.education.mapper.common.base.BaseMapper;
-import com.education.mapper.common.model.ModelBeanMap;
+import com.education.common.base.BaseMapper;
+import com.education.common.model.ModelBeanMap;
 
 import java.util.Map;
 

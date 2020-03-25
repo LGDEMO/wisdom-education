@@ -1,13 +1,13 @@
 package com.education.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.education.mapper.common.constants.EnumConstants;
-import com.education.mapper.common.model.online.OnlineUser;
-import com.education.mapper.common.model.online.OnlineUserManager;
-import com.education.mapper.common.utils.ObjectUtils;
-import com.education.mapper.common.utils.ResultCode;
-import com.education.service.task.TaskManager;
-import com.education.service.webSocket.SystemWebSocketHandler;
+import com.education.event.TaskManager;
+import com.education.event.webSocket.SystemWebSocketHandler;
+import com.education.common.constants.EnumConstants;
+import com.education.common.model.online.OnlineUser;
+import com.education.common.model.online.OnlineUserManager;
+import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
