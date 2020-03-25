@@ -1,7 +1,6 @@
 package com.education.service.school;
 
 import com.education.event.BaseTask;
-import com.education.event.impl.PositionTask;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.Md5Utils;
@@ -13,6 +12,7 @@ import com.education.mapper.system.SystemAdminMapper;
 import com.education.mapper.system.SystemAdminRoleMapper;
 import com.education.mapper.system.SystemRoleMapper;
 import com.education.service.BaseService;
+import com.education.service.task.PositionTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

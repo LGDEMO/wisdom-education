@@ -1,12 +1,12 @@
-package com.education.event.impl;
+package com.education.service.task;
 
-import com.education.event.BaseTask;
 import com.education.common.constants.EnumConstants;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.IpUtils;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.RequestUtils;
+import com.education.event.BaseTask;
 import com.education.service.system.SystemLogService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,6 +81,6 @@ public class HttpLogTask extends BaseTask<HttpLogTask> {
         long startTime = modelMap.getLong("startTime");
         put("request_time", (System.currentTimeMillis() - startTime) + "ms");
         modelMap.remove("startTime");
-        systemLogService.save(modelMap);
+     //   systemLogService.save(modelMap);
     }
 }

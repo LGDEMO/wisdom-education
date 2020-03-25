@@ -1,9 +1,9 @@
-package com.education.event.impl;
+package com.education.service.task;
 
 import com.alibaba.fastjson.JSONObject;
-import com.education.event.BaseTask;
 import com.education.common.base.BaseMapper;
 import com.education.common.model.ModelBeanMap;
+import com.education.event.BaseTask;
 import com.jfinal.weixin.sdk.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 

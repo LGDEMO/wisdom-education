@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.system.SystemRoleMapper">
+
+    <insert id="save" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        insert into system_role
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="map">
+        update system_role
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
+    <select id="findByRoleName" resultType="modelBeanMap">
+        select * from system_role where name = #{name}
+    </select>
+
+
+    <select id="queryList" resultType="modelBeanMap">
+        select * from system_role
+        <where>
+            <if test="name != null and name != ''">
+                <bind name="searchName" value="'%' + name + '%'"/>
+                and name like #{searchName}
+            </if>
+        </where>
+        order by id desc
+    </select>
+</mapper>

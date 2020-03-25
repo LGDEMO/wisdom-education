@@ -1,5 +1,6 @@
 package com.education.common.template;
 
+
 import com.education.common.utils.WordGeneratorWithFreemarker;
 
 import java.io.File;

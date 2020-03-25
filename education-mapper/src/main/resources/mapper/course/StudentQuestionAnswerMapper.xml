@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.StudentQuestionAnswerMapper">
+
+    <select id="getStudentCourseOrPaperQuestionInfoList" resultType="modelBeanMap">
+        select question.*, user_answer.question_points question_mark, user_answer.answer as user_answer, user_answer.enclosure, user_answer.is_right, user_answer.comment,
+        user_answer.mark as answer_mark
+        from question_info question, student_question_answer user_answer
+        where question.id = user_answer.question_info_id
+        and user_answer.student_id = #{studentId}
+        <if test="courseId != null and courseId != ''">
+            and user_answer.course_id = #{courseId}
+        </if>
+
+        <if test="testPaperId != null and testPaperId != ''">
+            and user_answer.test_paper_info_id = #{testPaperId}
+        </if>
+    </select>
+
+    <select id="getStudentCourseQuestionByCourseId" resultType="modelBeanMap">
+        select question_answer.*,question.question_type from student_question_answer question_answer left join question_info question on
+        question_answer.question_info_id = question.id where question_answer.question_info_id in
+        (
+          select question_info_id from course_question_info where course_id = #{courseId}
+        )
+        and question_answer.student_id = #{studentId} and question_answer.course_id = #{courseId}
+    </select>
+
+    <!-- 试卷试题答案信息列表 -->
+    <select id="getStudentCourseQuestionByPaperId" parameterType="Integer" resultType="modelBeanMap">
+        select question.*, question_answer.answer as userInfoAnswer, question_answer.enclosure, question_answer.correct_status,
+        question_answer.mark from question_info question, student_question_answer question_answer
+        where question.id = question_answer.question_info_id
+        and question.id in (
+          select question_info_id from test_paper_question_info where test_paper_info_id = #{paperInfoId}
+        ) and question_answer.test_paper_info_id = #{paperInfoId} and question_answer.student_id = #{studentId}
+    </select>
+
+    <select id="getStudentQuestionAnswerInfo" resultType="modelBeanMap">
+        select * from student_question_answer
+        <where>
+            <if test="courseId != null and courseId != ''">
+                course_id = #{courseId}
+            </if>
+
+            <if test="questionInfoId != null and questionInfoId != ''">
+                question_info_id = #{questionInfoId}
+            </if>
+
+            <if test="testPaperInfoId != null and testPaperInfoId != ''">
+                test_paper_info_id = #{testPaperInfoId}
+            </if>
+        </where>
+       limit 1
+    </select>
+
+    <select id="getStudentAnswerPaperList" resultType="modelBeanMap">
+        select paper_info.id, paper_info.exam_number, paper_info.mark paper_mark, paper_info.name, subject.name subject_name, exam.* from test_paper_info paper_info, exam_info exam, subject_info subject
+        where paper_info.id = exam.test_paper_info_id and
+        exam.subject_id = subject.id and exam.student_id = #{studentId}
+        <if test="subjectId != null and subjectId != ''">
+            and exam.subject_id = #{subjectId}
+        </if>
+    </select>
+
+    <insert id="batchSave" parameterType="map">
+        insert into student_question_answer(student_id, question_info_id, course_id, answer,
+        create_date, test_paper_info_id, enclosure, mark, question_points, correct_status) values
+        <foreach collection="list" separator="," item="item">
+            (
+            #{item.studentId}, #{item.questionInfoId}, #{item.courseId},  #{item.answer},
+            #{item.create_date}, #{item.test_paper_info_id}, #{item.enclosure},
+            #{item.mark}, #{item.question_points}, #{item.correct_status}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="getStudentErrorQuestionList" resultType="modelBeanMap">
+        select question.id, question.question_type, question.subject_id, question.school_type,
+        question.grade_type, question.content, question.answer, question.analysis,
+        question.summarize, question.question_type,
+        question.video_url, question.options, question.question_type, question_answer.question_points,
+        question_answer.mark, question_answer.create_date, question_answer.answer as user_answer,
+        question_answer.enclosure, question_answer.create_date as do_question_time from question_info question,
+        student_question_answer question_answer where question.id = question_answer.question_info_id
+        <if test="subjectId != null and subjectId != ''">
+            and question.subject_id = #{subjectId}
+        </if>
+        and question_answer.correct_status = 0
+        and question_answer.student_id = #{studentId}
+
+        <if test="startTime != null and startTime != ''">
+            and question_answer.create_date &gt;= #{startTime}
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            and question_answer.create_date &lt;= #{startTime}
+        </if>
+
+        <if test="keyWord != null and keyWord != ''">
+            <bind name="searchName" value="'%' + keyWord + '%'"/>
+            and question.content like #{searchName}
+        </if>
+        order by question_answer.id desc
+    </select>
+</mapper>

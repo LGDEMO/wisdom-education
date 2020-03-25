@@ -1,11 +1,11 @@
-package com.education.admin.api.config.interceptor;
+package com.education.service.log;
 
 import com.education.common.annotation.SystemLog;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.RequestUtils;
 import com.education.event.TaskManager;
-import com.education.event.impl.HttpLogTask;
 import com.education.service.system.SystemLogService;
+import com.education.service.task.HttpLogTask;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

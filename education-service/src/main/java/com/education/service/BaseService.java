@@ -48,7 +48,27 @@ public abstract class BaseService<M extends BaseMapper> {
      * @return
      */
     public Result<ModelBeanMap> pagination(Map params) {
-       return pagination(params, null, DEFAULT_MAPPER_PAGE_METHOD_NAME);
+        Result result = null;
+        try {
+            Integer offset = RowBounds.NO_ROW_OFFSET;
+            Integer limit = RowBounds.NO_ROW_LIMIT;
+            if (ObjectUtils.isNotEmpty(params.get("offset"))) {
+                offset = Integer.valueOf((String) params.get("offset"));
+            }
+            if (ObjectUtils.isNotEmpty(params.get("limit"))) {
+                limit = Integer.valueOf((String) params.get("limit"));
+            }
+            Page<ModelBeanMap> page = PageHelper.offsetPage(offset, limit);
+            List<Map> pageResult = mapper.queryList(params);
+            ModelBeanMap dataMap = new ModelBeanMap();
+            dataMap.put("dataList", pageResult);
+            dataMap.put("total", page.getTotal());
+            result = new Result(ResultCode.SUCCESS, dataMap);
+        } catch (Exception e) {
+            result = new Result(ResultCode.FAIL, "获取数据异常");
+            logger.error("获取数据异常", e);
+        }
+        return result;
     }
 
     public Result<ModelBeanMap> paginationByCache(String cacheName, String key, Map params) {
@@ -61,7 +81,7 @@ public abstract class BaseService<M extends BaseMapper> {
     }
 
     public Result<ModelBeanMap> pagination(Map params, Class<? extends BaseMapper> mapperClass, String mapperMethod) {
-        Result result = null;
+      /*  Result result = null;
         try {
             Integer offset = RowBounds.NO_ROW_OFFSET;
             Integer limit = RowBounds.NO_ROW_LIMIT;
@@ -73,14 +93,14 @@ public abstract class BaseService<M extends BaseMapper> {
                 limit = Integer.valueOf((String) params.get("limit"));
             }
             Page<ModelBeanMap> page = PageHelper.offsetPage(offset, limit);
-            Object pageResult = null;
-            if (ObjectUtils.isEmpty(mapperClass)) {
+            Object pageResult = mapper.queryList(params);
+            *//*if (ObjectUtils.isEmpty(mapperClass)) {
                 pageResult = mapper.queryList(params);
             } else {
                 Method method = mapperClass.getMethod(mapperMethod, Map.class);
                 BaseMapper mapperBean = SpringBeanManager.getBean(mapperClass);
                 pageResult = method.invoke(mapperBean, params);
-            }
+            }*//*
             ModelBeanMap dataMap = new ModelBeanMap();
             dataMap.put("dataList", pageResult);
             dataMap.put("total", page.getTotal());
@@ -89,7 +109,8 @@ public abstract class BaseService<M extends BaseMapper> {
             result = new Result(ResultCode.FAIL, "获取数据异常");
             logger.error("获取数据异常", e);
         }
-        return result;
+        return result;*/
+        return null;
     }
 
     /**

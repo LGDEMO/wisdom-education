@@ -23,7 +23,7 @@ public class SystemLogController extends ApiController {
     @Autowired
     private SystemLogService systemLogService;
 
-    @GetMapping
+    @GetMapping("list")
     @RequiresPermissions("system:log:list")
     public Result<ModelBeanMap> list(@RequestParam Map params) {
         return systemLogService.pagination(params);

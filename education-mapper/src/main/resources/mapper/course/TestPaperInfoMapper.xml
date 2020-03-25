@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.TestPaperInfoMapper">
+
+    <insert id="save" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        insert into test_paper_info
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="map">
+        update test_paper_info
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
+    <select id="queryList" resultType="modelBeanMap">
+        select paper.*, subject.name as subject_name from test_paper_info paper left join subject_info subject on paper.subject_id = subject.id
+        <where>
+            <if test="testPaperIds != null and testPaperIds.size() > 0">
+                and paper.id in
+                <foreach collection="testPaperIds" open="(" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+
+            <if test="keyWord != null and keyWord != ''">
+                <bind name="searchName" value="'%' + keyWord + '%'"/>
+                and (paper.name like #{searchName} or subject.name like #{searchName})
+            </if>
+
+            <if test="gradeType != null and gradeType != ''">
+                and paper.grade_type = #{gradeType}
+            </if>
+
+            <if test="subjectId != null and subjectId != ''">
+                and paper.subject_id = #{subjectId}
+            </if>
+        </where>
+        order by paper.sort desc
+    </select>
+
+    <select id="findById" resultType="modelBeanMap">
+        select * from test_paper_info where id = #{id}
+    </select>
+
+    <select id="findListBySubjectIds" resultType="modelBeanMap">
+        select paper.*, subject.name as subject_name from test_paper_info paper
+        left join subject_info subject on paper.subject_id = subject.id
+        where paper.id not in (select test_paper_info_id from exam_info where student_id = #{studentId})
+        <if test="gradeType != null and gradeType != ''">
+            and paper.grade_type = #{gradeType}
+        </if>
+
+        <choose>
+            <when test="subjectId != null and subjectId != ''">
+                and paper.subject_id = #{subjectId}
+            </when>
+
+            <otherwise>
+                <if test="subjectIds != null and subjectIds.size() > 0">
+                    and paper.subject_id in
+                    <foreach collection="subjectIds" close=")" open="(" separator="," item="id">
+                        #{id}
+                    </foreach>
+                </if>
+            </otherwise>
+        </choose>
+        order by paper.sort desc
+    </select>
+</mapper>

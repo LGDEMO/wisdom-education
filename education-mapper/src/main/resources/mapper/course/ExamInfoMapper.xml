@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.ExamInfoMapper">
+
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="map">
+        insert into exam_info
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>getStudentPaperList
+    </insert>
+
+    <update id="update" parameterType="map">
+        update exam_info
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
+    <select id="queryList" resultType="modelBeanMap">
+        select exam.*,
+        subject.name AS subject_name,
+        student.sex,
+        student.name AS student_name,
+        paper.name AS paper_name,
+        paper.correct_number,
+        (paper.exam_number - paper.correct_number) no_correct_number,
+        paper.mark paper_mark,
+        paper.exam_number from exam_info exam, student_info student, test_paper_info paper, subject_info subject where
+        exam.student_id = student.id and exam.test_paper_info_id = paper.id and exam.subject_id = subject.id
+        <if test="keyWord != null and keyWord != ''">
+            <bind name="searchName" value="'%' + keyWord + '%'"/>
+            and (paper.name like #{searchName} or subject.name like #{searchName}
+            or student.name like #{searchName})
+        </if>
+
+        <if test="gradeType != null and gradeType != ''">
+            and student.grade_type = #{gradeType}
+        </if>
+
+        <if test="subjectId != null and subjectId != ''">
+            and subject.id = #{subjectId}
+        </if>
+
+        <if test="schoolId != null and schoolId != ''">
+            and student.school_id = #{schoolId}
+        </if>
+        group by paper.id order by exam.id desc
+    </select>
+
+    <select id="findByPaperIdAndStudentId" resultType="modelBeanMap">
+        select exam.*, paper.name paper_name from exam_info exam, test_paper_info paper where
+         exam.test_paper_info_id = paper.id and
+         student_id = #{studentId} and test_paper_info_id = #{testPaperId} limit 1
+    </select>
+
+    <select id="getStudentListByExamId" resultType="modelBeanMap">
+        select subject.name subject_name, student.id student_id, student.name student_name, student.sex, exam.* from student_info student, exam_info exam,
+        subject_info subject
+        where student.id = exam.student_id and subject.id = exam.subject_id and exam.test_paper_info_id = #{testPaperId}
+        <if test="studentName != null and studentName != ''">
+            <bind name="searchName" value="'%' + studentName + '%'"/>
+            and student.name like #{searchName}
+        </if>
+
+        <if test="correctFlag != null and correctFlag != ''">
+            and exam.correct_flag = #{correctFlag}
+        </if>
+
+        <if test="orderBy != null and orderBy != ''">
+            AND exam.correct_flag = 1 ORDER BY mark DESC
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.TestPaperQuestionMapper">
+
+    <insert id="batchSave" parameterType="map">
+        insert into test_paper_question_info(question_info_id, test_paper_info_id, mark, create_date) values
+        <foreach collection="list" separator="," item="item">
+            (${item.question_info_id}, ${item.test_paper_info_id}, #{item.mark}, #{item.create_date})
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="map">
+        update test_paper_info
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
+    <select id="getTestPaperInfoSum" parameterType="Integer" resultType="Integer">
+        select ifnull(sum(mark), 0) as mark from test_paper_question_info where test_paper_info_id = #{testPaperInfoId}
+    </select>
+
+    <delete id="delete" parameterType="map">
+        delete from test_paper_question_info
+        <where>
+            <if test="testPaperInfoId != null and testPaperInfoId != ''">
+                and test_paper_info_id = #{testPaperInfoId}
+            </if>
+
+            <if test="questionInfoId != null and questionInfoId != ''">
+                and question_info_id = #{questionInfoId}
+            </if>
+        </where>
+    </delete>
+
+    <delete id="deletePaperQuestion" parameterType="map">
+        delete from test_paper_question_info where test_paper_info_id = #{testPaperInfoId}
+        and question_info_id in
+        <foreach collection="questionIds" item="id"  open="(" close=")" separator=",">
+            ${id}
+        </foreach>
+    </delete>
+
+    <select id="getPaperQuestionList" resultType="modelBeanMap">
+        select question.*, testPaperQuestion.sort paper_question_sort, '' as userInfoAnswer, subject.name as subject_name, testPaperQuestion.mark from question_info
+        question,
+        subject_info subject, test_paper_question_info testPaperQuestion where question.subject_id = subject.id
+        and question.id = testPaperQuestion.question_info_id and testPaperQuestion.test_paper_info_id = #{testPaperInfoId}
+        <if test="questionType != null and questionType != ''">
+            and question.question_type = #{questionType}
+        </if>
+        order by
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                testPaperQuestion.sort
+            </otherwise>
+        </choose>
+        asc
+    </select>
+
+    <select id="findByTestPaperInfoId" resultType="modelBeanMap">
+       select * from question_info where id in (
+          select question_info_id from test_paper_question_info where test_paper_info_id = #{testPaperInfoId}
+        ) order by question_type asc
+    </select>
+
+    <select id="findById" resultType="modelBeanMap">
+        select * from test_paper_info where id = #{id}
+    </select>
+
+    <update id="updatePaperQuestionMark" parameterType="map">
+        update test_paper_question_info set mark = #{mark}
+        <include refid="updateCourseQuestionSortOrMark"></include>
+    </update>
+
+    <update id="updatePaperQuestionSort" parameterType="map">
+        update test_paper_question_info set sort = #{sort}
+        <include refid="updateCourseQuestionSortOrMark"></include>
+    </update>
+
+    <sql id="updateCourseQuestionSortOrMark">
+        where test_paper_info_id = #{testPaperInfoId} and question_info_id = #{questionInfoId}
+    </sql>
+</mapper>

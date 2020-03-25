@@ -1,11 +1,13 @@
-package com.education.event.impl;
+package com.education.service.task;
 
-import com.education.event.BaseTask;
 import com.education.common.component.SpringBeanManager;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.StudentInfo;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.ResultCode;
+import com.education.event.BaseTask;
+import com.education.mapper.system.SystemDictMapper;
+import com.education.service.SystemDictManager;
 import com.education.service.school.StudentInfoService;
 
 import java.util.Date;
@@ -22,7 +24,7 @@ public class ImportStudentTask extends BaseTask {
 
     @Override
     public void run() {
-        try {
+         try {
             List<StudentInfo> studentInfoList = getData();
             StudentInfoService userInfoService = getStudentInfoService();
             Map adminUserMap = userInfoService.getAdminUser();
@@ -37,13 +39,7 @@ public class ImportStudentTask extends BaseTask {
                 studentInfo.setSchoolId(schoolId);
                 String gradeName = studentInfo.getGradeType();
                 studentInfo.setSexId("男".equals(studentInfo.getSex()) ? ResultCode.SUCCESS : ResultCode.FAIL);
-                if (ObjectUtils.isNotEmpty(primarySchool.get(gradeName))) {
-                    studentInfo.setGradeTypeId(primarySchool.get(gradeName));
-                } else if (ObjectUtils.isNotEmpty(middleSchool.get(gradeName))) {
-                    studentInfo.setGradeTypeId( middleSchool.get(gradeName));
-                } else {
-                    studentInfo.setGradeTypeId( highSchool.get(gradeName));
-                }
+                studentInfo.setGradeTypeId(SystemDictManager.getGradeTypeValue(gradeName).getValue());
                 Date now = new Date();
                 studentInfo.setCreateDate(now);
                 studentInfo.setUpdateDate(now);

@@ -1,14 +1,12 @@
-package com.education.event.impl;
+package com.education.service.task;
 
-import com.education.common.model.GradeTypeInfo;
-import com.education.event.BaseTask;
-import com.education.common.exception.BusinessException;
-import com.education.common.model.QuestionInfo;
 import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.ResultCode;
-import com.education.service.SystemDictManager;
+import com.education.event.BaseTask;
 import org.mybatis.spring.SqlSessionTemplate;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
@@ -51,7 +49,7 @@ public class ImportQuestionInfoTask<T> extends BaseTask {
 
     @Override
     public void run() {
-        try {
+       /* try {
             if (isRunning) {
                 List<QuestionInfo> dataList = getData();
                 logger.info(Thread.currentThread().getName() + "执行数据:" + dataList);
@@ -116,7 +114,7 @@ public class ImportQuestionInfoTask<T> extends BaseTask {
         } finally {
             logger.info(Thread.currentThread().getName() + "任务结束");
             countDownLatch.countDown();
-        }
+        }*/
     }
 
     public static void setIsRunning(boolean isRunning) {

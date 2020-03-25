@@ -4,6 +4,7 @@
 package com.education.admin.api.config.interceptor;
 
 
+import com.education.common.annotation.ParamsValidate;
 import com.education.common.interceptor.LogInterceptor;
 import com.education.common.interceptor.ParamsValidateInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
