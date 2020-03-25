@@ -2,14 +2,12 @@ package com.education.event.impl;
 
 import com.education.common.model.GradeTypeInfo;
 import com.education.event.BaseTask;
-import com.education.common.constants.EnumConstants;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.QuestionInfo;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.ResultCode;
 import com.education.service.SystemDictManager;
 import org.mybatis.spring.SqlSessionTemplate;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -85,7 +83,7 @@ public class ImportQuestionInfoTask<T> extends BaseTask {
                     params.put("mode_type", modeTypeMap.get(questionInfo.getMode()));
                     params.put("question_type", SystemDictManager.getQuestionTypeValue(type));
                     params.put("content", questionInfo.getContent());
-                    int questionType = questionTypes.get(type);
+                    int questionType = SystemDictManager.getQuestionTypeValue(type);
                     String answer = questionInfo.getAnswer();
                     if (questionType == CALCULATION_QUESTION) {
                         params.put("answer", "对".equals(answer) ? Boolean.TRUE : Boolean.FALSE);

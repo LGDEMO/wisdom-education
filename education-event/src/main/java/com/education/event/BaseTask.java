@@ -6,10 +6,7 @@ import com.education.common.model.ModelBeanMap;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -19,10 +16,6 @@ import java.util.concurrent.CountDownLatch;
  **/
 public abstract class BaseTask<T> implements Runnable {
 
-    protected static final Map<String, Integer> primarySchool = new ConcurrentHashMap();
-    protected static final Map<String, Integer> questionTypes = new ConcurrentHashMap();
-    protected static final Map<String, Integer> middleSchool = new ConcurrentHashMap();
-    protected static final Map<String, Integer> highSchool = new ConcurrentHashMap();
     protected static final Logger logger = LoggerFactory.getLogger(BaseTask.class);
 
     private List<T> data;
@@ -74,29 +67,6 @@ public abstract class BaseTask<T> implements Runnable {
         return data;
     }
 
-    public static void putQuestionType(String key, Integer value) {
-        questionTypes.put(key, value);
-    }
-
-    public static void putPrimarySchool(String key, Integer value) {
-        primarySchool.put(key, value);
-    }
-
-    public static void putMiddleSchool(String key, Integer value) {
-        middleSchool.put(key, value);
-    }
-
-    public static void putHighSchool(String key, Integer value) {
-        highSchool.put(key, value);
-    }
-
-    public static void clearMap() {
-        primarySchool.clear();
-        middleSchool.clear();
-        highSchool.clear();
-        questionTypes.clear();
-    }
-
     public BaseTask put(String key, Object value) {
         this.modelBeanMap.put(key, value);
         return this;
@@ -104,9 +74,5 @@ public abstract class BaseTask<T> implements Runnable {
 
     public ModelBeanMap getModelBeanMap() {
         return modelBeanMap;
-    }
-
-    public static Map<String, Integer> getQuestionTypes() {
-        return questionTypes;
     }
 }
