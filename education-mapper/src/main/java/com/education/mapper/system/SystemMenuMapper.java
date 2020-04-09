@@ -13,8 +13,6 @@ import java.util.Map;
  */
 public interface SystemMenuMapper extends BaseMapper {
 
-    List<ModelBeanMap> treeList();
-
     List<ModelBeanMap> findMenuByUser(Map params);
 
     List<ModelBeanMap> findByParentId(Integer parentId);

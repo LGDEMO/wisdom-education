@@ -1,7 +1,7 @@
 package com.education.common.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jfinal.kit.HttpKit;
+import com.jfinal.weixin.sdk.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public class IpUtils {
 		String address = null;
 		try {
 	//		{"code":0,"data":{"country":"中国","country_id":"CN","area":"华北","area_id":"100000","region":"北京市","region_id":"110000","city":"北京市","city_id":"110100","county":"","county_id":"-1","isp":"阿里巴巴","isp_id":"100098","ip":"47.94.12.108"}}
-			String data = HttpKit.get(IP_SERVICE_URL + ip);
+			String data = HttpUtils.get(IP_SERVICE_URL + ip);
 			JSONObject jsonObject = JSONObject.parseObject(data);
 			if (ObjectUtils.isNotEmpty(jsonObject)) {
 				if (jsonObject.getInteger("code") == 0) {

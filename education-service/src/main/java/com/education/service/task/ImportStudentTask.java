@@ -1,15 +1,12 @@
 package com.education.service.task;
 
 import com.education.common.component.SpringBeanManager;
-import com.education.common.exception.BusinessException;
 import com.education.common.model.StudentInfo;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.ResultCode;
 import com.education.event.BaseTask;
-import com.education.mapper.system.SystemDictMapper;
 import com.education.service.SystemDictManager;
 import com.education.service.school.StudentInfoService;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +44,7 @@ public class ImportStudentTask extends BaseTask {
             sqlSessionTemplate.insert("student.info.batchSave", studentInfoList);
         } catch (Exception e) {
             logger.error("学员数据导入失败", e);
-            throw new BusinessException(new ResultCode(ResultCode.FAIL, "导入失败, 请检查数据是否合法或文件格式是否正确"));
+           // throw new BusinessException(new ResultCode(ResultCode.FAIL, "导入失败, 请检查数据是否合法或文件格式是否正确"));
         } finally {
             countDownLatch.countDown();
         }

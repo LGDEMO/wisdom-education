@@ -55,13 +55,14 @@ public final class LogAspect {
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
         SystemLog systemLog = method.getAnnotation(SystemLog.class);
-        HttpLogTask httpLogTask = new HttpLogTask(systemLogService, request, systemLogService.getAdminUserSession());
+        HttpLogTask httpLogTask = new HttpLogTask(systemLogService, systemLogService.getAdminUserSession());
         httpLogTask.put("request_url", RequestUtils.getRequestUrl(request));
         try {
             if (ObjectUtils.isNotEmpty(systemLog)) {
                 httpLogTask.setDescribe(systemLog.describe());
             }
             httpLogTask.put("startTime", startTime);
+            httpLogTask.put("request", request);
             Object result = pjp.proceed();
             taskManager.execute(httpLogTask);
             return result;

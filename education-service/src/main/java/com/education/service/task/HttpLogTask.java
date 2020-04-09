@@ -23,7 +23,6 @@ import java.util.Map;
 public class HttpLogTask extends BaseTask<HttpLogTask> {
 
     private SystemLogService systemLogService;
-    private HttpServletRequest request;
     private String describe;
     private AdminUserSession adminUserSession;
 
@@ -31,14 +30,14 @@ public class HttpLogTask extends BaseTask<HttpLogTask> {
         this.describe = describe;
     }
 
-    public HttpLogTask(SystemLogService systemLogService, HttpServletRequest request, AdminUserSession adminUserSession) {
+    public HttpLogTask(SystemLogService systemLogService, AdminUserSession adminUserSession) {
         this.systemLogService = systemLogService;
-        this.request = request;
         this.adminUserSession = adminUserSession;
     }
 
     @Override
     public void run() {
+       /* HttpServletRequest request = (HttpServletRequest) getModelBeanMap().get("request");
         String methodName = request.getMethod();
         String contentType = request.getHeader("Content-Type");
         Object params = null;
@@ -81,6 +80,6 @@ public class HttpLogTask extends BaseTask<HttpLogTask> {
         long startTime = modelMap.getLong("startTime");
         put("request_time", (System.currentTimeMillis() - startTime) + "ms");
         modelMap.remove("startTime");
-     //   systemLogService.save(modelMap);
+     //   systemLogService.save(modelMap);*/
     }
 }

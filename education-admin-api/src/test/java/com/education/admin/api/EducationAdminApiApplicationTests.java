@@ -32,13 +32,12 @@ public class EducationAdminApiApplicationTests {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 500; i++) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                  //  String content = HttpUtils.get("http://127.0.0.1/redis");
-                    //System.err.println(content);
-                    System.err.println(System.currentTimeMillis());
+                    String content = HttpUtils.get("http://127.0.0.1/system/log/list?name=dsd&age=sdsd");
+                    System.err.println(content);
                 }
             }).start();
         }

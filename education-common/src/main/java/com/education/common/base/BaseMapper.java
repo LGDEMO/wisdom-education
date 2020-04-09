@@ -19,6 +19,8 @@ public interface BaseMapper<T> {
 
     List<ModelBeanMap> queryList(Map params);
 
+    List<ModelBeanMap> treeList();
+
     int save(@Param("params") Map params);
 
     int batchSave(Map params);

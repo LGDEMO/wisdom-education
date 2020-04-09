@@ -10,6 +10,8 @@ import java.util.Set;
  */
 public abstract class BaseController {
 
+    public static final String TREE_LIST = "tree_list";
+
     protected static final Set<String> excelTypes = new HashSet<String>() {
         {
             add("application/x-xls");
