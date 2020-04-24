@@ -6,13 +6,12 @@ import com.education.common.annotation.Param;
 import com.education.common.annotation.ParamsType;
 import com.education.common.annotation.ParamsValidate;
 import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.Result;
 import com.education.common.utils.TypeConvert;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -57,10 +56,7 @@ public class ParamsValidateInterceptor extends BaseInterceptor {
                 value = TypeConvert.convert(dataMap.get(name));
             }
             if (ObjectUtils.isEmpty(value)) {
-                Map resultMap = new HashMap<>();
-                resultMap.put("code", param.errorCode());
-                resultMap.put("message", param.message());
-                renderJson(response, resultMap);
+                renderJson(response, Result.fail(param.errorCode(), param.message()));
                 return false;
             }
         }

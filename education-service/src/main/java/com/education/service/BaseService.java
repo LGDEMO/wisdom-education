@@ -47,7 +47,6 @@ public abstract class BaseService<M extends BaseMapper> {
         return MapTreeUtils.buildTreeData(menuList);
     }
 
-
     /**
      * 分页查询
      * @param params

@@ -25,9 +25,9 @@ public class AuthInterceptor extends BaseInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
-		String target = getRequestUrl(request);
+		/* String target = getRequestUrl(request);
 		if ("/".equals(target) || "/system/unAuth".equals(target))
-			return true;
+			return true; */
 		return checkToken(adminJwtToken, request, response);
 	}
 }

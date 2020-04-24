@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.education.common.model.JwtToken;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.RequestUtils;
+import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -27,8 +28,8 @@ public abstract class BaseInterceptor implements HandlerInterceptor {
     private boolean forIE = false;
 
 
-    protected void renderJson(HttpServletResponse response, Map resultMap) {
-        String dataJson = JSONObject.toJSONString(resultMap);
+    protected void renderJson(HttpServletResponse response, Result result) {
+        String dataJson = JSONObject.toJSONString(result);
         PrintWriter writer = null;
         try {
             response.setHeader("Pragma", "no-cache");
@@ -60,10 +61,7 @@ public abstract class BaseInterceptor implements HandlerInterceptor {
         String token = request.getHeader("token");
         String userId = jwtToken.parseTokenToString(token);
         if (ObjectUtils.isEmpty(token) || ObjectUtils.isEmpty(userId)) { //token不存在 或者token失效
-            Map resultMap = new HashMap<>();
-            resultMap.put("code", ResultCode.UN_AUTH_ERROR_CODE);
-            resultMap.put("message", "用户未认证");
-            renderJson(response, resultMap);
+            renderJson(response, Result.fail(ResultCode.UN_AUTH_ERROR_CODE, "用户未认证"));
             return false;
         }
         return true;

@@ -39,6 +39,11 @@ public class CourseInfoController extends BaseController {
     @Autowired
     private CourseQuestionService courseQuestionService;
 
+    /**
+     * 课程管理接口
+     * @param params
+     * @return
+     */
     @GetMapping("list")
     @RequiresPermissions("system:course:list")
     @ApiOperation(value = "课程管理列表接口")
@@ -48,6 +53,11 @@ public class CourseInfoController extends BaseController {
     }
 
 
+    /**
+     * 添加或修改课程
+     * @param courseInfoMap
+     * @return
+     */
     @PostMapping
     @RequiresPermissions(value = {"system:course:save", "system:course:update"}, logical = Logical.OR)
     @ParamsValidate(params = {
@@ -73,6 +83,11 @@ public class CourseInfoController extends BaseController {
     }
 
 
+    /**
+     * 删除课程
+     * @param modelBeanMap
+     * @return
+     */
     @DeleteMapping
     @RequiresPermissions("system:course:deleteById")
     @ApiOperation("删除课程接口")

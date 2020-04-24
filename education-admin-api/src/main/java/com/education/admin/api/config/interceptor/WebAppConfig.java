@@ -42,6 +42,7 @@ public class WebAppConfig implements WebMvcConfigurer {
 	private static final List<String> noInterceptorUrl = new ArrayList<String>() {
 		{
 			add("/system/unAuth");
+			add("/");
 			add("/system/login");
 		}
 	};

@@ -105,14 +105,4 @@ public class QuestionController extends BaseController {
         }
         return new ResultCode(ResultCode.FAIL, "数据导入失败");
     }
-
-   /* *//**
-     * 获取知识点试题数量
-     * @param languagePointsId
-     * @return
-     *//*
-    @GetMapping("getQuestionCountByLanguagePoints")
-    public Result getQuestionCountByLanguagePoints(Integer languagePointsId) {
-        return questionService.getQuestionCountByLanguagePoints(languagePointsId);
-    }*/
 }
