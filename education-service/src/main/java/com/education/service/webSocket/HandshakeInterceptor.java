@@ -1,4 +1,4 @@
-package com.education.event.webSocket;
+package com.education.service.webSocket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;

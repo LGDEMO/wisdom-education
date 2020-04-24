@@ -17,8 +17,13 @@ public class ModelBeanMap extends LinkedHashMap {
         return new ModelBeanMap();
     }
 
-    public static ModelBeanMap set(Object key, Object value) {
+    public static ModelBeanMap by(Object key, Object value) {
         return create().put(key, value);
+    }
+
+    public ModelBeanMap set(Object key, Object value) {
+        super.put(key, value);
+        return this;
     }
 
     public String getStr(Object key) {

@@ -26,14 +26,9 @@ public class SystemDictController extends BaseController {
     @Autowired
     private SystemDictService systemDictService;
 
-    @GetMapping("list")
+    @GetMapping
     public Result list(@RequestParam Map params) {
         return systemDictService.pagination(params);
-    }
-
-    @GetMapping("listGroup")
-    public Result listGroup(@RequestParam Map params) {
-        return systemDictService.pagination(params, SystemDictMapper.class, SystemDictMapper.LIST_GROUP);
     }
 
     @PostMapping("saveOrUpdate")

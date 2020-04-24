@@ -36,12 +36,6 @@
             <artifactId>education-mapper</artifactId>
             <version>${service.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.education.event</groupId>
-            <artifactId>education-event</artifactId>
-            <version>${service.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

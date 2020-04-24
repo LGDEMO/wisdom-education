@@ -1,4 +1,4 @@
-package com.education.event.webSocket;
+package com.education.service.webSocket;
 
 
 import com.education.common.utils.ObjectUtils;

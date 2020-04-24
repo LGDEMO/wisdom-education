@@ -1,7 +1,6 @@
 package com.education.service;
 
 import com.education.common.utils.*;
-import com.education.event.TaskManager;
 import com.education.common.base.BaseMapper;
 import com.education.common.cache.BaseCache;
 import com.education.common.component.SpringBeanManager;
@@ -11,6 +10,7 @@ import com.education.common.exception.BusinessException;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.FrontUserInfoSession;
 import com.education.common.model.ModelBeanMap;
+import com.education.service.task.TaskManager;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.RowBounds;

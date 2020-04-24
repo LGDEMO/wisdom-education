@@ -1,11 +1,12 @@
-package com.education.service.log;
+package com.education.service.task;
 
 import com.education.common.annotation.SystemLog;
+import com.education.common.model.AdminUserSession;
+import com.education.common.model.FrontUserInfoSession;
+import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.RequestUtils;
-import com.education.event.TaskManager;
 import com.education.service.system.SystemLogService;
-import com.education.service.task.HttpLogTask;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,6 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
@@ -32,7 +34,6 @@ public final class LogAspect {
     @Autowired
     private SystemLogService systemLogService;
 
-
     /**
      * execution表达式示例
      * execution(* com.education.api.controller..*.*(..))
@@ -51,20 +52,25 @@ public final class LogAspect {
     public Object invoke(ProceedingJoinPoint pjp) throws Throwable {
         long startTime = System.currentTimeMillis();
         HttpServletRequest request = RequestUtils.getRequest();
-
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
         SystemLog systemLog = method.getAnnotation(SystemLog.class);
-        HttpLogTask httpLogTask = new HttpLogTask(systemLogService, systemLogService.getAdminUserSession());
-        httpLogTask.put("request_url", RequestUtils.getRequestUrl(request));
+        TaskParam taskParam = new TaskParam(SystemLogTask.class);
+        ModelBeanMap params = new ModelBeanMap();
         try {
             if (ObjectUtils.isNotEmpty(systemLog)) {
-                httpLogTask.setDescribe(systemLog.describe());
+                params.put("desc", systemLog.describe());
             }
-            httpLogTask.put("startTime", startTime);
-            httpLogTask.put("request", request);
+            params.put("startTime", startTime);
+            params.put("request", request);
+            params.put("request_url", RequestUtils.getRequestUrl(request));
+            AdminUserSession adminUserSession = systemLogService.getAdminUserSession();
+            FrontUserInfoSession frontUserInfoSession = systemLogService.getFrontUserInfoSession();
+            params.put("adminUserSession", adminUserSession);
+            params.put("frontUserInfoSession", frontUserInfoSession);
             Object result = pjp.proceed();
-            taskManager.execute(httpLogTask);
+            taskParam.setData(params);
+            taskManager.pushTask(taskParam);
             return result;
         } catch (Throwable throwable) {
             StringBuffer error = new StringBuffer();
@@ -73,8 +79,8 @@ public final class LogAspect {
             for (StackTraceElement stackTraceElement : stackTraceElements) {
                 error.append(stackTraceElement.toString() + "   ");
             }
-            httpLogTask.put("exception", error.toString());
-            taskManager.execute(httpLogTask);
+            params.put("exception", error.toString());
+            taskManager.pushTask(taskParam);
             throw throwable;
         }
     }

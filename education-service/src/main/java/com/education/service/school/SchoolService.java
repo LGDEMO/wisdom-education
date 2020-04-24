@@ -1,11 +1,9 @@
 package com.education.service.school;
 
-import com.education.event.BaseTask;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.Md5Utils;
 import com.education.common.utils.ResultCode;
-
 import com.education.mapper.school.SchoolInfoMapper;
 import com.education.mapper.school.StudentInfoMapper;
 import com.education.mapper.system.SystemAdminMapper;
@@ -13,13 +11,14 @@ import com.education.mapper.system.SystemAdminRoleMapper;
 import com.education.mapper.system.SystemRoleMapper;
 import com.education.service.BaseService;
 import com.education.service.task.PositionTask;
+import com.education.service.task.TaskParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,12 +74,13 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
     }
 
     private void updateSchoolAddress(Integer schoolId, String lat, String lng) {
-        BaseTask baseTask = new PositionTask(mapper);
-        baseTask.put("id", schoolId);
-        baseTask.put("lat", lat);
-        baseTask.put("key", lbsKey);
-        baseTask.put("lng", lng);
-        taskManager.execute(baseTask);
+        TaskParam taskParam = new TaskParam(PositionTask.class);
+        Map params = new HashMap<>();
+        params.put("id", schoolId);
+        params.put("lat", lat);
+        params.put("key", lbsKey);
+        params.put("lng", lng);
+        taskManager.pushTask(taskParam);
     }
 
     @Transactional

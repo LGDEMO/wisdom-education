@@ -1,4 +1,4 @@
-package com.education.event.webSocket;
+package com.education.service.webSocket;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
