@@ -49,13 +49,13 @@ public class PositionTask extends BaseTask {
                     + modelBeanMap.get("lng") + "&key=" + modelBeanMap.getStr("key"));
             JSONObject jsonObject = JSONObject.parseObject(result);
             if (jsonObject != null && jsonObject.containsKey("result")) {
-                JSONObject loaction = JSONObject.parseObject(jsonObject.getString("result"));
-                if (loaction != null && loaction.containsKey("address")) {
-                    String address = loaction.getString("address");
+                JSONObject location = JSONObject.parseObject(jsonObject.getString("result"));
+                if (location != null && location.containsKey("address")) {
+                    String address = location.getString("address");
                     put("address", address);
                 }
-                if (loaction != null && loaction.containsKey("ad_info")) {
-                    Map<String, String> resultMap = (Map<String, String>) JSONObject.parse(loaction.getString("ad_info"));
+                if (location != null && location.containsKey("ad_info")) {
+                    Map<String, String> resultMap = (Map<String, String>) JSONObject.parse(location.getString("ad_info"));
                     if (resultMap.containsKey("adcode")) {
                         String districtCode = resultMap.get("adcode"); //区编码
                         String provinceName = resultMap.get("province");
