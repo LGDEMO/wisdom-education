@@ -4,6 +4,7 @@ import com.education.common.interceptor.BaseInterceptor;
 import com.education.common.model.FrontUserInfoSession;
 import com.education.common.model.JwtToken;
 import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.service.school.StudentInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class AuthInterceptor extends BaseInterceptor {
         if (ObjectUtils.isEmpty(userInfoSession)) {
             Map resultMap = new HashMap<>();
             resultMap.put("code", ResultCode.UN_AUTH_ERROR_CODE);
-            renderJson(response, resultMap);
+            renderJson(response, Result.fail(ResultCode.UN_AUTH_ERROR_CODE, "用户身份已过期，请重新登录"));
             return false;
         }
         return checkToken(frontJwtToken, request, response);

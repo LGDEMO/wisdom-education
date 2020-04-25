@@ -126,10 +126,4 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
             systemAdminRoleMapper.save(params);// 关联校长账号角色权限
         }
     }
-
-
-    public List<Map> getSchoolPosition() {
-        return null;
-       // return sqlSessionTemplate.selectList("school.info.list.position");
-    }
 }
