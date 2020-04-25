@@ -1,5 +1,8 @@
 package com.education.service.webSocket;
 
+import com.education.common.constants.Constants;
+import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -35,8 +38,12 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
         if (serverHttpRequest instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletServerHttpRequest = (ServletServerHttpRequest)serverHttpRequest;
             HttpServletRequest request = servletServerHttpRequest.getServletRequest();
-            String sessionId = request.getSession().getId();
-            attributes.put("sessionId", sessionId);
+         // String sessionId = RequestUtils.getCookieValue("user_session_key"); // request.getSession().getId();
+            String sessionId = RequestUtils.getCookieValue(Constants.SESSION_NAME);
+            attributes.put("sessionId", request.getSession().getId());
+            if (ObjectUtils.isNotEmpty(sessionId)) {
+                attributes.put("sessionId", sessionId);
+            }
         }
         log.info("beforeHandshake");
         return true;
