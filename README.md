@@ -49,7 +49,7 @@ Element-UI | 2.13.0
 - ├── education-student-api-- 学生端api模块	
 ```
 #### 项目运行截图 
-
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0425/115112_1eb8a6e7_1526010.png "}CI9A4HDZZAC3%M`N}JL`77.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194825_34662cb0_1526010.png "]06ZXGQ[2~7S3_28H5XZD}9.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194921_bd7bc565_1526010.png "_QG(`5{@F690KF[O$ECXBVU.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194934_9d82c452_1526010.png "0UX7[[}L@8`9QVG~1JZRJ73.png")
