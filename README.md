@@ -56,7 +56,7 @@ Element-UI | 2.13.0
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194945_3b2ed607_1526010.png "P67Y6%0X}FR~2$KSG7RZXBO.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194953_0584ae6c_1526010.png "VETIX%NRF8V`)12DI0L[2ZP.png")
 ```
-QQ交流群
+QQ交流群 1072042422
 
 ```
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195324_02a1b710_1526010.png "temp_qrcode_share_1072042422.png")
