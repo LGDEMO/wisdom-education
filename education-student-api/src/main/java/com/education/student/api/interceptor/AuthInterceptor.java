@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 前台网站api接口拦截器
@@ -32,8 +30,6 @@ public class AuthInterceptor extends BaseInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         FrontUserInfoSession userInfoSession = studentInfoService.getFrontUserInfoSession();
         if (ObjectUtils.isEmpty(userInfoSession)) {
-            Map resultMap = new HashMap<>();
-            resultMap.put("code", ResultCode.UN_AUTH_ERROR_CODE);
             renderJson(response, Result.fail(ResultCode.UN_AUTH_ERROR_CODE, "用户身份已过期，请重新登录"));
             return false;
         }

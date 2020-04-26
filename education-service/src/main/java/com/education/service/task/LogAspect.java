@@ -63,11 +63,15 @@ public final class LogAspect {
             }
             params.put("startTime", startTime);
             params.put("request", request);
-            params.put("request_url", RequestUtils.getRequestUrl(request));
-            AdminUserSession adminUserSession = systemLogService.getAdminUserSession();
-            FrontUserInfoSession frontUserInfoSession = systemLogService.getFrontUserInfoSession();
-            params.put("adminUserSession", adminUserSession);
-            params.put("frontUserInfoSession", frontUserInfoSession);
+            String requestUrl = RequestUtils.getRequestUrl(request);
+            params.put("request_url", requestUrl);
+            if (requestUrl.startsWith("/system")) {
+                AdminUserSession adminUserSession = systemLogService.getAdminUserSession();
+                params.put("adminUserSession", adminUserSession);
+            } else {
+                FrontUserInfoSession frontUserInfoSession = systemLogService.getFrontUserInfoSession();
+                params.put("frontUserInfoSession", frontUserInfoSession);
+            }
             Object result = pjp.proceed();
             taskParam.setData(params);
             taskManager.pushTask(taskParam);

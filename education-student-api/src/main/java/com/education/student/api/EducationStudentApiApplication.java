@@ -12,7 +12,6 @@ import org.springframework.core.env.Environment;
         "com.education.student.api",
         "com.education.common",
         "com.education.service",
-        "com.education.event"
     }
 )
 @MapperScan("com.education.mapper")

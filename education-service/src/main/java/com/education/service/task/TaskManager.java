@@ -2,8 +2,7 @@ package com.education.service.task;
 
 import com.education.common.component.SpringBeanManager;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
 
 /**
  * 任务管理器
@@ -14,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TaskManager {
 
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-    private final Map<String, TaskListener> taskListenerMap = new ConcurrentHashMap<>();
 
     public TaskManager(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         this.threadPoolTaskExecutor = threadPoolTaskExecutor;
