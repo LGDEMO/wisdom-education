@@ -35,7 +35,7 @@ public abstract class BaseService<M extends BaseMapper> {
     @Autowired
     protected TaskManager taskManager;
     @Autowired
-    protected CacheBean iCache;
+    protected CacheBean cacheBean;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String DEFAULT_MAPPER_PAGE_METHOD_NAME = "queryList";
@@ -55,10 +55,10 @@ public abstract class BaseService<M extends BaseMapper> {
     }
 
     public Result<ModelBeanMap> paginationByCache(String cacheName, String key, Map params) {
-        Result<ModelBeanMap> result = iCache.get(cacheName, key);
+        Result<ModelBeanMap> result = cacheBean.get(cacheName, key);
         if (ObjectUtils.isEmpty(result)) {
             result = pagination(params);
-            iCache.put(cacheName, key, result);
+            cacheBean.put(cacheName, key, result);
         }
         return result;
     }
@@ -221,7 +221,7 @@ public abstract class BaseService<M extends BaseMapper> {
         if (ObjectUtils.isEmpty(sessionId)) {
             return null;
         }
-        return iCache.get(Constants.USER_INFO_CACHE, sessionId);
+        return cacheBean.get(Constants.USER_INFO_CACHE, sessionId);
     }
 
     public Map getFrontUserInfo() {
@@ -233,7 +233,7 @@ public abstract class BaseService<M extends BaseMapper> {
     }
 
     public FrontUserInfoSession getFrontUserInfoSession(String sessionId) {
-        return iCache.get(Constants.USER_INFO_CACHE, sessionId);
+        return cacheBean.get(Constants.USER_INFO_CACHE, sessionId);
     }
 
     public Integer getFrontUserInfoId() {

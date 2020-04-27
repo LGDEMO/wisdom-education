@@ -333,7 +333,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
             return;
         }
         RequestUtils.clearCookie(Constants.SESSION_NAME);
-        iCache.remove(Constants.USER_INFO_CACHE, userInfoSession.getSessionId()); // 删除用户缓存
+        cacheBean.remove(Constants.USER_INFO_CACHE, userInfoSession.getSessionId()); // 删除用户缓存
     }
 
 
@@ -342,7 +342,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         userInfoSession.setUserInfoMap(userInfoMap);
         String sessionId = getOrCreateSessionId(rememberMe);
         userInfoSession.setSessionId(sessionId);
-        iCache.put(Constants.USER_INFO_CACHE, sessionId, userInfoSession);
+        cacheBean.put(Constants.USER_INFO_CACHE, sessionId, userInfoSession);
         String token = frontJwtToken.createToken(userInfoMap.get("student_id"), Constants.SESSION_TIME_OUT * 60 * 1000); // 默认缓存5天
         Map userCacheMap = new HashMap();
         Integer gradeType = (Integer) userInfoMap.get("grade_type");

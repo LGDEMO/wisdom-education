@@ -14,12 +14,12 @@ import java.util.Set;
 @Component
 public final class OnlineUserManager {
 
-    private final CacheBean iCache;
+    private final CacheBean cacheBean;
     // 用户id 集合
     private static final String USER_ID_CACHE = "user:id:cache:";
 
-    public OnlineUserManager(CacheBean iCache) {
-        this.iCache = iCache;
+    public OnlineUserManager(CacheBean cacheBean) {
+        this.cacheBean = cacheBean;
     }
 
     /**
@@ -28,26 +28,26 @@ public final class OnlineUserManager {
      * @param onlineUser
      */
     public void addOnlineUser(Integer userId, OnlineUser onlineUser) {
-        this.iCache.put(USER_ID_CACHE, userId, onlineUser);
+        this.cacheBean.put(USER_ID_CACHE, userId, onlineUser);
     }
 
     public void removeOnlineUser(Integer userId) {
-        this.iCache.remove(USER_ID_CACHE, userId);
+        this.cacheBean.remove(USER_ID_CACHE, userId);
     }
 
 
     public OnlineUser getOnlineUser(Integer userId) {
-        return this.iCache.get(USER_ID_CACHE, userId);
+        return this.cacheBean.get(USER_ID_CACHE, userId);
     }
 
     /**
      * 删除所有用户
      */
     public void clearOnlineUser() {
-        Set<String> userIds = (Set<String>) this.iCache.getKeys(USER_ID_CACHE);
+        Set<String> userIds = (Set<String>) this.cacheBean.getKeys(USER_ID_CACHE);
         if (ObjectUtils.isNotEmpty(userIds)) {
             userIds.forEach(key -> {
-                this.iCache.remove(key);
+                this.cacheBean.remove(key);
             });
         }
     }

@@ -2,6 +2,7 @@ package com.education.admin.api;
 
 import com.education.common.cache.EhcacheBean;
 import com.education.common.cache.CacheBean;
+import com.education.common.utils.IpUtils;
 import com.education.common.utils.ObjectUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,19 +18,19 @@ import java.util.Collection;
 public class EducationAdminApiApplicationTests {
 
     @Autowired
-    public CacheBean iCache;
+    public CacheBean cacheBean;
     static final String cacheName = "user:cache";
 
     @Test
     public void testRedisCache() {
-        iCache.put("1", "java");
-        iCache.put("2", "php");
-        iCache.put("3", "python");
-        String value = iCache.get(cacheName, "1");
+        cacheBean.put("1", "java");
+        cacheBean.put("2", "php");
+        cacheBean.put("3", "python");
+        String value = cacheBean.get(cacheName, "1");
         System.out.println("value:" + value);
-        System.out.println(iCache.getKeys(cacheName));
-        iCache.removeAll(cacheName);
-        System.out.println(iCache.getKeys(cacheName));
+        System.out.println(cacheBean.getKeys(cacheName));
+        cacheBean.removeAll(cacheName);
+        System.out.println(cacheBean.getKeys(cacheName));
     }
 
     @Test
@@ -45,5 +46,10 @@ public class EducationAdminApiApplicationTests {
                 System.out.println(ehcacheBean.get(key) + "");
             });
         }
+    }
+
+    @Test
+    public void testIp() {
+        System.out.println(IpUtils.getIpAddress("182.101.63.196"));
     }
 }

@@ -65,8 +65,8 @@ public class ShiroConfiguration {
 	}
 
 	@Bean
-	public CacheManager redisCacheManager(CacheBean iCache) {
-		return new RedisCacheManager(iCache);
+	public CacheManager redisCacheManager(CacheBean cacheBean) {
+		return new RedisCacheManager(cacheBean);
 	}
 
 	@Bean
