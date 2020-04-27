@@ -3,7 +3,9 @@ package com.education.service;
 import com.education.common.constants.EnumConstants;
 import com.education.common.model.online.OnlineUser;
 import com.education.common.model.online.OnlineUserManager;
+import com.education.common.utils.IpUtils;
 import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.RequestUtils;
 import com.education.service.task.TaskManager;
 import com.education.service.task.TaskParam;
 import com.education.service.task.WebSocketMessageTask;
@@ -31,7 +33,8 @@ public class WebSocketMessageService {
             }
             String sessionId = onlineUser.getSessionId();
             TaskParam taskParam = new TaskParam(WebSocketMessageTask.class);
-            taskParam.setData(sessionId);
+            taskParam.put("sessionId", sessionId);
+            taskParam.put("ip", IpUtils.getAddressIp(RequestUtils.getRequest()));
             taskManager.pushTask(taskParam);
         }
     }

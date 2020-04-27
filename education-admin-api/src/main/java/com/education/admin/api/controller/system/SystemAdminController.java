@@ -3,7 +3,7 @@ package com.education.admin.api.controller.system;
 import com.education.common.annotation.Param;
 import com.education.common.annotation.ParamsType;
 import com.education.common.annotation.ParamsValidate;
-import com.education.common.base.ApiController;
+import com.education.common.base.BaseController;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
@@ -24,7 +24,7 @@ import java.util.Map;
 @RestController
 @Api(tags = "管理员管理")
 @RequestMapping("/system/admin")
-public class SystemAdminController extends ApiController {
+public class SystemAdminController extends BaseController {
 
     @Autowired
     private SystemAdminService systemAdminService;

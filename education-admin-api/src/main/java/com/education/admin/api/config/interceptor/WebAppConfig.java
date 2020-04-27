@@ -4,7 +4,6 @@
 package com.education.admin.api.config.interceptor;
 
 
-import com.education.common.annotation.ParamsValidate;
 import com.education.common.interceptor.LogInterceptor;
 import com.education.common.interceptor.ParamsValidateInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,6 @@ public class WebAppConfig implements WebMvcConfigurer {
 	private static final List<String> noInterceptorUrl = new ArrayList<String>() {
 		{
 			add("/system/unAuth");
-			add("/");
 			add("/system/login");
 		}
 	};

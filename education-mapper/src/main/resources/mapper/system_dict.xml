@@ -2,14 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.education.mapper.system.SystemDictMapper">
 
-   <select id="queryList" resultType="map">
+    <select id="queryList" resultType="modelBeanMap">
        select * from system_dict a <include refid="condition"/>
-   </select>
-
-    <select id="listGroup" resultType="modelBeanMap">
-         select a.*, b.name as parent_name from system_dict a left join system_dict b on a.parent_id = b.id
-         <include refid="condition"/>
-         group by type
     </select>
 
     <sql id="condition">
@@ -28,4 +22,8 @@
         </where>
         order by a.sort
     </sql>
+
+    <select id="findByCodeAndType" resultType="modelBeanMap">
+        select * from system_dict where code = #{code} and type = #{typeName}
+    </select>
 </mapper>

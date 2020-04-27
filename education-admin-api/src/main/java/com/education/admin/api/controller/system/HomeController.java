@@ -1,6 +1,6 @@
 package com.education.admin.api.controller.system;
 
-import com.education.common.base.ApiController;
+import com.education.common.base.BaseController;
 import com.education.common.utils.Result;
 import com.education.service.system.HomeService;
 import io.swagger.annotations.Api;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/system/home")
 @RestController
 @Api(tags = "首页数据接口")
-public class HomeController extends ApiController {
+public class HomeController extends BaseController {
 
     @Autowired
     private HomeService homeService;

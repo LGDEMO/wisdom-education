@@ -56,24 +56,22 @@ public final class LogAspect {
         Method method = signature.getMethod();
         SystemLog systemLog = method.getAnnotation(SystemLog.class);
         TaskParam taskParam = new TaskParam(SystemLogTask.class);
-        ModelBeanMap params = new ModelBeanMap();
         try {
             if (ObjectUtils.isNotEmpty(systemLog)) {
-                params.put("desc", systemLog.describe());
+                taskParam.put("desc", systemLog.describe());
             }
-            params.put("startTime", startTime);
-            params.put("request", request);
+            taskParam.put("startTime", startTime);
+            taskParam.put("request", request);
             String requestUrl = RequestUtils.getRequestUrl(request);
-            params.put("request_url", requestUrl);
+            taskParam.put("request_url", requestUrl);
             if (requestUrl.startsWith("/system")) {
                 AdminUserSession adminUserSession = systemLogService.getAdminUserSession();
-                params.put("adminUserSession", adminUserSession);
+                taskParam.put("adminUserSession", adminUserSession);
             } else {
                 FrontUserInfoSession frontUserInfoSession = systemLogService.getFrontUserInfoSession();
-                params.put("frontUserInfoSession", frontUserInfoSession);
+                taskParam.put("frontUserInfoSession", frontUserInfoSession);
             }
             Object result = pjp.proceed();
-            taskParam.setData(params);
             taskManager.pushTask(taskParam);
             return result;
         } catch (Throwable throwable) {
@@ -83,7 +81,7 @@ public final class LogAspect {
             for (StackTraceElement stackTraceElement : stackTraceElements) {
                 error.append(stackTraceElement.toString() + "   ");
             }
-            params.put("exception", error.toString());
+            taskParam.put("exception", error.toString());
             taskManager.pushTask(taskParam);
             throw throwable;
         }

@@ -55,6 +55,7 @@
     
     <!-- 指定一个文件目录，当EHCache把数据写到硬盘上时，将把数据写到这个文件目录下 -->
     <diskStore path="java.io.tmpdir"/>
+
     
     <!-- 设定缓存的默认数据过期策略。 -->
     <defaultCache
@@ -72,6 +73,7 @@
         timeToLiveSeconds="60"
         overflowToDisk="true"/>
 
+    <!-- 一分钟缓存 -->
     <cache name="two.minute"
         maxElementsInMemory="1000"
         eternal="false"
@@ -79,6 +81,7 @@
         timeToLiveSeconds="1200"
         overflowToDisk="true"/>
 
+    <!-- 一分钟缓存 -->
     <cache name="three.minute"
         maxElementsInMemory="1000"
         eternal="false"
@@ -86,6 +89,7 @@
         timeToLiveSeconds="1800"
         overflowToDisk="true"/>
 
+    <!-- 一小时缓存 -->
     <cache name="one.hour"
         maxElementsInMemory="1000"
         eternal="false"

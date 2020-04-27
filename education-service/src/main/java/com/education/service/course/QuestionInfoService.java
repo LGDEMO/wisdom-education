@@ -99,7 +99,6 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
                 questionInfoMap.put("update_date", now);
                 mapper.update(questionInfoMap);
             }
-            saveSystemLog(message + "试题id" + id);
             return new ResultCode(ResultCode.SUCCESS, message + "试题成功");
         } catch (Exception e) {
             log.error(message + "试题失败", e);

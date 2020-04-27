@@ -127,7 +127,6 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
             systemAdmin.put("password", password);
             int result = super.update(systemAdmin);
             if (result > 0) {
-                saveSystemLog("重置管理员" + userMap.get("login_name") + "密码");
                 return new ResultCode(ResultCode.SUCCESS, "密码重置成功");
             }
         } catch (Exception e) {
@@ -153,7 +152,6 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
             systemAdmin.put("id", userMap.get("id"));
             int result = this.update(systemAdmin);
             if (result > 0) {
-                saveSystemLog("修改管理员" + userMap.get("login_name") + "密码");
                 return new ResultCode(ResultCode.SUCCESS, "密码修改成功, 退出后请使用新密码登录");
             }
         } catch (Exception e) {
@@ -172,7 +170,6 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
         String message = "删除";
         int result = mapper.deleteById(systemAdmin.getInt("id"));
         if (result > 0) {
-            this.saveSystemLog(message + systemAdmin.get("operation"));
             return new ResultCode(ResultCode.SUCCESS, "删除成功");
         }
         return new ResultCode(ResultCode.FAIL, "删除失败");
@@ -227,7 +224,6 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
                 dataMap.put("list", adminRoleList);
                 systemAdminRoleMapper.batchSave(dataMap);
             }
-            saveSystemLog(message + "管理员" + params.get("login_name"));
             return new ResultCode(ResultCode.SUCCESS, message + "管理员成功");
         } catch (Exception e) {
             log.error(message + "管理员异常", e);

@@ -1,54 +1,49 @@
 package com.education.admin.api;
 
-
-import com.jfinal.weixin.sdk.utils.HttpUtils;
+import com.education.common.cache.EhcacheBean;
+import com.education.common.cache.CacheBean;
+import com.education.common.utils.ObjectUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 
-//@SpringBootTest
-//@RunWith(SpringRunner.class)
+
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class EducationAdminApiApplicationTests {
 
     @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public CacheBean iCache;
+    static final String cacheName = "user:cache";
 
     @Test
-    public void insertRegion() {
-        List<Map<String, Object>> data = jdbcTemplate.queryForList("select * from system_region1");
-        data.forEach(item -> {
-            jdbcTemplate.update("insert into system_region(code, parent_code, name, full_name, create_date) values(?, ?, ?, ?, ?)",
-                    item.get("code"), item.get("parent_code"), item.get("name"), item.get("full_name"), item.get("create_date"));
-        });
+    public void testRedisCache() {
+        iCache.put("1", "java");
+        iCache.put("2", "php");
+        iCache.put("3", "python");
+        String value = iCache.get(cacheName, "1");
+        System.out.println("value:" + value);
+        System.out.println(iCache.getKeys(cacheName));
+        iCache.removeAll(cacheName);
+        System.out.println(iCache.getKeys(cacheName));
     }
 
-    public static void main(String[] args) {
-        for (int i = 0; i < 500; i++) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String content = HttpUtils.get("http://127.0.0.1/system/log/list?name=dsd&age=sdsd");
-                    System.err.println(content);
-                }
-            }).start();
+    @Test
+    public void testEhcache() {
+        CacheBean ehcacheBean = new EhcacheBean();
+        ehcacheBean.put(cacheName, "1", "java");
+        ehcacheBean.put(cacheName, "2", "php");
+        ehcacheBean.put(cacheName, "3", "python");
+        Collection collection = ehcacheBean.getKeys();
+        if (ObjectUtils.isNotEmpty(collection)) {
+            collection.forEach(key -> {
+                System.out.println("key" + key);
+                System.out.println(ehcacheBean.get(key) + "");
+            });
         }
-    }
-
-    @Test
-    public void testRedis() {
-        long expires = System.currentTimeMillis()  + 1;
-
-       // boolean result = redisTemplate.opsForValue().setIfAbsent("TEST", expires);
-        System.err.println((Long) redisTemplate.opsForValue().get("TEST"));
-      //  redisTemplate.opsForValue().getAndSet("TEST", expires);
     }
 }

@@ -5,7 +5,9 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import java.util.List;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 基于Ehcache 缓存
@@ -14,11 +16,18 @@ import java.util.List;
  * @create_at 2019/12/23 21:11
  */
 @Slf4j
-public class EhcacheBean implements BaseCache {
+public class EhcacheBean implements CacheBean {
 
     private static final String DEFAULT_CACHE = "default_cache";
-    private CacheManager cacheManager;
-    private Object rock = new Object();
+    private final CacheManager cacheManager;
+    private final Object rock = new Object();
+
+    public EhcacheBean() {
+        InputStream inputStream = this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("ehcache.xml");
+        this.cacheManager = CacheManager.create(inputStream);
+    }
 
     public EhcacheBean(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
@@ -59,8 +68,24 @@ public class EhcacheBean implements BaseCache {
         }
     }
 
+    @Override
+    public void put(String cacheName, Object key, Object value, int liveSeconds, TimeUnit timeUnit) {
+
+    }
+
     public void put(Object key, Object value) {
         put(DEFAULT_CACHE, key, value);
+    }
+
+    @Override
+    public void put(Object key, Object value, int liveSeconds) {
+        if (liveSeconds <= 0) {
+            this.put(key, value);
+        } else {
+            Element element = new Element(key, value);
+            element.setTimeToLive(liveSeconds);
+            this.getOrAddCache(DEFAULT_CACHE).put(element);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -74,8 +99,23 @@ public class EhcacheBean implements BaseCache {
     }
 
     @SuppressWarnings("rawtypes")
-    public List getKeys(String cacheName) {
+    public Collection getKeys(String cacheName) {
         return getOrAddCache(cacheName).getKeys();
+    }
+
+    @Override
+    public Collection getKeys() {
+        return this.getKeys(DEFAULT_CACHE);
+    }
+
+    @Override
+    public void remove(Object key) {
+        this.remove(DEFAULT_CACHE, key);
+    }
+
+    @Override
+    public void remove() {
+        this.remove(DEFAULT_CACHE);
     }
 
     public void remove(String cacheName, Object key) {
@@ -85,7 +125,4 @@ public class EhcacheBean implements BaseCache {
     public void removeAll(String cacheName) {
         getOrAddCache(cacheName).removeAll();
     }
-
-
-
 }

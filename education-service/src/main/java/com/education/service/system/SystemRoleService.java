@@ -54,7 +54,6 @@ public class SystemRoleService extends BaseService<SystemRoleMapper> {
                 dataMap.put("list", list);
                 int result = systemRoleMenuMapper.batchSave(dataMap);
                 if (result > 0) {
-                    saveSystemLog("更改角色" + roleMenuMap.getStr("name") + "权限");
                     return new ResultCode(ResultCode.SUCCESS, "权限设置成功");
                 }
                 return new ResultCode(ResultCode.FAIL, "权限设置失败");

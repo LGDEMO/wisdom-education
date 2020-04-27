@@ -2,10 +2,9 @@ package com.education.service;
 
 import com.education.common.utils.*;
 import com.education.common.base.BaseMapper;
-import com.education.common.cache.BaseCache;
+import com.education.common.cache.CacheBean;
 import com.education.common.component.SpringBeanManager;
 import com.education.common.constants.Constants;
-import com.education.common.constants.EnumConstants;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.FrontUserInfoSession;
@@ -21,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +35,7 @@ public abstract class BaseService<M extends BaseMapper> {
     @Autowired
     protected TaskManager taskManager;
     @Autowired
-    protected BaseCache ehcacheBean;
+    protected CacheBean iCache;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String DEFAULT_MAPPER_PAGE_METHOD_NAME = "queryList";
@@ -57,10 +55,10 @@ public abstract class BaseService<M extends BaseMapper> {
     }
 
     public Result<ModelBeanMap> paginationByCache(String cacheName, String key, Map params) {
-        Result<ModelBeanMap> result = ehcacheBean.get(cacheName, key);
+        Result<ModelBeanMap> result = iCache.get(cacheName, key);
         if (ObjectUtils.isEmpty(result)) {
             result = pagination(params);
-            ehcacheBean.put(cacheName, key, result);
+            iCache.put(cacheName, key, result);
         }
         return result;
     }
@@ -139,24 +137,6 @@ public abstract class BaseService<M extends BaseMapper> {
         }
         return new ResultCode(ResultCode.SUCCESS, "删除数据异常");
     }
-
-    /**
-     * 保存系统操作日志
-     * @param operationDesc
-     */
-    public void saveSystemLog(String operationDesc) {
-        Map params = new HashMap<>();
-        params.put("operation_desc", operationDesc);
-        params.put("operation_ip", IpUtils.getAddressIp(RequestUtils.getRequest()));
-        params.put("create_date", new Date());
-       // params.put("user_id", getUserId());
-     //   params.put("operation_name", getAdminUser().get("login_name"));
-        params.put("platform_type", EnumConstants.PlatformType.WEB_ADMIN.getValue());
-
-      //  this.save("system.log.save", params);
-    }
-
-
 
     /**
      * 添加数据
@@ -241,7 +221,7 @@ public abstract class BaseService<M extends BaseMapper> {
         if (ObjectUtils.isEmpty(sessionId)) {
             return null;
         }
-        return ehcacheBean.get(Constants.USER_INFO_CACHE, sessionId);
+        return iCache.get(Constants.USER_INFO_CACHE, sessionId);
     }
 
     public Map getFrontUserInfo() {
@@ -253,7 +233,7 @@ public abstract class BaseService<M extends BaseMapper> {
     }
 
     public FrontUserInfoSession getFrontUserInfoSession(String sessionId) {
-        return ehcacheBean.get(Constants.USER_INFO_CACHE, sessionId);
+        return iCache.get(Constants.USER_INFO_CACHE, sessionId);
     }
 
     public Integer getFrontUserInfoId() {

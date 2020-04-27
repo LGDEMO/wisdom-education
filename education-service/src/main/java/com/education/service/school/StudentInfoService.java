@@ -199,16 +199,6 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
                 data.put("correct_flag", true);
                 examInfoMapper.update(data);
             }
-            // 发送答题成绩分数模板消息
-          /*  BaseTask studyTemplateMsg = new StudentMessageTask();
-            studyTemplateMsg.put("student_id", studentId);
-            studyTemplateMsg.put("mark", mark);
-            studyTemplateMsg.put("admin_id", getAdminUser().get("id"));
-            ModelBeanMap paperInfo = testPaperInfoMapper.findById(testPaperId);
-            studyTemplateMsg.put("content", "您参加的考试【" + paperInfo.getStr("name") + "】已被管理员" + getAdminUser().get("login_name") + "批改，快去查看吧");
-            studyTemplateMsg.put("create_date", new Date());
-            studyTemplateMsg.put("test_paper_info_id", testPaperId);
-            taskManager.execute(studyTemplateMsg); */
             params.put("code", ResultCode.SUCCESS);
             params.put("message", "操作成功, 该学员本次共得到" + mark + "分");
             return params;
@@ -342,18 +332,8 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         if (ObjectUtils.isEmpty(userInfoSession)) {
             return;
         }
-     //   Integer studentId = (Integer) userInfoSession.getUserInfoMap().get("student_id");
-    //    String studentName = (String) userInfoSession.getUserInfoMap().get("student_name");
-       // onlineUserManager.removeOnlineUser(userInfoSession.getUserId());
-        // 推送模板消息
-     //   BaseTask<Map> studyTemplateMsg = new StudyTemplateMsg(sqlSessionTemplate);
-      /*  studyTemplateMsg.put("studentId", studentId);
-        studyTemplateMsg.put("student_name", studentName);
-        studyTemplateMsg.put("login_status", EnumConstants.LoginStatus.LOGIN_OUT.getValue());
-        studyTemplateMsg.put("templateId", Constants.STUDY_STATUS_TEMPLATE_MESSAGE_ID);
-        taskManager.execute(studyTemplateMsg);*/
         RequestUtils.clearCookie(Constants.SESSION_NAME);
-        ehcacheBean.remove(Constants.USER_INFO_CACHE, userInfoSession.getSessionId()); // 删除用户缓存
+        iCache.remove(Constants.USER_INFO_CACHE, userInfoSession.getSessionId()); // 删除用户缓存
     }
 
 
@@ -362,7 +342,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         userInfoSession.setUserInfoMap(userInfoMap);
         String sessionId = getOrCreateSessionId(rememberMe);
         userInfoSession.setSessionId(sessionId);
-        ehcacheBean.put(Constants.USER_INFO_CACHE, sessionId, userInfoSession);
+        iCache.put(Constants.USER_INFO_CACHE, sessionId, userInfoSession);
         String token = frontJwtToken.createToken(userInfoMap.get("student_id"), Constants.SESSION_TIME_OUT * 60 * 1000); // 默认缓存5天
         Map userCacheMap = new HashMap();
         Integer gradeType = (Integer) userInfoMap.get("grade_type");

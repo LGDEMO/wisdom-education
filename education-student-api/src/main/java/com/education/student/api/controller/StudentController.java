@@ -18,6 +18,7 @@ import javax.validation.constraints.Pattern;
 import java.util.Map;
 
 /**
+ * 学员信息接口
  * @author zengjintao
  * @version 1.0
  * @create_at 2020/3/11 13:52
@@ -29,8 +30,6 @@ public class StudentController extends BaseController {
     @Autowired
     @Pattern(regexp = "")
     private StudentInfoService studentInfoService;
-    @Autowired
-    private QuestionInfoService questionInfoService;
     @Autowired
     private SubjectInfoService subjectInfoService;
 

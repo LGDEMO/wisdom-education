@@ -12,8 +12,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,15 +33,6 @@ public class WebAppConfig implements WebMvcConfigurer {
 
 	@Value("${file.uploadPath}")
 	private String uploadPath;
-
-	//不需要拦截的url
-	private static final List<String> noInterceptorUrl = new ArrayList<String>() {
-		{
-			add("/system/unAuth");
-			add("/system/login");
-			add("/api/**");
-		}
-	};
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

@@ -29,8 +29,7 @@ public class SystemLogTask implements TaskListener {
 
     @Override
     public void onMessage(TaskParam taskParam) {
-        ModelBeanMap modelBeanMap = taskParam.getData();
-        HttpServletRequest request = (HttpServletRequest) modelBeanMap.get("request");
+        HttpServletRequest request = (HttpServletRequest) taskParam.get("request");
         String methodName = request.getMethod();
         String contentType = request.getHeader("Content-Type");
         Object params = null;
@@ -63,8 +62,8 @@ public class SystemLogTask implements TaskListener {
         } else {
             dataMap.put("params", params);
         }
-        AdminUserSession adminUserSession = (AdminUserSession) modelBeanMap.get("adminUserSession");
-        FrontUserInfoSession frontUserInfoSession = (FrontUserInfoSession) modelBeanMap.get("frontUserInfoSession");
+        AdminUserSession adminUserSession = (AdminUserSession) taskParam.get("adminUserSession");
+        FrontUserInfoSession frontUserInfoSession = (FrontUserInfoSession) taskParam.get("frontUserInfoSession");
         if (ObjectUtils.isNotEmpty(adminUserSession)) {
             dataMap.put("user_id", adminUserSession.getUserMap().get("id"));
         } else if (ObjectUtils.isNotEmpty(frontUserInfoSession)) {
@@ -72,7 +71,7 @@ public class SystemLogTask implements TaskListener {
         }
         dataMap.put("create_date", new Date());
         dataMap.put("platform_type", EnumConstants.PlatformType.WEB_ADMIN.getValue());
-        long startTime = modelBeanMap.getLong("startTime");
+        long startTime = taskParam.getLong("startTime");
         dataMap.put("request_time", (System.currentTimeMillis() - startTime) + "ms");
         dataMap.remove("startTime");
         dataMap.remove("request");

@@ -5,7 +5,6 @@ import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.Result;
 
 import com.education.common.utils.ResultCode;
-import com.education.mapper.system.SystemDictMapper;
 import com.education.service.system.SystemDictService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;

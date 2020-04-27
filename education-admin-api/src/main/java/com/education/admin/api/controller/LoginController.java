@@ -1,7 +1,7 @@
 package com.education.admin.api.controller;
 
 import com.education.common.annotation.SystemLog;
-import com.education.common.base.ApiController;
+import com.education.common.base.BaseController;
 import com.education.common.constants.EnumConstants;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.JwtToken;
@@ -12,7 +12,6 @@ import com.education.common.utils.IpUtils;
 import com.education.common.utils.RequestUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
-
 import com.education.service.WebSocketMessageService;
 import com.education.service.system.SystemAdminService;
 import io.swagger.annotations.Api;
@@ -36,7 +35,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/system")
 @Api(value = "管理员登录登出接口", tags = "系统登录登出接口")
-public class LoginController extends ApiController {
+public class LoginController extends BaseController {
 
     @Autowired
     private SystemAdminService systemAdminService;
@@ -57,6 +56,12 @@ public class LoginController extends ApiController {
     public Result login(@RequestBody ModelBeanMap requestBody, HttpSession session) {
         String loginName = requestBody.getStr("userName");
         String password = requestBody.getStr("password");
+        String codeKey = requestBody.getStr("key");
+        String imageCode = requestBody.getStr("imageCode");
+        String cacheCode = (String) redisTemplate.opsForValue().get(codeKey);
+        if (!imageCode.equals(cacheCode)) {
+            return Result.fail(ResultCode.FAIL, "验证码输入错误");
+        }
         Result result = systemAdminService.login(loginName, password);
         if (result.isSuccess()) {
             String token = adminJwtToken.createToken(systemAdminService.getUserId(), 24 * 60 * 60 * 1000 * 5); // 默认缓存5天
@@ -90,7 +95,6 @@ public class LoginController extends ApiController {
             OnlineUser nowOnlineUser = new OnlineUser(userSession.getUserId(), sessionId, EnumConstants.PlatformType.WEB_ADMIN);
             nowOnlineUser.setAdminUserSession(userSession);
             onlineUserManager.addOnlineUser(userId, nowOnlineUser);
-          //  systemAdminService.saveSystemLog(loginName + "登录系统");
        }
         result.setData(requestBody);
         return result;

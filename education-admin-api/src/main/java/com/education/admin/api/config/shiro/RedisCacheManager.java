@@ -1,30 +1,27 @@
 package com.education.admin.api.config.shiro;
 
+import com.education.common.cache.CacheBean;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
-import org.springframework.data.redis.core.RedisTemplate;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * @descript:
+ * @descript: shiro redis缓存管理器
  * @Auther: zengjintao
  * @Date: 2020/3/27 15:03
  * @Version:2.1.0
  */
 public class RedisCacheManager implements CacheManager {
 
-    private RedisTemplate redisTemplate;
-    // 缓存默认失效时间
-    private static final int ONE_HOUR_CACHE = 3600;
-    private int expire = ONE_HOUR_CACHE;
+    private CacheBean cacheBean;
+
     private final Map<String, Cache> caches = new ConcurrentHashMap<>();
 
-    public RedisCacheManager(RedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public RedisCacheManager(CacheBean cacheBean) {
+        this.cacheBean = cacheBean;
     }
 
     @Override
@@ -38,7 +35,7 @@ public class RedisCacheManager implements CacheManager {
             synchronized (this) {
                 cache = caches.get(s);
                 if (cache == null) {
-                    cache = new RedisCache<K, V>(redisTemplate, expire);
+                    cache = new RedisCache<K, V>(cacheBean);
                 }
             }
         }

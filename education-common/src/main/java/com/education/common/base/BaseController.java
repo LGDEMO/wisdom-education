@@ -1,5 +1,8 @@
 package com.education.common.base;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,8 +13,9 @@ import java.util.Set;
  */
 public abstract class BaseController {
 
-    public static final String TREE_LIST = "tree_list";
 
+    @Autowired
+    protected RedisTemplate redisTemplate;
     protected static final Set<String> excelTypes = new HashSet<String>() {
         {
             add("application/x-xls");

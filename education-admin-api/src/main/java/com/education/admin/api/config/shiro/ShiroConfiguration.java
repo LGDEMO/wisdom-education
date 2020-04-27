@@ -1,25 +1,22 @@
 package com.education.admin.api.config.shiro;
 
+import com.education.common.cache.CacheBean;
+import com.education.common.cache.RedisCacheBean;
 import org.apache.shiro.cache.CacheManager;
-import org.apache.shiro.cache.ehcache.EhCacheManager;
-import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-
+import org.springframework.data.redis.core.RedisTemplate;
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +32,6 @@ import java.util.Map;
 public class ShiroConfiguration {
 
 	private static final long INVALID_TIME = 3600 * 6 * 1000;
-	@Autowired
-	private ShiroCookieConfig shiroCookieConfig;
 
 	@Bean
 	public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
@@ -46,26 +41,22 @@ public class ShiroConfiguration {
 		shiroFilterFactoryBean.setLoginUrl("/system/unAuth");
 		Map<String, String> filterChainDefinitionMap = new HashMap<>();
 		// swagger-ui 配置
-		filterChainDefinitionMap.put("/redis", "anon");
 		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
-		filterChainDefinitionMap.put("/MP_verify_W2WeDnp77xFcTDlk.txt", "anon");
 		filterChainDefinitionMap.put("/swagger-resources", "anon");
 		filterChainDefinitionMap.put("/v2/api-docs", "anon");
 		filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
-
 		filterChainDefinitionMap.put("/doc.html", "anon"); // boostrap swagger ui
 		filterChainDefinitionMap.put("/swagger-resources/**", "anon");
-		filterChainDefinitionMap.put("/ueditor/exec", "anon");
 		filterChainDefinitionMap.put("/uploads/**", "anon");
-		filterChainDefinitionMap.put("/upload/**", "anon");
 		filterChainDefinitionMap.put("/static/**", "anon");
 		filterChainDefinitionMap.put("/system/login", "anon");
 		filterChainDefinitionMap.put("/*", "anon");
-
-		filterChainDefinitionMap.put("/front/**", "anon");
-        filterChainDefinitionMap.put("/index.html", "anon");
+		
+		// 需要认证才能访问的url
+		filterChainDefinitionMap.put("/ueditor/exec", "authc");
+		filterChainDefinitionMap.put("/upload/**", "authc");
+		filterChainDefinitionMap.put("/dict/**", "authc");
         filterChainDefinitionMap.put("/system/**", "authc");
-        filterChainDefinitionMap.put("/api/**", "anon");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		//自定义过滤器
 		Map<String, Filter> filterMap = shiroFilterFactoryBean.getFilters();
@@ -74,12 +65,9 @@ public class ShiroConfiguration {
 	}
 
 	@Bean
-	public CacheManager ehCacheManager(net.sf.ehcache.CacheManager cacheManager) {
-		EhCacheManager ehCacheManager = new EhCacheManager();
-		ehCacheManager.setCacheManager(cacheManager);
-		return ehCacheManager;
+	public CacheManager redisCacheManager(CacheBean iCache) {
+		return new RedisCacheManager(iCache);
 	}
-
 
 	@Bean
 	public DefaultWebSessionManager sessionManager(SessionDAO educationShiroSession) {
@@ -94,39 +82,22 @@ public class ShiroConfiguration {
 	@Bean
 	public SecurityManager securityManager(SessionManager sessionManager,
 										   Realm systemRealm,
-										   CacheManager ehCacheManager,
-										   CookieRememberMeManager cookieRememberMeManager) {
+										   CacheManager redisCacheManager) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 		securityManager.setRealm(systemRealm);
 		securityManager.setSessionManager(sessionManager);
-		securityManager.setCacheManager(ehCacheManager);
-		securityManager.setRememberMeManager(cookieRememberMeManager);
+		securityManager.setCacheManager(redisCacheManager);
 		return securityManager;
 	}
 
-
 	@Bean
-	public SessionDAO educationShiroSession() {
-		return new EhcacheShiroSession();
+	public CacheBean cacheBean(RedisTemplate redisTemplate) {
+		return new RedisCacheBean(redisTemplate);
 	}
 
 	@Bean
-	public CookieRememberMeManager cookieRememberMeManager(SimpleCookie simpleCookie) {
-		CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-		cookieRememberMeManager.setCookie(simpleCookie);
-		cookieRememberMeManager.setCipherKey(Base64.decode("2AvVhdsgUs0FSA3SDFAdag=="));
-		return cookieRememberMeManager;
-	}
-
-	@Bean
-	public SimpleCookie rememberMeCookie() {
-		SimpleCookie simpleCookie = new SimpleCookie(shiroCookieConfig.getName());
-		// 记住我cookie生效时间5天 ,单位秒;-->
-		simpleCookie.setHttpOnly(true);
-		simpleCookie.setMaxAge(shiroCookieConfig.getTimeOut());
-		simpleCookie.setDomain(shiroCookieConfig.getDomain());
-		simpleCookie.setPath(shiroCookieConfig.getPath());
-		return simpleCookie;
+	public SessionDAO distributeShiroSession(CacheBean cacheBean) {
+		return new DistributeShiroSession(cacheBean);
 	}
 
 

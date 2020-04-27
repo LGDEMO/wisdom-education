@@ -1,15 +1,16 @@
-package com.education.common.base;
+package com.education.service.core;
 
 import com.baidu.ueditor.ActionEnter;
+import com.education.common.base.BaseController;
 import com.education.common.model.Captcha;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.PathKit;
-import com.education.common.utils.ResultCode;
-import com.education.common.utils.SpellUtils;
+import com.education.common.model.ModelBeanMap;
+import com.education.common.utils.*;
+import com.education.service.system.SystemDictService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * api 公共接口
  * @author zengjintao
  * @version 1.0
  * @create_at 2020/3/8 11:33
@@ -31,6 +33,29 @@ import java.util.Set;
 @RestController
 @Slf4j
 public class ApiController extends BaseController {
+
+    @Autowired
+    private SystemDictService systemDictService;
+
+    /**
+     * 字典管理列表
+     * @param params
+     * @return
+     */
+    @GetMapping("/dict/list")
+    public Result dictList(@RequestParam Map params) {
+        return systemDictService.pagination(params);
+    }
+
+    /**
+     * 添加或修改字典
+     * @param params
+     * @return
+     */
+    @PostMapping("/dict/saveOrUpdate")
+    public ResultCode saveOrUpdate(@RequestBody ModelBeanMap params) {
+        return systemDictService.saveOrUpdate(params);
+    }
 
     @RequestMapping(value = "/ueditor/exec", method = { RequestMethod.GET, RequestMethod.POST })
     public String exec(HttpServletRequest request, HttpServletResponse response) {
@@ -159,8 +184,9 @@ public class ApiController extends BaseController {
      */
     @GetMapping("/image")
     @ApiOperation("生成验证码接口")
-    public void image(HttpServletRequest request, HttpServletResponse response){
-        Captcha captcha = new Captcha();
-        captcha.render(request, response);
+    public void image(HttpServletRequest request, HttpServletResponse response) {
+        String key = request.getParameter("key");
+        Captcha captcha = new Captcha(redisTemplate, key);
+        captcha.render(response);
     }
 }

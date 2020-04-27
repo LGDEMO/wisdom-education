@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
+ * 系统消息通知接口
  * @author zengjintao
  * @version 1.0
  * @create_at 2020/3/15 13:59

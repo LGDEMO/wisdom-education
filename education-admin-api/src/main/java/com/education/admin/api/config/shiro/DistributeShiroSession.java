@@ -1,33 +1,38 @@
 package com.education.admin.api.config.shiro;
 
-import com.education.common.cache.EhcacheBean;
+import com.education.common.cache.CacheBean;
 import com.education.common.utils.ObjectUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
- * @descript:
- * @Auther: zengjintao
- * @Date: 2019/12/20 15:15
- * @Version:2.1.0
+ * 分布式session
  */
-public class EhcacheShiroSession extends AbstractSessionDAO {
+public class DistributeShiroSession extends AbstractSessionDAO {
 
-    private static final String sessionKey = "user.cache";
-    @Autowired
-    private EhcacheBean ehcacheBean;
+    private final CacheBean cacheBean;
+    public static final String SESSION_KEY = "user.session.cache";
+    // 缓存默认失效时间
+    private static final int WEEK_TIME_OUT = 7 * 24 * 60 * 60;
+    private int expire = WEEK_TIME_OUT;
 
+    public DistributeShiroSession(CacheBean cacheBean) {
+        this.cacheBean = cacheBean;
+    }
 
-    public EhcacheShiroSession() {
-
+    /**
+     * 设置缓存失效时间
+     * @param expire
+     */
+    public void setExpire(int expire) {
+        this.expire = expire;
     }
 
     @Override
@@ -42,13 +47,13 @@ public class EhcacheShiroSession extends AbstractSessionDAO {
         if (id == null) {
             throw new NullPointerException("id argument cannot be null.");
         }
-        ehcacheBean.put(sessionKey, id, session);
+        cacheBean.put(SESSION_KEY, id, session, WEEK_TIME_OUT, TimeUnit.SECONDS);
     }
 
 
     @Override
     protected Session doReadSession(Serializable sessionId) {
-        return ehcacheBean.get(sessionKey, sessionId);
+        return cacheBean.get(SESSION_KEY, sessionId);
     }
 
     @Override
@@ -58,16 +63,16 @@ public class EhcacheShiroSession extends AbstractSessionDAO {
 
     @Override
     public void delete(Session session) {
-        ehcacheBean.remove(sessionKey, session.getId());
+        cacheBean.remove(SESSION_KEY, session.getId());
     }
 
     @Override
     public Collection<Session> getActiveSessions() {
-        List<String> keys = ehcacheBean.getKeys(sessionKey);
+        Collection<String> keys = cacheBean.getKeys(SESSION_KEY);
         List<Session> sessionList = new ArrayList<>();
         if (ObjectUtils.isNotEmpty(keys)) {
             keys.forEach(key -> {
-                Session session = ehcacheBean.get(sessionKey, key);
+                Session session = cacheBean.get(SESSION_KEY, key);
                 sessionList.add(session);
             });
             return Collections.unmodifiableCollection(sessionList);

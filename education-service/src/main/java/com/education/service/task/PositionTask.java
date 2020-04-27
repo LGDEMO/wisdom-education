@@ -46,9 +46,8 @@ public class PositionTask implements TaskListener {
 
     @Override
     public void onMessage(TaskParam taskParam) {
-        ModelBeanMap modelBeanMap = taskParam.getData();
-        String result = HttpUtils.get(LBS_HTTP_URL + modelBeanMap.getStr("lat") + ","
-                + modelBeanMap.get("lng") + "&key=" + modelBeanMap.getStr("key"));
+        String result = HttpUtils.get(LBS_HTTP_URL + taskParam.getStr("lat") + ","
+                + taskParam.get("lng") + "&key=" + taskParam.getStr("key"));
         JSONObject jsonObject = JSONObject.parseObject(result);
         Map params = new HashMap<>();
         try {
@@ -81,7 +80,7 @@ public class PositionTask implements TaskListener {
                         params.put("town_code", districtCode);
                     }
                 }
-                modelBeanMap.remove("key");
+                taskParam.remove("key");
                 schoolInfoMapper.update(params);
             }
         } catch (Exception e) {

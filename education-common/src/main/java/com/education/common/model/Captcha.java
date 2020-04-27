@@ -1,6 +1,7 @@
 package com.education.common.model;
 
 import com.education.common.constants.Constants;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 图片验证码工具类
@@ -31,15 +33,23 @@ public class Captcha {
 		new Font(Font.SANS_SERIF, Font.BOLD, 34),
 		new Font(Font.MONOSPACED, Font.BOLD, 34)
 	};
+
+	private RedisTemplate redisTemplate;
+	private String key;
+
+	public Captcha(RedisTemplate redisTemplate, String key) {
+		this.redisTemplate = redisTemplate;
+		this.key = key;
+	}
 	
-	public void render(HttpServletRequest request, HttpServletResponse response) {
+	public void render(HttpServletResponse response) {
 		BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		Graphics graphics = image.getGraphics();
 		setBackground(graphics);//设置背景
 		setBorder(graphics);
 		setRandomLine(graphics);
 		String num = serRandomNum(graphics);
-		request.getSession().setAttribute(Constants.IMAGE_CODE, num);
+		redisTemplate.opsForValue().set(key, num, 60L, TimeUnit.SECONDS);
 		response.setHeader("Pragma","no-cache");
 		response.setHeader("Cache-Control","no-cache");
 		response.setDateHeader("Expires", 0);

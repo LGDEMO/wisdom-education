@@ -2,12 +2,10 @@
  * 
  */
 package com.education.admin.api.config.interceptor;
-
 import com.education.common.interceptor.BaseInterceptor;
 import com.education.common.model.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,10 +22,8 @@ public class AuthInterceptor extends BaseInterceptor {
 	private JwtToken adminJwtToken;
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
-		/* String target = getRequestUrl(request);
-		if ("/".equals(target) || "/system/unAuth".equals(target))
-			return true; */
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object)
+			throws Exception {
 		return checkToken(adminJwtToken, request, response);
 	}
 }

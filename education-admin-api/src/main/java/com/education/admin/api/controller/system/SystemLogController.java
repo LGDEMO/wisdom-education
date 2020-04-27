@@ -1,6 +1,6 @@
 package com.education.admin.api.controller.system;
 
-import com.education.common.base.ApiController;
+import com.education.common.base.BaseController;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/system/log")
-public class SystemLogController extends ApiController {
+public class SystemLogController extends BaseController {
 
     @Autowired
     private SystemLogService systemLogService;

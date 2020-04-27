@@ -1,10 +1,10 @@
 package com.education.admin.api.controller.system;
 
-import com.education.common.base.ApiController;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
+import com.education.service.core.ApiController;
 import com.education.service.system.SystemRoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
+ * 科目信息接口
  * @author zengjintao
  * @version 1.0
  * @create_at 2020/3/11 13:54
