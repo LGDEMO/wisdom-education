@@ -2,15 +2,18 @@ package com.education.admin.api;
 
 import com.education.common.cache.EhcacheBean;
 import com.education.common.cache.CacheBean;
+import com.education.common.model.AdminUserSession;
 import com.education.common.utils.IpUtils;
 import com.education.common.utils.ObjectUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 
 @SpringBootTest
@@ -20,17 +23,23 @@ public class EducationAdminApiApplicationTests {
     @Autowired
     public CacheBean cacheBean;
     static final String cacheName = "user:cache";
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Test
     public void testRedisCache() {
-        cacheBean.put("1", "java");
+        AdminUserSession adminUserSession = new AdminUserSession(new HashMap());
+        redisTemplate.opsForValue().set("test", adminUserSession);
+        AdminUserSession adminUserSession1 = (AdminUserSession) redisTemplate.opsForValue().get("test");
+        System.out.println(adminUserSession1);
+        /*cacheBean.put("1", "java");
         cacheBean.put("2", "php");
         cacheBean.put("3", "python");
         String value = cacheBean.get(cacheName, "1");
         System.out.println("value:" + value);
         System.out.println(cacheBean.getKeys(cacheName));
         cacheBean.removeAll(cacheName);
-        System.out.println(cacheBean.getKeys(cacheName));
+        System.out.println(cacheBean.getKeys(cacheName));*/
     }
 
     @Test

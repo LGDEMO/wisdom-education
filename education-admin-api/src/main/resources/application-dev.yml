@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8003
   servlet:
     context-path: /
 ## spring jdbc配置
@@ -20,7 +20,7 @@ spring:
     host: 127.0.0.1
     password: 123456
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/wisdom-education?serverTimezone=GMT%2B8&useSSL=true&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://111.229.169.170:3306/education?serverTimezone=GMT%2B8&useSSL=true&useUnicode=true&characterEncoding=utf8
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver

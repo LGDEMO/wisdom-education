@@ -73,6 +73,11 @@ public class EhcacheBean implements CacheBean {
 
     }
 
+    @Override
+    public void put(Object key, Object value, int liveSeconds, TimeUnit timeUnit) {
+
+    }
+
     public void put(Object key, Object value) {
         put(DEFAULT_CACHE, key, value);
     }

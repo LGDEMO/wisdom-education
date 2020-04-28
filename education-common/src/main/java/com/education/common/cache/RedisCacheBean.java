@@ -66,6 +66,11 @@ public class RedisCacheBean implements CacheBean {
     }
 
     @Override
+    public void put(Object key, Object value, int liveSeconds, TimeUnit timeUnit) {
+        this.valueOperations.set(key, value, liveSeconds, timeUnit);
+    }
+
+    @Override
     public Collection getKeys(String cacheName) {
         return this.redisTemplate.keys(cacheName + "*");
     }

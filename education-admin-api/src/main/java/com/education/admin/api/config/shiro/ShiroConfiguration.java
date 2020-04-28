@@ -55,7 +55,7 @@ public class ShiroConfiguration {
 		// 需要认证才能访问的url
 		filterChainDefinitionMap.put("/ueditor/exec", "authc");
 		filterChainDefinitionMap.put("/upload/**", "authc");
-		filterChainDefinitionMap.put("/dict/**", "authc");
+		filterChainDefinitionMap.put("/dict/**", "anon");
         filterChainDefinitionMap.put("/system/**", "authc");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		//自定义过滤器

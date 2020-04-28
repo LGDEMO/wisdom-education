@@ -59,6 +59,6 @@ public class IpUtils {
 		} catch (Exception e) {
 			logger.error("获取ip地址异常", e);
 		}
-		return null;
+		return "";
 	}
 }

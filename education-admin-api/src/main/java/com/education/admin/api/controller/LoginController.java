@@ -57,9 +57,9 @@ public class LoginController extends BaseController {
         String loginName = requestBody.getStr("userName");
         String password = requestBody.getStr("password");
         String codeKey = requestBody.getStr("key");
-        String imageCode = requestBody.getStr("imageCode");
-        String cacheCode = (String) redisTemplate.opsForValue().get(codeKey);
-        if (!imageCode.equals(cacheCode)) {
+        String imageCode = requestBody.getStr("code");
+        String cacheCode = cacheBean.get(codeKey);
+        if (!imageCode.equalsIgnoreCase(cacheCode)) {
             return Result.fail(ResultCode.FAIL, "验证码输入错误");
         }
         Result result = systemAdminService.login(loginName, password);

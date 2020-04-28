@@ -7,13 +7,15 @@ import com.education.common.utils.ObjectUtils;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * @author zengjintao
  * @version 1.0
  * @create_at 2019/4/7 14:51
  */
 
-public class OnlineUser {
+public class OnlineUser implements Serializable {
     @Setter
     @Getter
     private Integer userId;

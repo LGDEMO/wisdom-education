@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.system.SystemDictValueMapper">
+
+    <insert id="save" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        insert into system_dict_value
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
+
+    <select id="treeList" resultType="modelBeanMap">
+       select value as label, id as value, parent_id from system_dict_value order by sort desc
+    </select>
+
+    <select id="queryList" resultType="modelBeanMap">
+       select a.*, b.value as parent_name from system_dict_value a left join (select id, value from system_dict_value) b
+       on a.parent_id = b.id
+       <where>
+           <if test="system_dict_id != null and system_dict_id != ''">
+               and a.system_dict_id = #{system_dict_id}
+           </if>
+       </where>
+        order by sort desc
+    </select>
+
+    <select id="getDictValueByType" resultType="modelBeanMap">
+        select * from system_dict_value where system_dict_id in (select id from system_dict where type = #{type})
+    </select>
+
+    <select id="getDictValueByParentId" resultType="modelBeanMap">
+        select * from system_dict_value where parent_id = #{parentId}
+    </select>
+</mapper>

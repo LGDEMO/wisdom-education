@@ -6,6 +6,7 @@ import com.education.common.model.Captcha;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.*;
 import com.education.service.system.SystemDictService;
+import com.education.service.system.SystemDictValueService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -36,6 +36,8 @@ public class ApiController extends BaseController {
 
     @Autowired
     private SystemDictService systemDictService;
+    @Autowired
+    private SystemDictValueService systemDictValueService;
 
     /**
      * 字典管理列表
@@ -43,18 +45,62 @@ public class ApiController extends BaseController {
      * @return
      */
     @GetMapping("/dict/list")
-    public Result dictList(@RequestParam Map params) {
+    public Result getDictList(@RequestParam Map params) {
         return systemDictService.pagination(params);
     }
 
     /**
-     * 添加或修改字典
+     * 获取字典值tree 列表
+     * @return
+     */
+    @GetMapping("/dict/getDictValueTreeList")
+    public Result getDictValueTreeList() {
+        return Result.success(systemDictValueService.getDictValueTreeList());
+    }
+
+    /**
+     * 添加或修改字典类型
      * @param params
      * @return
      */
     @PostMapping("/dict/saveOrUpdate")
     public ResultCode saveOrUpdate(@RequestBody ModelBeanMap params) {
         return systemDictService.saveOrUpdate(params);
+    }
+
+
+    @GetMapping("/dict/getDictValueByType")
+    public Result getDictValueByType(@RequestParam Map params) {
+        return Result.success(systemDictValueService.getDictValueByType(params));
+    }
+
+    @GetMapping("/dict/getDictValueByParentId")
+    public Result getDictValueByParentId(@RequestParam Map params) {
+        return Result.success(systemDictValueService.getDictValueByParentId(params));
+    }
+
+    /**
+     * 添加或修改字典值
+     * @param params
+     * @return
+     */
+    @PostMapping("/dict/saveOrUpdateDictValue")
+    public ResultCode saveOrUpdateDictValue(@RequestBody ModelBeanMap params) {
+        boolean updateFlag = false;
+        if (ObjectUtils.isNotEmpty(params.get("id"))) {
+            updateFlag = true;
+        }
+        return systemDictValueService.saveOrUpdate(updateFlag, params);
+    }
+
+    /**
+     * 获取字典值列表
+     * @param params
+     * @return
+     */
+    @GetMapping("/dict/getDictValueList")
+    public Result getDictValueByDictId(@RequestParam Map params) {
+        return systemDictValueService.pagination(params);
     }
 
     @RequestMapping(value = "/ueditor/exec", method = { RequestMethod.GET, RequestMethod.POST })
@@ -186,7 +232,7 @@ public class ApiController extends BaseController {
     @ApiOperation("生成验证码接口")
     public void image(HttpServletRequest request, HttpServletResponse response) {
         String key = request.getParameter("key");
-        Captcha captcha = new Captcha(redisTemplate, key);
+        Captcha captcha = new Captcha(cacheBean, key);
         captcha.render(response);
     }
 }

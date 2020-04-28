@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public interface TestPaperQuestionMapper extends BaseMapper {
 
+    String GET_PAPER_QUESTION_LIST = "getPaperQuestionList";
+
     int updatePaperQuestionSort(Map params);
     int updatePaperQuestionMark(Map params);
 

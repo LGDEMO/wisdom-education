@@ -1,7 +1,6 @@
 package com.education.service.course;
 
 import com.education.common.constants.EnumConstants;
-import com.education.common.constants.MapperPageMethod;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.template.BaseTemplate;
@@ -60,19 +59,9 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
                 data.put("mark", 0);
                 paramList.add(data);
             });
-          /*  List<Integer> marks = (List<Integer>)params.get("marks");
-            int markCount = 0;
-            for (Integer mark : marks) {
-                markCount += mark;
-            }
-            params.clear();
-            params.put("id", testPaperInfoId);
-            params.put("mark", markCount);
-            this.update("test.paper.info.update", params);*/
             params.clear();
             params.put("list", paramList);
             testPaperQuestionMapper.batchSave(params);
-           // this.saveSystemLog("导入试题id" + paramList.toArray());
             return new ResultCode(ResultCode.SUCCESS, paramList.size() + "道试题导入成功");
         } catch (Exception e) {
             logger.error("关联试题失败", e);
@@ -83,9 +72,7 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
     public ResultCode updateQuestionSort(Map params) {
         try {
             params.put("update_date", new Date());
-
             testPaperQuestionMapper.updatePaperQuestionSort(params);
-           // sqlSessionTemplate.update("test.paper.question.info.updateSort", params);
             return new ResultCode(ResultCode.SUCCESS, "排序修改成功");
         } catch (Exception e) {
             logger.error("排序修改失败", e);
@@ -215,6 +202,6 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
     }
 
     public Result getPaperQuestionList(Map params) {
-        return pagination(params, TestPaperQuestionMapper.class, MapperPageMethod.GET_TEST_PAPER_QUESTION_LIST);
+        return pagination(params, TestPaperQuestionMapper.class, TestPaperQuestionMapper.GET_PAPER_QUESTION_LIST);
     }
 }

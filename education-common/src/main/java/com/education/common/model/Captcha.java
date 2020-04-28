@@ -1,5 +1,6 @@
 package com.education.common.model;
 
+import com.education.common.cache.CacheBean;
 import com.education.common.constants.Constants;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -34,11 +35,12 @@ public class Captcha {
 		new Font(Font.MONOSPACED, Font.BOLD, 34)
 	};
 
-	private RedisTemplate redisTemplate;
+
+	private CacheBean cacheBean;
 	private String key;
 
-	public Captcha(RedisTemplate redisTemplate, String key) {
-		this.redisTemplate = redisTemplate;
+	public Captcha(CacheBean cacheBean, String key) {
+		this.cacheBean = cacheBean;
 		this.key = key;
 	}
 	
@@ -49,7 +51,7 @@ public class Captcha {
 		setBorder(graphics);
 		setRandomLine(graphics);
 		String num = serRandomNum(graphics);
-		redisTemplate.opsForValue().set(key, num, 60L, TimeUnit.SECONDS);
+		cacheBean.put(key, num, 60, TimeUnit.SECONDS);
 		response.setHeader("Pragma","no-cache");
 		response.setHeader("Cache-Control","no-cache");
 		response.setDateHeader("Expires", 0);
