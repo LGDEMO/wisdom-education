@@ -17,11 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.subject.support.DefaultWebSubjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
@@ -57,6 +62,9 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
         }
         return result;
     }
+
+    @Autowired
+    private HttpSession session;
 
     public void loadPermission(AdminUserSession userSession) {
         List<ModelBeanMap> menuList = null;

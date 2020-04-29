@@ -54,12 +54,10 @@ public class SystemMenuService extends BaseService<SystemMenuMapper> {
         if (ObjectUtils.isEmpty(menuList)) {
             Integer userId = userSession.getUserId();
             Map params = new HashMap<>();
-            if (userSession.isSuperAdmin()) {
-                menuList = mapper.findMenuByUser(params);
-            } else {
+            if (!userSession.isSuperAdmin()) {
                 params.put("adminId", userId);
-                menuList = mapper.findMenuByUser(params);
             }
+            menuList = mapper.findMenuByUser(params);
             for (Map menu : menuList) {
                 Integer parentId = (Integer)menu.get("id");
                 params.put("parentId", parentId);

@@ -30,7 +30,7 @@ lbs:
   key: MYOBZ-OOEW3-KYC3G-YWDXA-DMQJ6-SPBMH
 ## 虚拟文件上传路径
 file:
-  uploadPath: /mydata/uploads/
+  uploadPath: /root/uploads/
 ueditor:
   configFileName: config.json
 # 微信公众号配置
@@ -39,7 +39,9 @@ weChat:
   token: education
   appSecret: cf05150f801935391f29d73695f04300
 mybatis:
-  config-location: classPath:mybatis/mybatis-config.xml
-  mapper-locations: xml/**/*.xml
+  mapper-locations: mapper/**/*.xml
+  type-aliases-package: com.education.common.model
 logging:
     file:  /root/jar/education.log
+lbs:
+  key: MYOBZ-OOEW3-KYC3G-YWDXA-DMQJ6-SPBMH

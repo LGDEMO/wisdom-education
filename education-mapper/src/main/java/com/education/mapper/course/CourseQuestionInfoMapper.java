@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public interface CourseQuestionInfoMapper extends BaseMapper {
 
+    String GET_COURSE_QUESTION_LIST = "getCourseQuestionList";
     /**
      * 获取课程试题列表
      * @param params

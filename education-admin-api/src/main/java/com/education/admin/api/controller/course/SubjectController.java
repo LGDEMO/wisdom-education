@@ -32,7 +32,7 @@ public class SubjectController extends BaseController {
     @GetMapping({"", "list"})
     @RequiresPermissions("system:subject:list")
     @SystemLog(describe = "获取科目列表")
-    public Result<ModelBeanMap> list(@RequestParam Map params) {
+    public Result list(@RequestParam Map params) {
         return subjectInfoService.pagination(params);
     }
 

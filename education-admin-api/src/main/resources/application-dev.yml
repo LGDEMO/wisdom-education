@@ -1,14 +1,8 @@
 server:
-  port: 8003
+  port: 80
   servlet:
     context-path: /
 ## spring jdbc配置
-shiro:
-  cookie:
-    name: user_session_key
-    time-out: 7200
-    domain: localhost
-    rememberMe: true
 spring:
   redis:
     jedis:
