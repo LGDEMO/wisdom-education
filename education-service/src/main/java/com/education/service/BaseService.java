@@ -14,6 +14,8 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,21 @@ public abstract class BaseService<M extends BaseMapper> {
     public List<ModelBeanMap> treeMenu() {
         List<ModelBeanMap> menuList = mapper.treeList();
         return MapTreeUtils.buildTreeData(menuList);
+    }
+
+    /**
+     * 更新shiro 缓存中的用户信息，避免由于redis 缓存导致获取用户信息不一致问题
+     * @param adminUserSession
+     */
+    protected void updateShiroCacheUserInfo(AdminUserSession adminUserSession) {
+        Subject subject = SecurityUtils.getSubject();
+        PrincipalCollection principals = subject.getPrincipals();
+        //realName认证信息的key，对应的value就是认证的user对象
+        String realName = principals.getRealmNames().iterator().next();
+        //创建一个PrincipalCollection对象
+        PrincipalCollection newPrincipalCollection = new SimplePrincipalCollection(adminUserSession, realName);
+        // 调用subject的runAs方法，把新的PrincipalCollection放到session里面
+        subject.runAs(newPrincipalCollection);
     }
 
     /**

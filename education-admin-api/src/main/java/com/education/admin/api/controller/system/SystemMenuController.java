@@ -31,11 +31,6 @@ public class SystemMenuController extends ApiController {
     @Autowired
     private SystemRoleMenuService systemRoleMenuService;
 
-    @GetMapping("getMenuByUserId")
-    public Result<ModelBeanMap> getMenuByUserId() {
-        return Result.success(systemMenuService.getMenuByUser());
-    }
-
     /**
      * 获取角色拥有菜单id 集合
      * @param roleId
@@ -73,13 +68,8 @@ public class SystemMenuController extends ApiController {
     public ResultCode saveOrUpdate(@RequestBody ModelBeanMap menuMap) {
         Integer id = menuMap.getInt("id");
         boolean updateFlag = false;
-        String name = (String)menuMap.get("name");
-        String message = "";
-        if (ObjectUtils.isEmpty(id)) {
-            message = "创建菜单" + name;
-        } else {
+        if (ObjectUtils.isNotEmpty(id)) {
             updateFlag = true;
-            message = "更新菜单" + name;
         }
         return systemMenuService.saveOrUpdate(updateFlag, menuMap);
     }

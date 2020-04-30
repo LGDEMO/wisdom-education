@@ -6,14 +6,15 @@ import com.education.common.constants.EnumConstants;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.JwtToken;
 import com.education.common.model.ModelBeanMap;
-import com.education.common.model.online.OnlineUser;
 import com.education.common.model.online.OnlineUserManager;
-import com.education.common.utils.IpUtils;
 import com.education.common.utils.RequestUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.service.WebSocketMessageService;
 import com.education.service.system.SystemAdminService;
+import com.education.service.task.TaskManager;
+import com.education.service.task.TaskParam;
+import com.education.service.task.UserLoginSuccessListener;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -21,7 +22,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +43,8 @@ public class LoginController extends BaseController {
     private JwtToken adminJwtToken;
     @Autowired
     private WebSocketMessageService webSocketMessageService;
+    @Autowired
+    private TaskManager taskManager;
     @Autowired
     private OnlineUserManager onlineUserManager;
 
@@ -67,38 +69,34 @@ public class LoginController extends BaseController {
             String token = adminJwtToken.createToken(systemAdminService.getUserId(), 24 * 60 * 60 * 1000 * 5); // 默认缓存5天
             AdminUserSession userSession = systemAdminService.getAdminUserSession();
             webSocketMessageService.checkOnlineUser(userSession.getUserId(), EnumConstants.PlatformType.WEB_ADMIN);
-            systemAdminService.loadPermission(userSession);
-            requestBody.remove("password");
+            userSession.setSessionId(session.getId());
+            systemAdminService.loadUserMenuAndPermission(userSession);
+            requestBody.clear();
+            // 将用户信息返回前端
             requestBody.put("token", token);
             Map userInfo = new HashMap<>();
-            userInfo.put("id", userSession.getUserId());
-            if (userSession.isPrincipalAccount()) {
-                userInfo.put("school_id", systemAdminService.getAdminUser().get("school_id"));
-            }
-            userInfo.put("id", userSession.getUserId());
-            userInfo.put("login_name", userSession.getUserMap().get("login_name"));
-            requestBody.put("name", userSession.getUserMap().get("name"));
-            requestBody.put("userInfo", userInfo);
-            requestBody.put("userPermission", userSession.getPermissionList());
-
-            // 更新用户登录信息
             Integer userId = userSession.getUserId();
-            Map data = new HashMap<>();
-            Integer count = (Integer)userSession.getUserMap().get("login_count");
-            data.put("loginCount", count + 1);
-            data.put("loginIp", IpUtils.getAddressIp(RequestUtils.getRequest()));
-            data.put("lastLoginTime", new Date());
-            data.put("userId", userId);
-            systemAdminService.updateByUserId(data);
-            // 添加在线用户
-            String sessionId = session.getId();
-            OnlineUser nowOnlineUser = new OnlineUser(userSession.getUserId(), sessionId, EnumConstants.PlatformType.WEB_ADMIN);
-            nowOnlineUser.setAdminUserSession(userSession);
-            onlineUserManager.addOnlineUser(userId, nowOnlineUser);
+            userInfo.put("id", userId);
+            if (userSession.isPrincipalAccount()) {
+                userInfo.put("school_id", userSession.getUserMap().get("school_id"));
+            }
+            userInfo.put("login_name", userSession.getUserMap().get("login_name"));
+            userInfo.put("permissionList", userSession.getPermissionList()); // 用户权限标识
+            userInfo.put("menuList", userSession.getMenuList()); // 用户菜单集合
+            userInfo.put("name", userSession.getUserMap().get("name"));
+            requestBody.put("userInfo", userInfo);
+
+            // 异步更新用户相关信息
+            TaskParam taskParam = new TaskParam(UserLoginSuccessListener.class);
+            taskParam.put("userSession", userSession);
+            taskParam.put("request", RequestUtils.getRequest());
+            taskManager.pushTask(taskParam);
        }
-        result.setData(requestBody);
-        return result;
+       result.setData(requestBody);
+       return result;
     }
+
+
 
     /**
      * 系统退出

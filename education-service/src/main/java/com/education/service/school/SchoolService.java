@@ -10,7 +10,7 @@ import com.education.mapper.system.SystemAdminMapper;
 import com.education.mapper.system.SystemAdminRoleMapper;
 import com.education.mapper.system.SystemRoleMapper;
 import com.education.service.BaseService;
-import com.education.service.task.PositionTask;
+import com.education.service.task.PositionListener;
 import com.education.service.task.TaskParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,7 +73,7 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
     }
 
     private void updateSchoolAddress(Integer schoolId, String lat, String lng) {
-        TaskParam taskParam = new TaskParam(PositionTask.class);
+        TaskParam taskParam = new TaskParam(PositionListener.class);
         Map params = new HashMap<>();
         params.put("id", schoolId);
         params.put("lat", lat);

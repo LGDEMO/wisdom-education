@@ -36,7 +36,7 @@
     </sql>
 
     <select id="findByParentIdAndRoleId" resultType="modelBeanMap">
-        <include refid="column"/>
+
         <if test="adminId != null and adminId != ''">
             and a.id in (
             select menu_id from system_role_menu where role_id in
@@ -44,5 +44,9 @@
             )
         </if>
         order by sort desc
+    </select>
+
+    <select id="findByParentId" resultType="map">
+        <include refid="column"/>
     </select>
 </mapper>

@@ -3,7 +3,6 @@ package com.education.service.task;
 import com.education.common.annotation.SystemLog;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.FrontUserInfoSession;
-import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.RequestUtils;
 import com.education.service.system.SystemLogService;
@@ -55,7 +54,7 @@ public final class LogAspect {
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
         SystemLog systemLog = method.getAnnotation(SystemLog.class);
-        TaskParam taskParam = new TaskParam(SystemLogTask.class);
+        TaskParam taskParam = new TaskParam(SystemLogListener.class);
         try {
             if (ObjectUtils.isNotEmpty(systemLog)) {
                 taskParam.put("desc", systemLog.describe());

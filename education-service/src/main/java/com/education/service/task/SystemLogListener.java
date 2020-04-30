@@ -22,7 +22,7 @@ import java.util.Map;
  * @create_at 2020/4/24 20:54
  */
 @Component
-public class SystemLogTask implements TaskListener {
+public class SystemLogListener implements TaskListener {
 
     @Autowired
     private SystemLogService systemLogService;

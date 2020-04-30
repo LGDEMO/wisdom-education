@@ -21,7 +21,7 @@ import java.util.Set;
  */
 @Component
 @Slf4j
-public class PositionTask implements TaskListener {
+public class PositionListener implements TaskListener {
 
     @Autowired
     private SchoolInfoMapper schoolInfoMapper;

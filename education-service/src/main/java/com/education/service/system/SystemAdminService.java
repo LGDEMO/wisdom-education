@@ -3,10 +3,7 @@ package com.education.service.system;
 import com.education.common.constants.EnumConstants;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.ModelBeanMap;
-import com.education.common.utils.Md5Utils;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.Result;
-import com.education.common.utils.ResultCode;
+import com.education.common.utils.*;
 
 import com.education.mapper.system.SystemAdminMapper;
 import com.education.mapper.system.SystemAdminRoleMapper;
@@ -63,13 +60,15 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
         return result;
     }
 
-    @Autowired
-    private HttpSession session;
 
-    public void loadPermission(AdminUserSession userSession) {
+    /**
+     * 加载用户菜单及权限标识
+     * @param userSession
+     */
+    public void loadUserMenuAndPermission(AdminUserSession userSession) {
         List<ModelBeanMap> menuList = null;
         if (userSession.isSuperAdmin()) {
-            menuList = systemMenuMapper.queryList(null); //sqlSessionTemplate.selectList("system.menu.list");
+            menuList = systemMenuMapper.queryList(null);
         } else {
             int adminId = userSession.getUserId();
             List<ModelBeanMap> roleList = getRolesByAUserId(adminId);
@@ -79,6 +78,7 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
                 for (Map roleMap : roleList) {
                     roleIds.add((Integer)roleMap.get("role_id"));
                 }
+                userSession.setRoleList(roleList);
             }
             menuList = systemRoleMenuMapper.getMenuByRoleIds(roleIds);  //用户菜单集合
         }
@@ -89,17 +89,9 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
                     userSession.addPermission(permissions);
                 }
             }
+            List<ModelBeanMap> menuTreeList = MapTreeUtils.buildTreeData(menuList);
+            userSession.setMenuList(menuTreeList);
         }
-
-     /*   Subject subject = SecurityUtils.getSubject();
-        PrincipalCollection principals = subject.getPrincipals();
-        //realName认证信息的key，对应的value就是认证的user对象
-        String realName = principals.getRealmNames().iterator().next();
-        //创建一个PrincipalCollection对象，userDO是更新后的user对象
-        PrincipalCollection newPrincipalCollection = new SimplePrincipalCollection(userSession, realName);
-        // 调用subject的runAs方法，把新的PrincipalCollection放到session里面
-        subject.runAs(newPrincipalCollection); */
-
     }
 
     public int updateByUserId(Map params) {
