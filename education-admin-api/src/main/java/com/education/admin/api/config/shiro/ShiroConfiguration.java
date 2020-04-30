@@ -1,8 +1,9 @@
 package com.education.admin.api.config.shiro;
 
 import com.education.common.cache.CacheBean;
-import com.education.common.cache.RedisCacheBean;
+import com.education.common.cache.EhcacheBean;
 import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -16,7 +17,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.redis.core.RedisTemplate;
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,8 +65,23 @@ public class ShiroConfiguration {
 	}
 
 	@Bean
-	public CacheManager redisCacheManager(CacheBean cacheBean) {
-		return new RedisCacheManager(cacheBean);
+	public CacheManager ehCacheManager(net.sf.ehcache.CacheManager cacheManager) {
+		EhCacheManager ehCacheManager = new EhCacheManager();
+		ehCacheManager.setCacheManager(cacheManager);
+		return ehCacheManager;
+	}
+
+	@Bean
+	public net.sf.ehcache.CacheManager cacheManager() {
+		return net.sf.ehcache.CacheManager.create(this.getClass()
+				.getClassLoader()
+				.getResourceAsStream("ehcache.xml"));
+	}
+
+
+	@Bean
+	public CacheBean cacheBean(net.sf.ehcache.CacheManager cacheManager) {
+		return new EhcacheBean(cacheManager);
 	}
 
 	@Bean
@@ -82,17 +97,12 @@ public class ShiroConfiguration {
 	@Bean
 	public SecurityManager securityManager(SessionManager sessionManager,
 										   Realm systemRealm,
-										   CacheManager redisCacheManager) {
+										   CacheManager ehCacheManager) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 		securityManager.setRealm(systemRealm);
 		securityManager.setSessionManager(sessionManager);
-		securityManager.setCacheManager(redisCacheManager);
+		securityManager.setCacheManager(ehCacheManager);
 		return securityManager;
-	}
-
-	@Bean
-	public CacheBean cacheBean(RedisTemplate redisTemplate) {
-		return new RedisCacheBean(redisTemplate);
 	}
 
 	@Bean

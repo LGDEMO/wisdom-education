@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
+ * 基于 redis 缓存
  * @author zengjintao
  * @version 1.0
  * @create_at 2019/12/23 21:43

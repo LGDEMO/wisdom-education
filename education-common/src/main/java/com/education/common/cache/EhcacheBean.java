@@ -70,12 +70,12 @@ public class EhcacheBean implements CacheBean {
 
     @Override
     public void put(String cacheName, Object key, Object value, int liveSeconds, TimeUnit timeUnit) {
-
+        this.put(cacheName, key, value, liveSeconds);
     }
 
     @Override
     public void put(Object key, Object value, int liveSeconds, TimeUnit timeUnit) {
-
+        this.put(key, value, liveSeconds);
     }
 
     public void put(Object key, Object value) {

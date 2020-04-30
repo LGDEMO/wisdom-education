@@ -82,6 +82,16 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
                 }
             }
         }
+
+     /*   Subject subject = SecurityUtils.getSubject();
+        PrincipalCollection principals = subject.getPrincipals();
+        //realName认证信息的key，对应的value就是认证的user对象
+        String realName = principals.getRealmNames().iterator().next();
+        //创建一个PrincipalCollection对象，userDO是更新后的user对象
+        PrincipalCollection newPrincipalCollection = new SimplePrincipalCollection(userSession, realName);
+        // 调用subject的runAs方法，把新的PrincipalCollection放到session里面
+        subject.runAs(newPrincipalCollection); */
+
     }
 
     public int updateByUserId(Map params) {

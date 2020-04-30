@@ -1,5 +1,7 @@
 package com.education.admin.api;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.education.common.cache.EhcacheBean;
 import com.education.common.cache.CacheBean;
 import com.education.common.model.AdminUserSession;
@@ -12,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.*;
 
 
 @SpringBootTest
@@ -27,19 +29,42 @@ public class EducationAdminApiApplicationTests {
     private RedisTemplate redisTemplate;
 
     @Test
-    public void testRedisCache() {
-        AdminUserSession adminUserSession = new AdminUserSession(new HashMap());
-        redisTemplate.opsForValue().set("test", adminUserSession);
-        AdminUserSession adminUserSession1 = (AdminUserSession) redisTemplate.opsForValue().get("test");
-        System.out.println(adminUserSession1);
-        /*cacheBean.put("1", "java");
+    public void testRedisStringCache() {
+        cacheBean.put("1", "java");
         cacheBean.put("2", "php");
         cacheBean.put("3", "python");
         String value = cacheBean.get(cacheName, "1");
         System.out.println("value:" + value);
         System.out.println(cacheBean.getKeys(cacheName));
         cacheBean.removeAll(cacheName);
-        System.out.println(cacheBean.getKeys(cacheName));*/
+        System.out.println(cacheBean.getKeys(cacheName));
+    }
+
+    @Test
+    public void testRedisObjectCache() {
+        AdminUserSession adminUserSession = new AdminUserSession(new HashMap());
+        Set<String> set = new HashSet<>();
+        redisTemplate.opsForValue().set("user", adminUserSession);
+        set.add("test:12:12");
+        adminUserSession.setPermissionList(set);
+        System.err.println(adminUserSession);
+
+        adminUserSession = (AdminUserSession) redisTemplate.opsForValue().get("user");
+        System.out.println(adminUserSession);
+    }
+
+    @Test
+    public void testEhcacheObjectCache() {
+        EhcacheBean ehcacheBean = new EhcacheBean();
+        AdminUserSession adminUserSession = new AdminUserSession(new HashMap());
+
+        System.err.println(adminUserSession);
+        ehcacheBean.put("user", adminUserSession);
+        Set<String> set = new HashSet<>();
+        set.add("test:12:12");
+        adminUserSession.setPermissionList(set);
+        adminUserSession = (AdminUserSession) ehcacheBean.get("user");
+        System.out.println(adminUserSession);
     }
 
     @Test
@@ -60,5 +85,15 @@ public class EducationAdminApiApplicationTests {
     @Test
     public void testIp() {
         System.out.println(IpUtils.getIpAddress("182.101.63.196"));
+    }
+
+    @Test
+    public void testJson() {
+        User user = new User();
+        user.setId("1");
+        user.setName("test");
+
+        User user1 = JSON.parseObject(JSON.toJSONString(user), (Type) Object.class);
+        System.out.println(user1);
     }
 }

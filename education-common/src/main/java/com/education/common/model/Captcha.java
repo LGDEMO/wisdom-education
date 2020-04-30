@@ -1,11 +1,7 @@
 package com.education.common.model;
 
 import com.education.common.cache.CacheBean;
-import com.education.common.constants.Constants;
-import org.springframework.data.redis.core.RedisTemplate;
-
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
