@@ -5,7 +5,6 @@ import com.education.common.annotation.ParamsType;
 import com.education.common.annotation.ParamsValidate;
 import com.education.common.annotation.SystemLog;
 import com.education.common.base.BaseController;
-import com.education.common.constants.MapperPageMethod;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.Result;
@@ -109,7 +108,7 @@ public class CourseInfoController extends BaseController {
 
     @GetMapping("getCourseQuestionList")
     public Result<ModelBeanMap> getCourseQuestionList(@RequestParam Map params) {
-        return courseQuestionService.pagination(params, CourseQuestionInfoMapper.class, MapperPageMethod.GET_COURSE_QUESTION_LIST);
+        return courseQuestionService.pagination(params, CourseQuestionInfoMapper.class, CourseQuestionInfoMapper.GET_COURSE_QUESTION_LIST);
     }
 
     /**

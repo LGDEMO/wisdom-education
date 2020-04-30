@@ -4,6 +4,7 @@ import com.education.common.constants.EnumConstants;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.FrontUserInfoSession;
 import com.education.common.utils.ObjectUtils;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,21 +15,13 @@ import java.io.Serializable;
  * @version 1.0
  * @create_at 2019/4/7 14:51
  */
-
+@Data
 public class OnlineUser implements Serializable {
-    @Setter
-    @Getter
-    private Integer userId;
-    @Setter
-    @Getter
-    private String sessionId; // 服务器sessionId
-    @Setter
-    @Getter
-    private EnumConstants.PlatformType platformType;
 
-    @Setter
+    private Integer userId;
+    private String sessionId; // 服务器sessionId
+    private EnumConstants.PlatformType platformType;
     private AdminUserSession adminUserSession;
-    @Setter
     private FrontUserInfoSession frontUserInfoSession;
 
     public OnlineUser(Integer userId, String sessionId, EnumConstants.PlatformType platformType) {
