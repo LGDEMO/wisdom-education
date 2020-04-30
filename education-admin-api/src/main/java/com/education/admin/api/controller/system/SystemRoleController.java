@@ -25,12 +25,22 @@ public class SystemRoleController extends ApiController {
     @Autowired
     private SystemRoleService systemRoleService;
 
+    /**
+     * 角色列表
+     * @param params
+     * @return
+     */
     @GetMapping({"", "list"})
     @RequiresPermissions("system:role:list")
     public Result<ModelBeanMap> list(@RequestParam Map params) {
         return systemRoleService.pagination(params);
     }
 
+    /**
+     * 添加或修改角色
+     * @param roleModelMap
+     * @return
+     */
     @PostMapping({"", "saveOrUpdate"})
     @RequiresPermissions({"system:role:save", "system:role:update"})
     public ResultCode saveOrUpdate(@RequestBody ModelBeanMap roleModelMap) {
@@ -62,6 +72,11 @@ public class SystemRoleController extends ApiController {
         return systemRoleService.deleteById(roleMap);
     }
 
+    /**
+     * 保存角色权限标识
+     * @param roleMenu
+     * @return
+     */
     @PostMapping("savePermission")
     @RequiresPermissions("system:role:savePermission")
     public ResultCode savePermission(@RequestBody ModelBeanMap roleMenu) {

@@ -7,13 +7,11 @@ import com.education.common.utils.RequestUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import org.springframework.web.servlet.HandlerInterceptor;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+
 
 /**
  * @author zengjintao
@@ -43,10 +41,6 @@ public abstract class BaseInterceptor implements HandlerInterceptor {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    protected String getRequestUrl(HttpServletRequest request) {
-        return RequestUtils.getRequestUrl(request);
     }
 
     /**

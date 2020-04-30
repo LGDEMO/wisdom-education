@@ -9,7 +9,6 @@ import com.education.common.utils.Md5Utils;
 import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.ResultCode;
 import com.education.mapper.system.SystemAdminMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -20,9 +19,9 @@ import org.springframework.stereotype.Component;
 /**
  * 管理员登录认证器
  */
-@Slf4j
 @Component
 public class SystemRealm extends AuthorizingRealm {
+
 
 	/**
 	 * 用户授权

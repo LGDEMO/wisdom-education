@@ -3,6 +3,8 @@ package com.education.common.cache;
 import lombok.extern.slf4j.Slf4j;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
@@ -12,6 +14,9 @@ import java.io.IOException;
 
 @Slf4j
 public class FstRedisSerializer implements RedisSerializer<Object> {
+
+    private static final Logger logger = LoggerFactory.getLogger(FstRedisSerializer.class);
+
     @Override
     public byte[] serialize(Object value) throws SerializationException {
         FSTObjectOutput fstOut = null;
@@ -28,7 +33,7 @@ public class FstRedisSerializer implements RedisSerializer<Object> {
         finally {
             if(fstOut != null)
                 try {fstOut.close();} catch (IOException e) {
-                    log.error(e.getMessage(), e);}
+                    logger.error(e.getMessage(), e);}
         }
     }
 
@@ -47,7 +52,7 @@ public class FstRedisSerializer implements RedisSerializer<Object> {
         }
         finally {
             if(fstInput != null)
-                try {fstInput.close();} catch (IOException e) {log.error(e.getMessage(), e);}
+                try {fstInput.close();} catch (IOException e) {logger.error(e.getMessage(), e);}
         }
     }
 }

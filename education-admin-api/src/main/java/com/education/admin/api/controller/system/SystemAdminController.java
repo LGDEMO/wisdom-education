@@ -29,6 +29,11 @@ public class SystemAdminController extends BaseController {
     @Autowired
     private SystemAdminService systemAdminService;
 
+    /**
+     * 管理员列表
+     * @param params
+     * @return
+     */
     @GetMapping({"", "list"})
     @RequiresPermissions("system:admin:list")
     public Result<Map> list(@RequestParam Map params) {
@@ -87,6 +92,11 @@ public class SystemAdminController extends BaseController {
         return systemAdminService.findById(id);
     }
 
+    /**
+     * 添加或修改管理员
+     * @param params
+     * @return
+     */
     @PostMapping
     @RequiresPermissions(value = {"system:admin:save", "system:admin:update"}, logical = Logical.OR)
     public ResultCode saveOrUpdate(@RequestBody Map params) {
