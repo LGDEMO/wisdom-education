@@ -15,6 +15,8 @@ import com.education.mapper.course.QuestionInfoMapper;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
 import com.education.mapper.course.TestPaperQuestionMapper;
 import com.education.service.BaseService;
+import com.education.service.system.SystemDictService;
+import com.education.service.system.SystemDictValueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,10 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
     private CourseQuestionInfoMapper courseQuestionInfoMapper;
     @Autowired
     private TestPaperQuestionMapper testPaperQuestionMapper;
+    @Autowired
+    private SystemDictValueService systemDictValueService;
+    @Autowired
+    private SubjectInfoService subjectInfoService;
 
     @Override
     @Transactional
@@ -276,21 +282,58 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
 
     /**
      * 试题信息导入
-     * @param data
+     * @param questionInfoList
      * @return
      */
-    public ResultCode importQuestionFromExcel(List<QuestionInfo> data) {
-        try {
-           /* ThreadManager threadBuilder = new ThreadManager<QuestionInfo>(data, 100, taskManager, sqlSessionTemplate);
-            threadBuilder.startThread(ImportQuestionInfoTask.class);
-            if (ImportQuestionInfoTask.isSuccess()) {
-                return new ResultCode(ResultCode.SUCCESS, "数据导入成功");
+    public void importQuestionFromExcel(List<QuestionInfo> questionInfoList) {
+        List<Map> data = new ArrayList<>();
+        for (QuestionInfo questionInfo : questionInfoList) {
+            if (ObjectUtils.isEmpty(questionInfo.getContent())) {
+                continue;
             }
-            ImportQuestionInfoTask.setIsRunning(true); */
-        } catch (Exception e) {
-            log.error("数据导入失败", e);
+            Map params = new HashMap<>();
+            Integer questionType = systemDictValueService.getDictValueByName("question_type", questionInfo.getQuestionType());
+            params.put("question_type", questionType); // 获取试题类型
+            String answer = questionInfo.getAnswer();
+            if (questionType == EnumConstants.QuestionType.JUDGMENT_QUESTION.getValue()) {
+               params.put("answer", "对".equals(answer) ? Boolean.TRUE : Boolean.FALSE);
+            } else {
+               params.put("answer", answer);
+            }
+            params.put("content", questionInfo.getContent());
+            params.put("options", questionInfo.getOptions());
+            params.put("analysis", questionInfo.getAnalysis());
+            String gradeName = questionInfo.getGradeInfoName();
+            ModelBeanMap gradeTypeInfo = systemDictValueService.getDictValueForMapByName(SystemDictService.GRADE_TYPE, gradeName);
+            Integer gradeType = gradeTypeInfo.getInt("code");
+            params.put("grade_type", gradeTypeInfo.get("code"));
+            params.put("school_type", gradeTypeInfo.get("parent_id"));
+            Integer subjectId = getSubjectId(questionInfo.getSubjectName(), gradeType);
+            params.put("subject_id", subjectId);
+            String category = questionInfo.getCategory();
+            if (EnumConstants.QuestionCategory.COURSE.getName().equals(category)) {
+                params.put("category", EnumConstants.QuestionCategory.COURSE.getValue());
+            } else if (EnumConstants.QuestionCategory.TEST_PAPER.getName().equals(category)) {
+                params.put("category", EnumConstants.QuestionCategory.TEST_PAPER.getValue());
+            }
+            Date now = new Date();
+            params.put("create_date", now);
+            data.add(params);
         }
-        return new ResultCode(ResultCode.FAIL, "导入失败, 请检查科目或者课程是否已存在或文件格式是否正确");
+        Map dataMap = new HashMap<>();
+        dataMap.put("list", data);
+        mapper.batchSave(dataMap);
+    }
+
+    private Integer getSubjectId(String subjectName, Integer gradeTypeId) {
+        Map params = new HashMap<>();
+        params.put("name", subjectName);
+        params.put("gradeType", gradeTypeId);
+        ModelBeanMap subjectInfo = subjectInfoService.findByNameAndGradeType(params);
+        if (ObjectUtils.isNotEmpty(subjectInfo)) {
+            return subjectInfo.getInt("id");
+        }
+        return null;
     }
 
 }

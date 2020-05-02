@@ -89,11 +89,11 @@ public class EducationAdminApiApplicationTests {
 
     @Test
     public void testJson() {
-        User user = new User();
+       /* User user = new User();
         user.setId("1");
         user.setName("test");
 
         User user1 = JSON.parseObject(JSON.toJSONString(user), (Type) Object.class);
-        System.out.println(user1);
+        System.out.println(user1);*/
     }
 }

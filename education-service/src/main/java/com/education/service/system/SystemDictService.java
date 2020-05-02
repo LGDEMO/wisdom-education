@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SystemDictService extends BaseService<SystemDictMapper> {
 
+    public static final String GRADE_TYPE = "grade_type";
+
     public ResultCode saveOrUpdate(ModelBeanMap params) {
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(params.get("id"))) {

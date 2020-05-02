@@ -24,6 +24,9 @@ public class SubjectInfoService extends BaseService<SubjectInfoMapper> {
     @Autowired
     private QuestionInfoMapper questionInfoMapper;
 
+    public ModelBeanMap findByNameAndGradeType(Map params) {
+        return mapper.findByNameAndGradeType(params);
+    }
 
     public ResultCode deleteById(ModelBeanMap subjectMap) {
         if (subjectMap.getBoolean("use_flag")) {

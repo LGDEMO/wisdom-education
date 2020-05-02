@@ -61,6 +61,7 @@
     <defaultCache
         maxElementsInMemory="1000"
         eternal="false"
+        diskPersistent="true"
         timeToIdleSeconds="100"
         timeToLiveSeconds="100"
         overflowToDisk="true"/>
@@ -69,6 +70,7 @@
      <cache name="one.minute"
         maxElementsInMemory="1000"
         eternal="false"
+        diskPersistent="true"
         timeToIdleSeconds="10"
         timeToLiveSeconds="60"
         overflowToDisk="true"/>
@@ -77,6 +79,7 @@
     <cache name="two.minute"
         maxElementsInMemory="1000"
         eternal="false"
+        diskPersistent="true"
         timeToIdleSeconds="0"
         timeToLiveSeconds="1200"
         overflowToDisk="true"/>
@@ -85,6 +88,7 @@
     <cache name="three.minute"
         maxElementsInMemory="1000"
         eternal="false"
+        diskPersistent="true"
         timeToIdleSeconds="0"
         timeToLiveSeconds="1800"
         overflowToDisk="true"/>
@@ -93,16 +97,17 @@
     <cache name="one.hour"
         maxElementsInMemory="1000"
         eternal="false"
+        diskPersistent="true"
         timeToIdleSeconds="0"
         timeToLiveSeconds="3600"
         overflowToDisk="true" />
 
 
     <cache name="user.cache"
-           maxElementsInMemory="1000"
-           eternal="false"
-           diskPersistent="true"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="216000"
-           overflowToDisk="true" />
+         maxElementsInMemory="1000"
+         eternal="false"
+         diskPersistent="true"
+         timeToIdleSeconds="0"
+         timeToLiveSeconds="216000"
+         overflowToDisk="true" />
 </ehcache>
