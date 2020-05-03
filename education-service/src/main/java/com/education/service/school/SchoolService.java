@@ -118,7 +118,7 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
             params.put("create_date", now);
             params.put("update_date", now);
             Integer adminId = systemAdminMapper.save(params);
-            Map roleMap =systemRoleMapper.findByRoleName(PRINCIPAL);
+            Map roleMap = systemRoleMapper.findByRoleName(PRINCIPAL);
             params.clear();
             params.put("admin_id", adminId);
             params.put("role_id", roleMap.get("id"));

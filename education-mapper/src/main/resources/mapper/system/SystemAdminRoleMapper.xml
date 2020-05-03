@@ -17,4 +17,15 @@
             (#{item.adminId}, #{item.roleId})
         </foreach>
     </insert>
+
+    <insert id="save" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        insert into system_admin_role
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
 </mapper>

@@ -65,26 +65,6 @@ public class ShiroConfiguration {
 	}
 
 	@Bean
-	public CacheManager ehCacheManager(net.sf.ehcache.CacheManager cacheManager) {
-		EhCacheManager ehCacheManager = new EhCacheManager();
-		ehCacheManager.setCacheManager(cacheManager);
-		return ehCacheManager;
-	}
-
-	@Bean
-	public net.sf.ehcache.CacheManager cacheManager() {
-		return net.sf.ehcache.CacheManager.create(this.getClass()
-				.getClassLoader()
-				.getResourceAsStream("ehcache.xml"));
-	}
-
-
-	@Bean
-	public CacheBean cacheBean(net.sf.ehcache.CacheManager cacheManager) {
-		return new EhcacheBean(cacheManager);
-	}
-
-	@Bean
 	public DefaultWebSessionManager sessionManager(SessionDAO educationShiroSession) {
 		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
 		// 设置session过期时间6个小时

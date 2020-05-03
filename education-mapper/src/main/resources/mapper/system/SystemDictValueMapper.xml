@@ -24,6 +24,10 @@
            <if test="system_dict_id != null and system_dict_id != ''">
                and a.system_dict_id = #{system_dict_id}
            </if>
+
+           <if test="parentId != null and parentId != ''">
+               and a.parent_id = #{parentId}
+           </if>
        </where>
         order by sort desc
     </select>

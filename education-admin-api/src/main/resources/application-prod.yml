@@ -43,5 +43,3 @@ mybatis:
   type-aliases-package: com.education.common.model
 logging:
     file:  /root/jar/education.log
-lbs:
-  key: MYOBZ-OOEW3-KYC3G-YWDXA-DMQJ6-SPBMH
