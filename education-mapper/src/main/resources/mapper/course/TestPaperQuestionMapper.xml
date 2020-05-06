@@ -50,10 +50,12 @@
         <if test="questionType != null and questionType != ''">
             and question.question_type = #{questionType}
         </if>
-        order by
+
+       order by
+       <!-- 由于 pageHeplper中的order by包含参数，因此不能使用OrderBy插件进行修改!，降级为直接拼接 order by 参数-->
         <choose>
-            <when test="orderBy != null and orderBy != ''">
-                #{orderBy}
+            <when test="orderByColumn != null and orderByColumn != ''">
+                #{orderByColumn}
             </when>
             <otherwise>
                 testPaperQuestion.sort

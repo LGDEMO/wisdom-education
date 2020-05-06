@@ -125,7 +125,7 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
                 ModelBeanMap testPaper = testPaperList.get(i);
                 Integer testPaperInfoId = (Integer) testPaper.get("id");
                 params.put("testPaperInfoId", testPaperInfoId);
-                params.put("orderBy", "question_type");
+                params.put("orderByColumn", "question_type");
                 List<ModelBeanMap> questionList = testPaperQuestionMapper.getPaperQuestionList(params);
                 Set<Integer> questionTypes = questionList.stream()
                         .map(item -> item.getInt("question_type"))
@@ -135,7 +135,8 @@ public class TestPaperInfoService extends BaseService<TestPaperInfoMapper> {
                 int num = 1;
                 for (Integer type : questionTypes) {
                     ModelBeanMap questionMap = new ModelBeanMap();
-                    questionMap.put("questionTypeName", NumberUtils.numberToChinese(num) + "、" + EnumConstants.QuestionType.getName(type));
+                    questionMap.put("questionTypeName", NumberUtils.numberToChinese(num) + "、"
+                            + EnumConstants.QuestionType.getName(type));
                     List<ModelBeanMap> questionMapList = new ArrayList<>();
                     // 遍历所有的试题类型
                     questionList.forEach(question -> {

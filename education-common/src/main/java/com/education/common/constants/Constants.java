@@ -12,6 +12,8 @@ public final class Constants {
     public static final String EDUCATION_FRONT_SECRET_KEY = "education_front";
     public static final String USER_SESSION_ID = "user_id_key";
     public static final String ONE_MINUTE_CACHE = "one.minute";
+    public static final String ONE_HOUR_CACHE = "one.hour";
+
     public static final String USER_INFO_CACHE = "user.cache";
     public static final String SESSION_NAME = "u_id_key";
     public static final String DEFAULT_SESSION_ID = "JSESSIONID";

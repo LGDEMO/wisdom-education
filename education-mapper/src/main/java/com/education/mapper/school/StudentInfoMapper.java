@@ -2,7 +2,9 @@ package com.education.mapper.school;
 
 import com.education.common.base.BaseMapper;
 import com.education.common.model.ModelBeanMap;
+import com.education.common.model.StudentInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,4 +18,6 @@ public interface StudentInfoMapper extends BaseMapper {
     int deleteByIdOrSchoolId(Map params);
 
     ModelBeanMap findByLoginName(String loginName);
+
+    int batchSaveStudent(List<StudentInfo> studentInfoList);
 }

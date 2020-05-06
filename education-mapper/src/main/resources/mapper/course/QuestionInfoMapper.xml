@@ -58,15 +58,15 @@
     </insert>
 
     <insert id="batchSave" parameterType="list">
-        insert into question_info(subject_id, create_date, update_date, answer, content, options, school_type, grade_type,
-        question_type, analysis, mode_type, course_id, language_points_id)
+        insert into question_info(subject_id, category, create_date, update_date, answer, content, options, school_type, grade_type,
+        question_type, analysis)
         values
         <foreach collection="list" separator="," item="item">
-                (
-                #{item.subject_id}, #{item.create_date}, #{item.update_date}, #{item.answer}, #{item.content},  #{item.options},
-                ${item.school_type}, ${item.grade_type}, ${item.question_type}, #{item.analysis}, #{item.mode_type}, #{item.course_id},
-                #{item.language_points_id}
-                )
+            (
+              #{item.subject_id}, #{item.category}, #{item.create_date}, #{item.update_date},
+              #{item.answer}, #{item.content},  #{item.options},
+              #{item.school_type}, ${item.grade_type}, ${item.question_type}, #{item.analysis}
+            )
         </foreach>
     </insert>
 

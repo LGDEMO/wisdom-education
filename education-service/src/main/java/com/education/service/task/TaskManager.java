@@ -19,11 +19,25 @@ public class TaskManager {
     }
 
     public void pushTask(TaskParam taskParam) {
-        TaskListener taskListener = SpringBeanManager.getBean(taskParam.getTaskListenerClass()); //taskListenerMap.get(beanName);
+        TaskListener taskListener = SpringBeanManager.getBean(taskParam.getTaskListenerClass());
         if (taskListener != null) {
             threadPoolTaskExecutor.execute(() -> {
                 taskListener.onMessage(taskParam);
             });
+        }
+    }
+
+    public void pushTaskByNewInstance(TaskParam taskParam) {
+        Class<? extends TaskListener> taskListenerClass = taskParam.getTaskListenerClass();
+        if (taskListenerClass != null) {
+            try {
+                TaskListener taskListener = taskListenerClass.newInstance();
+                threadPoolTaskExecutor.execute(() -> {
+                    taskListener.onMessage(taskParam);
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

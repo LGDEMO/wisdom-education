@@ -14,11 +14,12 @@ import com.education.mapper.school.StudentInfoMapper;
 import com.education.service.BaseService;
 import com.education.service.WebSocketMessageService;
 import com.education.service.course.QuestionInfoService;
+import com.education.service.system.SystemDictService;
+import com.education.service.system.SystemDictValueService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.Cookie;
 import java.util.*;
 
@@ -44,10 +45,12 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
     private WebSocketMessageService webSocketMessageService;
     @Autowired
     private OnlineUserManager onlineUserManager;
+    @Autowired
+    private SystemDictValueService systemDictValueService;
 
 
     private static final String STUDENT_EXCEL_TITLE[] = new String[]{
-            "学生姓名", "头像", "就读学校", "性别", "年龄", "年级", "家庭住址", "联系电话", "父亲姓名", "母亲姓名"
+            "学生姓名", "登录账号", "头像", "就读学校", "性别", "年龄", "年级", "家庭住址", "联系电话", "父亲姓名", "母亲姓名"
     };
 
     @Override
@@ -63,6 +66,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
     public ResultCode exportExcel(Map params)  {
         List<String> column = new ArrayList<>();
         column.add("name");
+        column.add("login_name");
         column.add("head_img");
         column.add("school_name");
         column.add("sex");
@@ -72,16 +76,16 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         column.add("mobile");
         column.add("father_name");
         column.add("mother_name");
-        int width[] = {10000, 10000, 9000, 5000, 7000, 10000, 5000, 15000, 5000, 5000};
+        int width[] = {10000, 10000, 10000, 9000, 5000, 7000, 10000, 5000, 15000, 5000, 5000};
         String title = "学员信息表";
         AdminUserSession adminUserSession = getAdminUserSession();
         if (adminUserSession.isPrincipalAccount()) {
             params.put("schoolId", adminUserSession.getUserMap().get("school_id"));
         }
-        List<Map> dataList = mapper.queryList(params); //sqlSessionTemplate.selectList("student.info.list", params);
+        List<Map> dataList = mapper.queryList(params);
         dataList.forEach(student -> {
             Integer gradeType = (Integer) student.get("grade_type");
-            String gradeName = null; // BaseTask.getGradeName(gradeType);
+            String gradeName = systemDictValueService.getDictNameByValue(SystemDictService.GRADE_TYPE, gradeType);
             student.put("grade_type", gradeName);
             Integer sex = (Integer) student.get("sex");
             student.put("sex", sex == EnumConstants.Sex.MAN.getValue() ? "男" : "女");
@@ -90,9 +94,33 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         return ExcelKit.exportByAjax("学员信息表.xls", RequestUtils.getResponse(), hssfWorkbook);
     }
 
-    public ResultCode importStudentFromExcel(List<StudentInfo> dataList) throws Exception {
-
-        return new ResultCode(ResultCode.SUCCESS, "数据导入失败");
+    public void importStudentFromExcel(List<StudentInfo> studentList) throws Exception {
+        Map adminUserMap = getAdminUser();
+        Integer schoolId = 0;
+        if (ObjectUtils.isNotEmpty(adminUserMap)) {
+            schoolId = (Integer) adminUserMap.get("school_id");
+        }
+        for (StudentInfo studentInfo : studentList) {
+            if (ObjectUtils.isEmpty(studentInfo.getName())) {
+                continue;
+            }
+            studentInfo.setSchoolId(schoolId);
+            String gradeName = studentInfo.getGradeType();
+            studentInfo.setSexId("男".equals(studentInfo.getSex()) ? ResultCode.SUCCESS : ResultCode.FAIL);
+            Integer gradeTypeId = systemDictValueService.getDictValueByName(SystemDictService.GRADE_TYPE, gradeName);
+            studentInfo.setGradeTypeId(gradeTypeId);
+            String name = studentInfo.getName();
+            String loginName = SpellUtils.getSpellHeadChar(name); // 获取登录名
+            String encrypt = Md5Utils.encodeSalt(Md5Utils.generatorKey());
+            String password = Md5Utils.getMd5(loginName, encrypt); //生成默认密码
+            studentInfo.setPassword(password);
+            studentInfo.setEncrypt(encrypt);
+            studentInfo.setLoginName(loginName);
+            Date now = new Date();
+            studentInfo.setCreateDate(now);
+            studentInfo.setUpdateDate(now);
+        }
+        mapper.batchSaveStudent(studentList);
     }
 
     @Transactional
@@ -108,13 +136,13 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
                 result = super.save(studentInfoMap);
             }
             if (result > 0) {
-                return new ResultCode(ResultCode.FAIL, message);
+                return new ResultCode(ResultCode.SUCCESS, message);
             }
         } catch (Exception e) {
             logger.error("操作异常", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, "操作异常"));
         }
-        return new ResultCode(ResultCode.FAIL, "操作异常");
+        return new ResultCode(ResultCode.FAIL, "修改学员失败");
     }
 
     public List<ModelBeanMap> getStudentCourseOrPaperQuestionInfoList(Map params) {

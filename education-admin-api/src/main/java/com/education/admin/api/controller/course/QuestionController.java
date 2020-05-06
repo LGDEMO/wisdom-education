@@ -12,6 +12,7 @@ import com.education.common.model.QuestionInfo;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.service.course.QuestionInfoService;
+import com.jfinal.i18n.Res;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -75,10 +76,10 @@ public class QuestionController extends BaseController {
      * @param file
      */
     @RequestMapping(value = "uploadExcel", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResultCode uploadExcel(@RequestParam MultipartFile file) {
+    public Result uploadExcel(@RequestParam MultipartFile file) {
         try {
             if (!excelTypes.contains(file.getContentType())) {
-                return new ResultCode(ResultCode.FAIL, "只能导入excel文件");
+                return Result.fail(ResultCode.FAIL, "只能导入excel文件");
             }
             InputStream inputStream = file.getInputStream();
             ImportParams importParams = new ImportParams();
@@ -96,13 +97,14 @@ public class QuestionController extends BaseController {
                         errorMsg.append(rowNumber + ",");
                     }
                 }
-                return new ResultCode(ResultCode.FAIL, errorMsg.toString() + "行数据错误，请根据表格错误提示进行修改后再导入");
+                return Result.fail(ResultCode.FAIL, errorMsg.toString() + "行数据错误，请根据表格错误提示进行修改后再导入");
             }
             List<QuestionInfo> dataList = result.getList();
-            return questionInfoService.importQuestionFromExcel(dataList);
+            questionInfoService.importQuestionFromExcel(dataList);
+            return Result.success(ResultCode.SUCCESS, "数据导入成功");
         } catch (Exception e) {
             log.error("数据导入失败", e);
         }
-        return new ResultCode(ResultCode.FAIL, "数据导入失败");
+        return Result.fail(ResultCode.FAIL, "导入失败, 请检查科目是否已存在或文件格式是否正确");
     }
 }

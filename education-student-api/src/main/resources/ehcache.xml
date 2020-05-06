@@ -33,6 +33,7 @@
     <defaultCache
         maxElementsInMemory="1000"
         eternal="false"
+        diskPersistent="true"
         timeToIdleSeconds="100"
         timeToLiveSeconds="100"
         overflowToDisk="true"/>
@@ -41,6 +42,7 @@
      <cache name="one.minute"
         maxElementsInMemory="1000"
         eternal="false"
+        diskPersistent="true"
         timeToIdleSeconds="10"
         timeToLiveSeconds="60"
         overflowToDisk="true"/>
@@ -69,6 +71,7 @@
     <cache name="user.cache"
            maxElementsInMemory="1000"
            eternal="false"
+           diskPersistent="true"
            timeToIdleSeconds="0"
            timeToLiveSeconds="216000"
            overflowToDisk="true" />
