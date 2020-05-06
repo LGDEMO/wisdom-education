@@ -13,6 +13,14 @@
         </foreach>
     </insert>
 
+    <update id="update" parameterType="map">
+        update system_dict_value
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
     <select id="treeList" resultType="modelBeanMap">
        select value as label, id as value, parent_id from system_dict_value order by sort desc
     </select>
@@ -35,4 +43,12 @@
     <select id="getDictValueByParentId" resultType="modelBeanMap">
         select * from system_dict_value where parent_id = #{parentId}
     </select>
+
+    <delete id="deleteByDictId" parameterType="Integer">
+        delete from system_dict_value where system_dict_id = #{dictId}
+    </delete>
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from system_dict_value where id = #{id}
+    </delete>
 </mapper>

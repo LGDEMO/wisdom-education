@@ -70,6 +70,7 @@ public class SystemLogListener implements TaskListener {
             dataMap.put("user_id", frontUserInfoSession.getUserInfoMap().get("id"));
         }
         dataMap.put("create_date", new Date());
+        dataMap.put("request_url", taskParam.getStr("request_url"));
         dataMap.put("platform_type", EnumConstants.PlatformType.WEB_ADMIN.getValue());
         long startTime = taskParam.getLong("startTime");
         dataMap.put("request_time", (System.currentTimeMillis() - startTime) + "ms");

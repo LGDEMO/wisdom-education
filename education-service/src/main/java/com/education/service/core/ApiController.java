@@ -65,6 +65,10 @@ public class ApiController extends BaseController {
      */
     @PostMapping("/dict/saveOrUpdate")
     public ResultCode saveOrUpdate(@RequestBody ModelBeanMap params) {
+        boolean updateFlag = false;
+        if (ObjectUtils.isNotEmpty(params.get("id"))) {
+            updateFlag = true;
+        }
         return systemDictService.saveOrUpdate(params);
     }
 
@@ -91,6 +95,28 @@ public class ApiController extends BaseController {
             updateFlag = true;
         }
         return systemDictValueService.saveOrUpdate(updateFlag, params);
+    }
+
+    /**
+     * 根据id 删除字典
+     * @param dictBeanMap
+     * @return
+     */
+    @DeleteMapping("/dict/deleteDictById")
+    public Result deleteDictById(@RequestBody ModelBeanMap dictBeanMap) {
+        return systemDictService.deleteDictById(dictBeanMap);
+    }
+
+    /**
+     * 根据id 删除字典
+     * @param dictBeanMap
+     * @return
+     */
+    @DeleteMapping("/dict/deleteDictValueById")
+    public Result deleteDictValueById(@RequestBody ModelBeanMap dictBeanMap) {
+        int result = systemDictValueService.deleteDictValueById(dictBeanMap);
+        return result > 1 ? Result.success(ResultCode.SUCCESS, "删除成功")
+                : Result.fail(ResultCode.FAIL, "删除失败");
     }
 
     /**

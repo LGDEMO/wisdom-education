@@ -1,7 +1,6 @@
 package com.education.admin.api;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
 import com.education.common.cache.EhcacheBean;
 import com.education.common.cache.CacheBean;
 import com.education.common.model.AdminUserSession;
@@ -13,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.lang.reflect.Type;
 import java.util.*;
 
 
@@ -85,15 +82,5 @@ public class EducationAdminApiApplicationTests {
     @Test
     public void testIp() {
         System.out.println(IpUtils.getIpAddress("182.101.63.196"));
-    }
-
-    @Test
-    public void testJson() {
-        User user = new User();
-        user.setId("1");
-        user.setName("test");
-
-        User user1 = JSON.parseObject(JSON.toJSONString(user), (Type) Object.class);
-        System.out.println(user1);
     }
 }

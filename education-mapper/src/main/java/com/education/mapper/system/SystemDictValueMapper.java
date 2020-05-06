@@ -12,4 +12,6 @@ public interface SystemDictValueMapper extends BaseMapper {
 
     List<ModelBeanMap> getDictValueByParentId(Map params);
 
+    int deleteByDictId(Integer dictId);
+
 }

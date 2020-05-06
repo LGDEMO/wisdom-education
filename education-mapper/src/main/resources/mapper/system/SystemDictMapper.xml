@@ -13,6 +13,14 @@
         </foreach>
     </insert>
 
+    <update id="update" parameterType="map">
+        update system_dict
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
     <select id="queryList" resultType="modelBeanMap">
        select * from system_dict a <include refid="condition"/>
     </select>
@@ -37,4 +45,8 @@
     <select id="findByCodeAndType" resultType="modelBeanMap">
         select * from system_dict where code = #{code} and type = #{typeName}
     </select>
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from system_dict where id = #{id}
+    </delete>
 </mapper>
