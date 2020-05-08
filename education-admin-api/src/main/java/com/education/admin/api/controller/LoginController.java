@@ -1,5 +1,8 @@
 package com.education.admin.api.controller;
 
+import com.education.common.annotation.Param;
+import com.education.common.annotation.ParamsType;
+import com.education.common.annotation.ParamsValidate;
 import com.education.common.annotation.SystemLog;
 import com.education.common.base.BaseController;
 import com.education.common.constants.EnumConstants;
@@ -55,6 +58,12 @@ public class LoginController extends BaseController {
      */
     @PostMapping("/login")
     @SystemLog(describe = "登录管理系统")
+    @ParamsValidate(params = {
+        @Param(name = "userName", message = "请输入用户名"),
+        @Param(name = "password", message = "请输入密码"),
+        @Param(name = "key", message = "请传递一个验证码时间戳"),
+        @Param(name = "password", message = "请输入密码"),
+    }, paramsType = ParamsType.JSON_DATA)
     public Result login(@RequestBody ModelBeanMap requestBody, HttpSession session) {
         String loginName = requestBody.getStr("userName");
         String password = requestBody.getStr("password");

@@ -1,13 +1,12 @@
 package com.education.common.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-
 import com.education.common.annotation.Param;
 import com.education.common.annotation.ParamsType;
 import com.education.common.annotation.ParamsValidate;
 import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.RegexUtils;
 import com.education.common.utils.Result;
-import com.education.common.utils.TypeConvert;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import javax.servlet.http.HttpServletRequest;
@@ -51,13 +50,22 @@ public class ParamsValidateInterceptor extends BaseInterceptor {
             String name = param.name();
             Object value = null;
             if (paramsType == ParamsType.FORM_DATA) {
-                value = TypeConvert.convert(request.getParameter(name));
+                value = request.getParameter(name);
             } else if (isJsonData && dataMap != null) {
-                value = TypeConvert.convert(dataMap.get(name));
+                value = dataMap.get(name);
             }
             if (ObjectUtils.isEmpty(value)) {
                 renderJson(response, Result.fail(param.errorCode(), param.message()));
                 return false;
+            } else {
+                String regexp = param.regexp();
+                if (ObjectUtils.isNotEmpty(param.regexp())) {
+                    boolean regexpFlag = RegexUtils.compile(regexp, value);
+                    if (!regexpFlag) {
+                        renderJson(response, Result.fail(param.errorCode(), param.regexpMessage()));
+                        return false;
+                    }
+                }
             }
         }
         return true;

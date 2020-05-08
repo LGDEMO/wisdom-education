@@ -36,6 +36,10 @@ public class SystemAdminController extends BaseController {
      */
     @GetMapping({"", "list"})
     @RequiresPermissions("system:admin:list")
+    @ParamsValidate(params = {
+        @Param(name = "offset", message = "请传递当前页参数"),
+        @Param(name = "limit", message = "请输入每页显示条数")
+    }, paramsType = ParamsType.JSON_DATA)
     public Result<Map> list(@RequestParam Map params) {
         return systemAdminService.pagination(params);
     }
@@ -46,8 +50,8 @@ public class SystemAdminController extends BaseController {
      */
     @PostMapping("updatePassword")
     @ParamsValidate(params = {
-            @Param(name = "password", message = "请输入密码"),
-            @Param(name = "confirmPassword", message = "请输入确认密码")
+       @Param(name = "password", message = "请输入密码"),
+       @Param(name = "confirmPassword", message = "请输入确认密码")
     }, paramsType = ParamsType.JSON_DATA)
     @RequiresPermissions("system:admin:updatePassword")
     public ResultCode updatePassword(@RequestBody ModelBeanMap systemAdmin) {
