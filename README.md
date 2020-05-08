@@ -38,16 +38,19 @@ Element-UI | 2.13.0
 
 #### 模块说明
 
-```lua
-
-- 管理后台前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education-admin-front
-- 学生端前端代码education-admin-ui  -- https://gitee.com/zhuimengshaonian/wisdom-education-front
-- 
+```
 - education
 - ├── education-admin-api-- 管理后台api模块
-- └── education-common -- 系统公共模块 业务层模块服务注册与发现[8761]
+- └── education-common -- 系统公共模块 
+- └── education-service-- 系统业务模块 
+- └── education-mapper-- 系统maperr接口及sql模块 
 - ├── education-student-api-- 学生端api模块	
 ```
+### 智慧云智能教育系统管理平台
+- 项目源码地址：  https://gitee.com/zhuimengshaonian/wisdom-education-admin-front
+-  功能模块：系统首页、教育教学模块、考试管理模块、统计分析模块、系统设置模块
+
+
 ### 智慧云智能教育系统交流群
 
 
