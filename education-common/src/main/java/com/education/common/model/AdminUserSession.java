@@ -40,11 +40,7 @@ public class AdminUserSession implements Serializable {
      * @return
      */
     public boolean isPrincipalAccount() {
-        Integer schoolId = (Integer)this.userMap.get("school_id");
-        if (ObjectUtils.isNotEmpty(schoolId)) {
-            return true;
-        }
-        return false;
+        return (boolean)this.userMap.get("principal_flag");
     }
 
     public void addPermission(String permission) {

@@ -5,6 +5,7 @@ import com.education.common.annotation.ParamsType;
 import com.education.common.annotation.ParamsValidate;
 import com.education.common.annotation.SystemLog;
 import com.education.common.base.BaseController;
+import com.education.common.constants.Constants;
 import com.education.common.constants.EnumConstants;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.JwtToken;
@@ -24,7 +25,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpSession;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +68,7 @@ public class LoginController extends BaseController {
         @Param(name = "key", message = "请传递一个验证码时间戳"),
         @Param(name = "password", message = "请输入密码"),
     }, paramsType = ParamsType.JSON_DATA)
-    public Result login(@RequestBody ModelBeanMap requestBody, HttpSession session) {
+    public Result login(@RequestBody ModelBeanMap requestBody, HttpServletResponse response, HttpServletRequest request) {
         String loginName = requestBody.getStr("userName");
         String password = requestBody.getStr("password");
         String codeKey = requestBody.getStr("key");
@@ -78,8 +82,18 @@ public class LoginController extends BaseController {
             String token = adminJwtToken.createToken(systemAdminService.getUserId(), 24 * 60 * 60 * 1000 * 5); // 默认缓存5天
             AdminUserSession userSession = systemAdminService.getAdminUserSession();
             webSocketMessageService.checkOnlineUser(userSession.getUserId(), EnumConstants.PlatformType.WEB_ADMIN);
-            userSession.setSessionId(session.getId());
+            userSession.setSessionId(request.getSession().getId());
             systemAdminService.loadUserMenuAndPermission(userSession);
+
+            boolean rememberMe = requestBody.getBoolean("checked");
+            if (rememberMe) {
+                // 先删除JSESSIONID
+                Cookie cookie = RequestUtils.getCookie(Constants.DEFAULT_SESSION_ID);
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+                // 重新创建JSESSIONID 并设置过期时间, 默认过期时间为5天
+                RequestUtils.createCookie(Constants.DEFAULT_SESSION_ID, request.getSession().getId(), Constants.SESSION_TIME_OUT);
+            }
             requestBody.clear();
             // 将用户信息返回前端
             requestBody.put("token", token);
@@ -101,7 +115,8 @@ public class LoginController extends BaseController {
             taskParam.put("request", RequestUtils.getRequest());
             taskManager.pushTask(taskParam);
 
-            systemAdminService.updateShiroCacheUserInfo(userSession);
+            systemAdminService.updateShiroCacheUserInfo(userSession); // 更新shiro 用户信息，避免与redis 缓存中用户信息不一致问题
+
        }
        result.setData(requestBody);
        return result;

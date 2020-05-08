@@ -1,5 +1,6 @@
 package com.education.service.school;
 
+import com.education.common.constants.EnumConstants;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.Md5Utils;
@@ -115,6 +116,7 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
             String password = Md5Utils.getMd5(simplicity, encrypt);
             params.put("password", password);
             params.put("school_id", schoolId);
+            params.put("principal_flag", EnumConstants.Flag.YES.getValue());
             params.put("create_date", now);
             params.put("update_date", now);
             Integer adminId = systemAdminMapper.save(params);

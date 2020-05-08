@@ -112,7 +112,7 @@ public class SystemAdminService extends BaseService<SystemAdminMapper> {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
         try {
-            token.setRememberMe(true);
+         //   token.setRememberMe(false);
             subject.login(token);
             result.setCode(ResultCode.SUCCESS);
             result.setMessage("登录成功");
