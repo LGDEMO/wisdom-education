@@ -100,6 +100,8 @@ public class LoginController extends BaseController {
             taskParam.put("userSession", userSession);
             taskParam.put("request", RequestUtils.getRequest());
             taskManager.pushTask(taskParam);
+
+            systemAdminService.updateShiroCacheUserInfo(userSession);
        }
        result.setData(requestBody);
        return result;

@@ -4,6 +4,7 @@ import com.education.common.cache.CacheBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,8 +16,10 @@ import java.util.Set;
 public abstract class BaseController {
 
 
-    @Autowired
+    @Resource(name = "redisCacheBean")
     protected CacheBean cacheBean;
+    @Resource
+    protected CacheBean ehcacheBean;
     protected static final Set<String> excelTypes = new HashSet<String>() {
         {
             add("application/x-xls");

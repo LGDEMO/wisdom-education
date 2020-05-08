@@ -20,6 +20,8 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +39,7 @@ public abstract class BaseService<M extends BaseMapper> {
     @Autowired
     protected TaskManager taskManager;
     @Autowired
+    @Qualifier("redisCacheBean")
     protected CacheBean cacheBean;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -51,7 +54,7 @@ public abstract class BaseService<M extends BaseMapper> {
      * 更新shiro 缓存中的用户信息，避免由于redis 缓存导致获取用户信息不一致问题
      * @param adminUserSession
      */
-    protected void updateShiroCacheUserInfo(AdminUserSession adminUserSession) {
+    public void updateShiroCacheUserInfo(AdminUserSession adminUserSession) {
         Subject subject = SecurityUtils.getSubject();
         PrincipalCollection principals = subject.getPrincipals();
         //realName认证信息的key，对应的value就是认证的user对象

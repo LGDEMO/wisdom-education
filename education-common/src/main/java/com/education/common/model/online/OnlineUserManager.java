@@ -2,7 +2,10 @@ package com.education.common.model.online;
 
 import com.education.common.cache.CacheBean;
 import com.education.common.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 import java.util.Set;
 
 /**
@@ -14,13 +17,11 @@ import java.util.Set;
 @Component
 public final class OnlineUserManager {
 
-    private final CacheBean cacheBean;
+    @Resource(name = "redisCacheBean")
+    private CacheBean cacheBean;
     // 用户id 集合
     private static final String USER_ID_CACHE = "user:id:cache:";
 
-    public OnlineUserManager(CacheBean cacheBean) {
-        this.cacheBean = cacheBean;
-    }
 
     /**
      * 添加用户

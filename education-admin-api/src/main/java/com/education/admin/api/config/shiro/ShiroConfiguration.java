@@ -13,6 +13,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,17 +78,22 @@ public class ShiroConfiguration {
 	@Bean
 	public SecurityManager securityManager(SessionManager sessionManager,
 										   Realm systemRealm,
-										   CacheManager ehCacheManager) {
+										   @Qualifier("redisCacheManager") CacheManager cacheManager) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 		securityManager.setRealm(systemRealm);
 		securityManager.setSessionManager(sessionManager);
-		securityManager.setCacheManager(ehCacheManager);
+		securityManager.setCacheManager(cacheManager);
 		return securityManager;
 	}
 
 	@Bean
-	public SessionDAO distributeShiroSession(CacheBean cacheBean) {
+	public SessionDAO distributeShiroSession(@Qualifier("redisCacheBean") CacheBean cacheBean) {
 		return new DistributeShiroSession(cacheBean);
+	}
+
+	@Bean
+	public RedisCacheManager redisCacheManager(@Qualifier("redisCacheBean") CacheBean cacheBean) {
+		return new RedisCacheManager(cacheBean);
 	}
 
 
