@@ -48,6 +48,13 @@ Element-UI | 2.13.0
 - └── education-common -- 系统公共模块 业务层模块服务注册与发现[8761]
 - ├── education-student-api-- 学生端api模块	
 ```
+### 智慧云智能教育系统交流群
+
+
+ -  **QQ交流群 1072042422** 
+ -  **作者QQ 1913188966** 
+
+
 #### 项目运行截图 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0425/115112_1eb8a6e7_1526010.png "}CI9A4HDZZAC3%M`N}JL`77.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194825_34662cb0_1526010.png "]06ZXGQ[2~7S3_28H5XZD}9.png")
@@ -56,28 +63,5 @@ Element-UI | 2.13.0
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194945_3b2ed607_1526010.png "P67Y6%0X}FR~2$KSG7RZXBO.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/194953_0584ae6c_1526010.png "VETIX%NRF8V`)12DI0L[2ZP.png")
 ```
-QQ交流群 1072042422
-
-```
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195324_02a1b710_1526010.png "temp_qrcode_share_1072042422.png")
-```
-赞助
-```
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0311/195343_65d0cb1e_1526010.jpeg "1583927530267.jpg")
-```
-#### 提交反馈
-
-1. 欢迎提交 issue，请写清楚遇到问题的原因，开发环境，复显步骤。
-
-2. 不接受`功能请求`的 issue，功能请求可能会被直接关闭。  
-
-3. 欢迎喜欢研究做开源的小伙伴加入我的团队
-
-3. <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2270033969&site=qq&menu=yes"> 个人QQ: 1913188966</a>
-
-#### 开源协议
-
-
-![](https://images.gitee.com/uploads/images/2019/0330/065147_e07bc645_410595.png)
 
 
