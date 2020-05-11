@@ -11,6 +11,10 @@
                 or mobile like #{searchName}
                 )
             </if>
+
+            <if test="gradeType != null and gradeType != ''">
+                and school_type = #{gradeType}
+            </if>
         </where>
         order by id desc
     </select>
