@@ -6,7 +6,10 @@ import com.education.mapper.school.SchoolInfoMapper;
 import com.jfinal.weixin.sdk.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,12 +23,14 @@ import java.util.Set;
  * @create_at 2020/3/14 15:21
  */
 @Component
-@Slf4j
 public class PositionListener implements TaskListener {
 
     @Autowired
     private SchoolInfoMapper schoolInfoMapper;
+    @Value("${lbs.key}")
+    private String lbsKey;
 
+    private static final Logger logger = LoggerFactory.getLogger(PositionListener.class);
     private static final Set<String> codeSet = new HashSet<String>() {
         {
             add("重庆市"); //重庆
@@ -47,7 +52,7 @@ public class PositionListener implements TaskListener {
     @Override
     public void onMessage(TaskParam taskParam) {
         String result = HttpUtils.get(LBS_HTTP_URL + taskParam.getStr("lat") + ","
-                + taskParam.get("lng") + "&key=" + taskParam.getStr("key"));
+                + taskParam.get("lng") + "&key=" + this.lbsKey);
         JSONObject jsonObject = JSONObject.parseObject(result);
         Map params = new HashMap<>();
         try {
@@ -84,7 +89,7 @@ public class PositionListener implements TaskListener {
                 schoolInfoMapper.update(params);
             }
         } catch (Exception e) {
-            log.error("获取定位异常", e);
+            logger.error("获取定位异常", e);
         }
     }
 }

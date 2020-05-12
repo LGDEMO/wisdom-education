@@ -21,7 +21,9 @@ public class DistributeShiroSession extends AbstractSessionDAO {
     public static final String SESSION_KEY = "user.session.cache";
     // 缓存默认失效时间
     private static final int WEEK_TIME_OUT = 7 * 24 * 60 * 60;
-    private int expire = WEEK_TIME_OUT;
+    private static final int ONE_DAY = 24 * 60 * 60;
+    // SESSION 默认失效时间为1天
+    private int expire = ONE_DAY;
 
     public DistributeShiroSession(CacheBean cacheBean) {
         this.cacheBean = cacheBean;

@@ -119,6 +119,7 @@ public class CourseInfoController extends BaseController {
     @PostMapping("relevanceQuestion")
     @RequiresPermissions(value = "system:mode:relevanceQuestion")
     @ApiOperation("关联试题")
+    @SystemLog(describe = "关联试题")
     public ResultCode relevanceQuestion(@RequestBody ModelBeanMap modelBeanMap) {
         return courseQuestionService.relevanceQuestion(modelBeanMap);
     }

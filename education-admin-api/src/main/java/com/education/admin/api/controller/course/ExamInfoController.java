@@ -1,5 +1,6 @@
 package com.education.admin.api.controller.course;
 
+import com.education.common.annotation.SystemLog;
 import com.education.common.base.BaseController;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.ModelBeanMap;
@@ -31,6 +32,7 @@ public class ExamInfoController extends BaseController {
 
     @GetMapping
     @RequiresPermissions("system:exam:list")
+    @SystemLog(describe = "获取考试列表")
     public Result list(@RequestParam Map params) {
         AdminUserSession adminUserSession = examInfoService.getAdminUserSession();
         if (adminUserSession.isPrincipalAccount()) {

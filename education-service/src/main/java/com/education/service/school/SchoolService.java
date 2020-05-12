@@ -42,8 +42,7 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
     private SystemRoleMapper systemRoleMapper;
     @Autowired
     private SystemAdminRoleMapper systemAdminRoleMapper;
-    @Value("${lbs.key}")
-    private String lbsKey;
+
 
     @Transactional
     @Override
@@ -76,11 +75,9 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
 
     private void updateSchoolAddress(Integer schoolId, String lat, String lng) {
         TaskParam taskParam = new TaskParam(PositionListener.class);
-        Map params = new HashMap<>();
-        params.put("id", schoolId);
-        params.put("lat", lat);
-        params.put("key", lbsKey);
-        params.put("lng", lng);
+        taskParam.put("id", schoolId);
+        taskParam.put("lat", lat);
+        taskParam.put("lng", lng);
         taskManager.pushTask(taskParam);
     }
 
