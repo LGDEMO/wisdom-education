@@ -6,10 +6,7 @@ import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.model.QuestionInfo;
 import com.education.common.model.UserAnswerInfo;
-import com.education.common.utils.NumberUtils;
-import com.education.common.utils.ObjectUtils;
-import com.education.common.utils.ResultCode;
-import com.education.common.utils.RichHtmlHandler;
+import com.education.common.utils.*;
 import com.education.mapper.course.CourseQuestionInfoMapper;
 import com.education.mapper.course.QuestionInfoMapper;
 import com.education.mapper.course.StudentQuestionAnswerMapper;
@@ -25,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 /**
+ * 试题管理service
  * @author zengjintao
  * @version 1.0
  * @create_at 2020/3/9 15:42
@@ -43,6 +41,8 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
     private SystemDictValueService systemDictValueService;
     @Autowired
     private SubjectInfoService subjectInfoService;
+    @Autowired
+    private LanguagePointsService languagePointsService;
 
     @Override
     @Transactional
@@ -62,7 +62,7 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
         }
     }
 
-    public ResultCode saveOrUpdate(ModelBeanMap questionInfoMap) {
+    public Result saveOrUpdate(ModelBeanMap questionInfoMap) {
         String message = "";
         try {
             List<Map> optionList = null;
@@ -105,7 +105,7 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
                 questionInfoMap.put("update_date", now);
                 mapper.update(questionInfoMap);
             }
-            return new ResultCode(ResultCode.SUCCESS, message + "试题成功");
+            return new Result(ResultCode.SUCCESS, message + "试题成功");
         } catch (Exception e) {
             log.error(message + "试题失败", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, message + "试题失败"));
@@ -291,7 +291,7 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
                 continue;
             }
             Map params = new HashMap<>();
-            Integer questionType = systemDictValueService.getDictValueByName("question_type", questionInfo.getQuestionType());
+            Integer questionType = null; //systemDictValueService.getDictValueByName("question_type", questionInfo.getQuestionType());
             params.put("question_type", questionType); // 获取试题类型
             String answer = questionInfo.getAnswer();
             if (questionType == EnumConstants.QuestionType.JUDGMENT_QUESTION.getValue()) {
@@ -303,7 +303,7 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
             params.put("options", questionInfo.getOptions());
             params.put("analysis", questionInfo.getAnalysis());
             String gradeName = questionInfo.getGradeInfoName();
-            ModelBeanMap gradeTypeInfo = systemDictValueService.getDictValueForMapByName(SystemDictService.GRADE_TYPE, gradeName);
+            ModelBeanMap gradeTypeInfo = null; //systemDictValueService.getDictValueForMapByName(SystemDictService.GRADE_TYPE, gradeName);
             Integer gradeType = gradeTypeInfo.getInt("code");
             params.put("grade_type", gradeTypeInfo.get("code"));
             params.put("school_type", gradeTypeInfo.get("parent_id"));
@@ -333,6 +333,23 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
             return subjectInfo.getInt("id");
         }
         return null;
+    }
+
+    public Map findById(Integer questionInfoId) {
+        ModelBeanMap questionInfo = mapper.findById(questionInfoId);
+        List<Integer> parentIds = languagePointsService.getParentId(questionInfo.getInt("language_points_id"));
+        Collections.reverse(parentIds);
+        questionInfo.put("languagePointsIds", parentIds);
+        // 获取科目列表
+        Map params = new HashMap<>();
+        params.put("grade_type", questionInfo.get("grade_type"));
+        params.put("subjectId", questionInfo.get("subject_id"));
+        Result<ModelBeanMap> result = subjectInfoService.pagination(params);
+        questionInfo.put("subjectList", result.getData().get("dataList"));
+        // 获取知识点列表
+        result = languagePointsService.pagination(params);
+        questionInfo.put("languagePointsList", MapTreeUtils.buildTreeData((List<ModelBeanMap>) result.getData().get("dataList")));
+        return questionInfo;
     }
 
 }

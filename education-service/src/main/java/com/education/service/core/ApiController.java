@@ -64,7 +64,7 @@ public class ApiController extends BaseController {
      * @return
      */
     @PostMapping("/dict/saveOrUpdate")
-    public ResultCode saveOrUpdate(@RequestBody ModelBeanMap params) {
+    public Result saveOrUpdate(@RequestBody ModelBeanMap params) {
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(params.get("id"))) {
             updateFlag = true;
@@ -89,7 +89,7 @@ public class ApiController extends BaseController {
      * @return
      */
     @PostMapping("/dict/saveOrUpdateDictValue")
-    public ResultCode saveOrUpdateDictValue(@RequestBody ModelBeanMap params) {
+    public Result saveOrUpdateDictValue(@RequestBody ModelBeanMap params) {
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(params.get("id"))) {
             updateFlag = true;

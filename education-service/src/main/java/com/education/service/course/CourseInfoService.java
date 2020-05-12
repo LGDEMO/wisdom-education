@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 课程管理
  * @author zengjintao
  * @version 1.0
  * @create_at 2019/3/31 10:06
@@ -102,8 +103,8 @@ public class CourseInfoService extends BaseService<CourseInfoMapper> {
     }
 
     public Result getCourse(Map params) {
-        Result<ModelBeanMap> result = super.pagination(params);
-        ModelBeanMap dataMap = result.getData();
+        Result result = super.pagination(params);
+        ModelBeanMap dataMap = (ModelBeanMap) result.getData();
         List<ModelBeanMap> dataList = dataMap.getModelBeanMapList("dataList");
         if (ObjectUtils.isNotEmpty(dataList)) {
             dataList.forEach(item -> {

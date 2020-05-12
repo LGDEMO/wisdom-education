@@ -95,5 +95,8 @@
         where id = #{params.id}
     </update>
 
+    <select id="findById" resultType="modelBeanMap">
+        select * from question_info where id = #{id}
+    </select>
 
 </mapper>

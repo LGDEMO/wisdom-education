@@ -26,7 +26,7 @@ public class SystemDictService extends BaseService<SystemDictMapper> {
     @Autowired
     private SystemDictValueService systemDictValueService;
 
-    public ResultCode saveOrUpdate(ModelBeanMap params) {
+    public Result saveOrUpdate(ModelBeanMap params) {
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(params.get("id"))) {
             updateFlag = true;

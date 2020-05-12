@@ -37,18 +37,18 @@ public class SystemMenuController extends ApiController {
      * @return
      */
     @GetMapping("getMenuByRole")
-    public Result<Integer> getMenuByRole(Integer roleId) {
+    public Result getMenuByRole(Integer roleId) {
         return Result.success(systemRoleMenuService.getMenuListByRoleId(roleId));
     }
 
     @GetMapping(value = "getMenuByParent")
-    public Result<ModelBeanMap> getMenuByParent() {
+    public Result getMenuByParent() {
         return Result.success(systemMenuService.treeMenu());
     }
 
     @GetMapping({"", "list"})
     @RequiresPermissions("system:menu:list")
-    public Result<ModelBeanMap> list(@RequestParam Map params) {
+    public Result list(@RequestParam Map params) {
         return systemMenuService.pagination(params);
     }
 
@@ -65,7 +65,7 @@ public class SystemMenuController extends ApiController {
 
     @PostMapping("saveOrUpdate")
     @RequiresPermissions(value = {"system:menu:save", "system:menu:update"}, logical = Logical.OR)
-    public ResultCode saveOrUpdate(@RequestBody ModelBeanMap menuMap) {
+    public Result saveOrUpdate(@RequestBody ModelBeanMap menuMap) {
         Integer id = menuMap.getInt("id");
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(id)) {

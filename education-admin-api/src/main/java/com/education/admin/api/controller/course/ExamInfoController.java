@@ -31,7 +31,7 @@ public class ExamInfoController extends BaseController {
 
     @GetMapping
     @RequiresPermissions("system:exam:list")
-    public Result<ModelBeanMap> list(@RequestParam Map params) {
+    public Result list(@RequestParam Map params) {
         AdminUserSession adminUserSession = examInfoService.getAdminUserSession();
         if (adminUserSession.isPrincipalAccount()) {
             params.put("schoolId", adminUserSession.getUserMap().get("school_id"));
@@ -40,7 +40,7 @@ public class ExamInfoController extends BaseController {
     }
 
     @GetMapping("getStudentExamQuestionList")
-    public Result<ModelBeanMap> getStudentExamQuestionList(@RequestParam Map params) {
+    public Result getStudentExamQuestionList(@RequestParam Map params) {
         return null;
     }
 }

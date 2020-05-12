@@ -9,6 +9,7 @@ import com.education.common.utils.ObjectUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,10 +21,17 @@ import java.util.*;
 public class EducationAdminApiApplicationTests {
 
     @Autowired
+    @Qualifier("redisCacheBean")
     public CacheBean cacheBean;
     static final String cacheName = "user:cache";
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Test
+    public void remove() {
+        redisTemplate.delete(redisTemplate.keys("*"));
+    }
+
 
     @Test
     public void testRedisStringCache() {

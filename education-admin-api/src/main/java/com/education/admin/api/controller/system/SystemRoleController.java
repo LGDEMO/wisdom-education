@@ -43,13 +43,13 @@ public class SystemRoleController extends ApiController {
      */
     @PostMapping({"", "saveOrUpdate"})
     @RequiresPermissions({"system:role:save", "system:role:update"})
-    public ResultCode saveOrUpdate(@RequestBody ModelBeanMap roleModelMap) {
+    public Result saveOrUpdate(@RequestBody ModelBeanMap roleModelMap) {
         Integer id = roleModelMap.getInt("id");
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(id)) {
             Integer createType = roleModelMap.getInt("create_type");
             if (createType == ResultCode.SUCCESS) {
-                return new ResultCode(ResultCode.FAIL, "您不能编辑系统内置角色");
+                return new Result(ResultCode.FAIL, "您不能编辑系统内置角色");
             }
             updateFlag = true;
         }

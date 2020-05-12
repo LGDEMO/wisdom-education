@@ -13,6 +13,7 @@ import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.service.course.QuestionInfoService;
 import com.jfinal.i18n.Res;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -37,10 +38,19 @@ public class QuestionController extends BaseController {
     @Autowired
     private QuestionInfoService questionInfoService;
 
+    /**
+     * 实体列表
+     * @param params
+     * @return
+     */
     @GetMapping({"", "list"})
     @RequiresPermissions("system:question:list")
     public Result list(@RequestParam Map params) {
         return questionInfoService.pagination(params);
+    }
+
+    public Result findById(Integer id) {
+        return Result.success(questionInfoService.findById(id));
     }
 
     /**
@@ -56,7 +66,7 @@ public class QuestionController extends BaseController {
         @Param(name = "question_type", message = "请选择试题类型")
     }, paramsType = ParamsType.JSON_DATA)
     @RequiresPermissions(value = {"system:question:save", "system:question:update"}, logical = Logical.OR)
-    public ResultCode saveOrUpdate(@RequestBody ModelBeanMap questionInfoMap) {
+    public Result saveOrUpdate(@RequestBody ModelBeanMap questionInfoMap) {
         return questionInfoService.saveOrUpdate(questionInfoMap);
     }
 

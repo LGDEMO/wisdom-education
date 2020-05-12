@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.mapper.course.LanguagePointsMapper">
+
+    <select id="queryList" resultType="modelBeanMap">
+       select points.name label, points.id value, points.hasChildren, points.parent_id, points.subject_id, points.grade_type, points.school_type,
+        points.create_date, points.update_date,
+        subject.name subject_name from language_points_info points left join subject_info subject on points.subject_id = subject.id
+       <where>
+
+           <if test="keyWord != null and keyWord != ''">
+               <bind name="searchName" value="'%' + keyWord + '%'"/>
+               and points.name like #{searchName}
+           </if>
+
+           <if test="gradeType != null and gradeType != ''">
+               and points.grade_type = #{gradeType}
+           </if>
+
+           <if test="subjectId != null and subjectId != ''">
+               and points.subject_id = #{subjectId}
+           </if>
+
+           <if test="parentId != null and parentId != ''">
+               and points.parent_id = #{parentId}
+           </if>
+       </where>
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="map">
+        insert into language_points_info
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="map">
+        update language_points_info
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
+    <select id="findById" resultType="modelBeanMap">
+        select * from language_points_info where id = #{id}
+    </select>
+</mapper>

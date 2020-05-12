@@ -40,7 +40,7 @@ public class SystemAdminController extends BaseController {
         @Param(name = "offset", message = "请传递当前页参数"),
         @Param(name = "limit", message = "请输入每页显示条数")
     }, paramsType = ParamsType.JSON_DATA)
-    public Result<Map> list(@RequestParam Map params) {
+    public Result list(@RequestParam Map params) {
         return systemAdminService.pagination(params);
     }
     /**

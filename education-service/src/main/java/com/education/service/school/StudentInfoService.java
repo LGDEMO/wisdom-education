@@ -85,7 +85,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         List<Map> dataList = mapper.queryList(params);
         dataList.forEach(student -> {
             Integer gradeType = (Integer) student.get("grade_type");
-            String gradeName = systemDictValueService.getDictNameByValue(SystemDictService.GRADE_TYPE, gradeType);
+            String gradeName = null; //systemDictValueService.getDictNameByValue(SystemDictService.GRADE_TYPE, gradeType);
             student.put("grade_type", gradeName);
             Integer sex = (Integer) student.get("sex");
             student.put("sex", sex == EnumConstants.Sex.MAN.getValue() ? "男" : "女");
@@ -107,7 +107,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
             studentInfo.setSchoolId(schoolId);
             String gradeName = studentInfo.getGradeType();
             studentInfo.setSexId("男".equals(studentInfo.getSex()) ? ResultCode.SUCCESS : ResultCode.FAIL);
-            Integer gradeTypeId = systemDictValueService.getDictValueByName(SystemDictService.GRADE_TYPE, gradeName);
+            Integer gradeTypeId = null; //systemDictValueService.getDictValueByName(SystemDictService.GRADE_TYPE, gradeName);
             studentInfo.setGradeTypeId(gradeTypeId);
             String name = studentInfo.getName();
             String loginName = SpellUtils.getSpellHeadChar(name); // 获取登录名
@@ -124,7 +124,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
     }
 
     @Transactional
-    public ResultCode saveOrUpdate(boolean updateFlag, ModelBeanMap studentInfoMap) {
+    public Result saveOrUpdate(boolean updateFlag, ModelBeanMap studentInfoMap) {
         try {
             int result = 0;
             String message = "";
@@ -136,13 +136,13 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
                 result = super.save(studentInfoMap);
             }
             if (result > 0) {
-                return new ResultCode(ResultCode.SUCCESS, message);
+                return new Result(ResultCode.SUCCESS, message);
             }
         } catch (Exception e) {
             logger.error("操作异常", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, "操作异常"));
         }
-        return new ResultCode(ResultCode.FAIL, "修改学员失败");
+        return new Result(ResultCode.FAIL, "修改学员失败");
     }
 
     public List<ModelBeanMap> getStudentCourseOrPaperQuestionInfoList(Map params) {
@@ -272,7 +272,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         return new ResultCode(ResultCode.SUCCESS, "密码修改失败");
     }
 
-    public Result<ModelBeanMap> getPaperHistory(Map params) {
+    public Result getPaperHistory(Map params) {
         try {
             Integer studentId = (Integer) getFrontUserInfo().get("student_id");
             params.put("studentId", studentId);

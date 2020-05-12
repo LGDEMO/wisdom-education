@@ -2,6 +2,7 @@ package com.education.service.course;
 
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.ObjectUtils;
+import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.mapper.course.QuestionInfoMapper;
 import com.education.mapper.course.SubjectInfoMapper;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 科目管理service
  * @author zengjintao
  * @version 1.0
  * @create_at 2020/3/9 19:51
@@ -49,12 +51,12 @@ public class SubjectInfoService extends BaseService<SubjectInfoMapper> {
     }
 
     @Override
-    public ResultCode saveOrUpdate(boolean updateFlag, ModelBeanMap subjectMap) {
+    public Result saveOrUpdate(boolean updateFlag, ModelBeanMap subjectMap) {
         if (ObjectUtils.isEmpty(subjectMap.get("id"))) {
             subjectMap.put("gradeType", subjectMap.get("grade_type"));
             Map gradeMap = mapper.findByNameAndGradeType(subjectMap);
             if (ObjectUtils.isNotEmpty(gradeMap)) {
-                return new ResultCode(ResultCode.FAIL, "该年级科目已存在,请勿重复创建");
+                return new Result(ResultCode.FAIL, "该年级科目已存在,请勿重复创建");
             }
         }
         subjectMap.remove("gradeType");

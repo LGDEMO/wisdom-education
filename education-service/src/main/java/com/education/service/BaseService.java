@@ -70,12 +70,12 @@ public abstract class BaseService<M extends BaseMapper> {
      * @param params
      * @return
      */
-    public Result<ModelBeanMap> pagination(Map params) {
+    public Result pagination(Map params) {
        return pagination(params, null, DEFAULT_MAPPER_PAGE_METHOD_NAME);
     }
 
-    public Result<ModelBeanMap> paginationByCache(String cacheName, String key, Map params) {
-        Result<ModelBeanMap> result = cacheBean.get(cacheName, key);
+    public Result paginationByCache(String cacheName, String key, Map params) {
+        Result result = cacheBean.get(cacheName, key);
         if (ObjectUtils.isEmpty(result)) {
             result = pagination(params);
             cacheBean.put(cacheName, key, result);
@@ -83,7 +83,7 @@ public abstract class BaseService<M extends BaseMapper> {
         return result;
     }
 
-    public Result<ModelBeanMap> pagination(Map params, Class<? extends BaseMapper> mapperClass, String mapperMethod) {
+    public Result pagination(Map params, Class<? extends BaseMapper> mapperClass, String mapperMethod) {
         Result result = null;
         try {
             Integer offset = RowBounds.NO_ROW_OFFSET;
@@ -126,7 +126,7 @@ public abstract class BaseService<M extends BaseMapper> {
         }
     }
 
-    public ResultCode saveOrUpdate(boolean updateFlag, ModelBeanMap modelBeanMap) {
+    public Result saveOrUpdate(boolean updateFlag, ModelBeanMap modelBeanMap) {
         try {
             String message = "";
             if (updateFlag) {
@@ -138,11 +138,19 @@ public abstract class BaseService<M extends BaseMapper> {
                 this.save(modelBeanMap);
                 message = "添加";
             }
-            return new ResultCode(ResultCode.SUCCESS, message + "成功");
+            return new Result(ResultCode.SUCCESS, message + "成功");
         } catch (Exception e) {
             logger.error("操作异常", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, "操作异常"));
         }
+    }
+
+    public Result saveOrUpdate(ModelBeanMap modelBeanMap) {
+        boolean updateFlag = false;
+        if (ObjectUtils.isNotEmpty(modelBeanMap.getInt("id"))) {
+            updateFlag = true;
+        }
+        return this.saveOrUpdate(updateFlag, modelBeanMap);
     }
 
 

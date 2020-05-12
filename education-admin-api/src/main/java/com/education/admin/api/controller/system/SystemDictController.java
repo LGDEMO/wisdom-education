@@ -31,7 +31,7 @@ public class SystemDictController extends BaseController {
     }
 
     @PostMapping("saveOrUpdate")
-    public ResultCode saveOrUpdate(@RequestBody ModelBeanMap params) {
+    public Result saveOrUpdate(@RequestBody ModelBeanMap params) {
         return systemDictService.saveOrUpdate(params);
     }
 }

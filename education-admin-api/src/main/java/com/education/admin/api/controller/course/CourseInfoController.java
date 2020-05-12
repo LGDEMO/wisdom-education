@@ -67,7 +67,7 @@ public class CourseInfoController extends BaseController {
     }, paramsType= ParamsType.JSON_DATA)
     @ApiOperation("课程添加修改接口")
     @SystemLog(describe = "添加或修改课程")
-    public ResultCode saveOrUpdate(@RequestBody ModelBeanMap courseInfoMap) {
+    public Result saveOrUpdate(@RequestBody ModelBeanMap courseInfoMap) {
         Integer id = courseInfoMap.getInt("id");
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(id)) {
@@ -75,7 +75,7 @@ public class CourseInfoController extends BaseController {
             courseInfoMap.put("update_date", new Date());
             Integer parentId = courseInfoMap.getInt("parent_id");
             if (id == parentId) {
-                return new ResultCode(ResultCode.FAIL, "您选择的父级课程不能和填写的课程一样");
+                return new Result(ResultCode.FAIL, "您选择的父级课程不能和填写的课程一样");
             }
         }
         return courseService.saveOrUpdate(updateFlag, courseInfoMap);

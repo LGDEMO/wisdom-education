@@ -40,7 +40,7 @@ public class TestPaperController extends BaseController {
 
     @PostMapping("saveOrUpdate")
     @RequiresPermissions(value = {"system:testPaper:save", "system:testPaper:update"}, logical = Logical.OR)
-    public ResultCode saveOrUpdate(@ApiParam(hidden = true) @RequestBody ModelBeanMap testPaper) {
+    public Result saveOrUpdate(@ApiParam(hidden = true) @RequestBody ModelBeanMap testPaper) {
         Integer id = testPaper.getInt("id");
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(id)) {

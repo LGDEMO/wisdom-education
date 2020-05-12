@@ -4,6 +4,7 @@ import com.education.common.constants.EnumConstants;
 import com.education.common.exception.BusinessException;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.Md5Utils;
+import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.mapper.school.SchoolInfoMapper;
 import com.education.mapper.school.StudentInfoMapper;
@@ -46,7 +47,7 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
 
     @Transactional
     @Override
-    public ResultCode saveOrUpdate(boolean updateFlag, ModelBeanMap schoolMap) {
+    public Result saveOrUpdate(boolean updateFlag, ModelBeanMap schoolMap) {
         String message = "";
         try {
             if (updateFlag) {
@@ -66,7 +67,7 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
                 schoolMap.put("schoolId", schoolId);
                 createPrincipalAccount(schoolMap);
             }
-            return new ResultCode(ResultCode.SUCCESS, message + "学校成功");
+            return new Result(ResultCode.SUCCESS, message + "学校成功");
         } catch (Exception e) {
             log.error(message + "学校失败", e);
             throw new BusinessException(new ResultCode(ResultCode.FAIL, message + "学校失败"));

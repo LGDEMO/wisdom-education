@@ -43,7 +43,7 @@ public class SubjectController extends BaseController {
      */
     @PostMapping("saveOrUpdate")
     @RequiresPermissions(value = {"system:subject:save", "system:subject:update"}, logical = Logical.OR)
-    public ResultCode saveOrUpdate(@RequestBody ModelBeanMap subjectMap) {
+    public Result saveOrUpdate(@RequestBody ModelBeanMap subjectMap) {
         Integer id = subjectMap.getInt("id");
         boolean updateFlag = false;
         if (ObjectUtils.isNotEmpty(id)) {
