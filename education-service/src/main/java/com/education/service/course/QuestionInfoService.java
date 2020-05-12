@@ -338,7 +338,8 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
     public Map findById(Integer questionInfoId) {
         ModelBeanMap questionInfo = mapper.findById(questionInfoId);
         List<Integer> parentIds = languagePointsService.getParentId(questionInfo.getInt("language_points_id"));
-        Collections.reverse(parentIds);
+        parentIds.add(questionInfo.getInt("language_points_id"));
+      //  Collections.reverse(parentIds);
         questionInfo.put("languagePointsIds", parentIds);
         // 获取科目列表
         Map params = new HashMap<>();

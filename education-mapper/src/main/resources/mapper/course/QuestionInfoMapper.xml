@@ -19,7 +19,6 @@
             question.summarize,
             question.content,
             question.language_points_id,
-            question.category,
            subject.name as subject_name
         from question_info question
         left join subject_info subject on question.subject_id = subject.id
@@ -54,10 +53,6 @@
             <!-- 试题类型 -->
             <if test="questionType != null and questionType != ''">
                     and question.question_type = #{questionType}
-            </if>
-
-            <if test="category != null and category != ''">
-                    and question.category = #{category}
             </if>
         </where>
         order by question.id desc

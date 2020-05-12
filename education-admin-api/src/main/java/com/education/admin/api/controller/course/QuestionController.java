@@ -49,6 +49,13 @@ public class QuestionController extends BaseController {
         return questionInfoService.pagination(params);
     }
 
+
+    /**
+     * 试题详情
+     * @param id
+     * @return
+     */
+    @GetMapping("findById")
     public Result findById(Integer id) {
         return Result.success(questionInfoService.findById(id));
     }
@@ -60,9 +67,9 @@ public class QuestionController extends BaseController {
      */
     @PostMapping
     @ParamsValidate(params = {
-       // @Param(name = "school_type", message = "请选择阶段"),
-      //  @Param(name = "grade_type", message = "请选择年级"),
-       // @Param(name = "subject_id", message = "请选择科目"),
+        @Param(name = "school_type", message = "请选择阶段"),
+        @Param(name = "grade_type", message = "请选择年级"),
+        @Param(name = "subject_id", message = "请选择科目"),
         @Param(name = "question_type", message = "请选择试题类型")
     }, paramsType = ParamsType.JSON_DATA)
     @RequiresPermissions(value = {"system:question:save", "system:question:update"}, logical = Logical.OR)
