@@ -58,8 +58,8 @@ Element-UI | 2.13.0
 - 项目源码地址：  https://gitee.com/zhuimengshaonian/wisdom-education-front
 - 功能模块：学员在线做课程试题、在线考试、错题本功能记录、考试记录、个人中心
 
-### 后期项目计划
- - 小程序端及app开发，欢迎有兴趣的朋友一起合作开发
+### 小程序及app
+ - 项目源码地址：  https://gitee.com/zhuimengshaonian/education-app (功能开发中，敬请期待。。。)
 ### 智慧云智能教育系统交流群（加群获取项目正式部署教程和免费视频教程）
 
  -  **QQ交流群 1072042422** 
