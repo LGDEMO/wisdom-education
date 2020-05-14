@@ -20,6 +20,11 @@
         ) order by sort desc
     </select>
 
+    <select id="getByRoleId" parameterType="Integer" resultType="map">
+        select menu.* from system_role_menu role_menu, system_menu menu where
+         role_menu.menu_id = menu.id and role_menu.role_id = #{roleId}
+    </select>
+
     <!-- 删除角色菜单 -->
     <delete id="deleteByRoleId" parameterType="Integer">
         delete from system_role_menu where role_id = #{roleId}
