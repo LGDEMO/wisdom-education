@@ -11,6 +11,7 @@ import com.education.common.model.AdminUserSession;
 import com.education.common.model.JwtToken;
 import com.education.common.model.ModelBeanMap;
 import com.education.common.model.online.OnlineUserManager;
+import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.RequestUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
@@ -89,8 +90,10 @@ public class LoginController extends BaseController {
             if (rememberMe) {
                 // 先删除JSESSIONID
                 Cookie cookie = RequestUtils.getCookie(Constants.DEFAULT_SESSION_ID);
-                cookie.setMaxAge(0);
-                response.addCookie(cookie);
+                if (ObjectUtils.isNotEmpty(cookie)) {
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                }
                 // 重新创建JSESSIONID 并设置过期时间, 默认过期时间为5天
                 RequestUtils.createCookie(Constants.DEFAULT_SESSION_ID, request.getSession().getId(), Constants.SESSION_TIME_OUT);
             }
