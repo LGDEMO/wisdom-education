@@ -62,6 +62,10 @@ public class RequestUtils {
         }
     }
 
+    public static String getRequestUrl() {
+        return getRequestUrl(getRequest());
+    }
+
     public static String getRequestUrl(HttpServletRequest request) {
         String contentPath = request.getServletContext().getContextPath();
         int contentPathLength = contentPath.length();
