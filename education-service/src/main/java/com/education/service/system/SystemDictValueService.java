@@ -2,6 +2,7 @@ package com.education.service.system;
 
 import com.education.common.constants.Constants;
 import com.education.common.model.ModelBeanMap;
+import com.education.common.model.online.OnlineUser;
 import com.education.common.utils.MapTreeUtils;
 import com.education.common.utils.ObjectUtils;
 import com.education.mapper.system.SystemDictValueMapper;

@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class SystemDictService extends BaseService<SystemDictMapper> {
 
     public static final String GRADE_TYPE = "grade_type";
-
     @Autowired
     private SystemDictValueService systemDictValueService;
 
