@@ -24,7 +24,7 @@ public class HomeController extends BaseController {
     private HomeService homeService;
 
     @GetMapping
-    public Result test() {
+    public Result headDataCount() {
         return homeService.homeData();
     }
 }

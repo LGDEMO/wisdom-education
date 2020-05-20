@@ -7,6 +7,7 @@ import com.education.common.annotation.SystemLog;
 import com.education.common.base.BaseController;
 import com.education.common.constants.Constants;
 import com.education.common.constants.EnumConstants;
+import com.education.common.disabled.LimitLock;
 import com.education.common.model.AdminUserSession;
 import com.education.common.model.JwtToken;
 import com.education.common.model.ModelBeanMap;
@@ -69,6 +70,7 @@ public class LoginController extends BaseController {
         @Param(name = "key", message = "请传递一个验证码时间戳"),
         @Param(name = "password", message = "请输入密码"),
     }, paramsType = ParamsType.JSON_DATA)
+    @LimitLock
     public Result login(@RequestBody ModelBeanMap requestBody, HttpServletResponse response, HttpServletRequest request) {
         String loginName = requestBody.getStr("userName");
         String password = requestBody.getStr("password");
