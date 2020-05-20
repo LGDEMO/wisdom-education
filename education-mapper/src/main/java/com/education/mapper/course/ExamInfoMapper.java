@@ -18,4 +18,11 @@ public interface ExamInfoMapper extends BaseMapper {
     ModelBeanMap findByPaperIdAndStudentId(Map params);
 
     List<ModelBeanMap> getStudentListByExamId(Map params);
+
+    /**
+     * 近七天考试记录统计
+     * @param params
+     * @return
+     */
+    List<ModelBeanMap> countByDateTime(Map params);
 }

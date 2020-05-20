@@ -75,4 +75,34 @@
             AND exam.correct_flag = 1 ORDER BY mark DESC
         </if>
     </select>
+
+
+    <!-- 近七天考试记录统计 -->
+    <select id="countByDateTime" resultType="modelBeanMap">
+        SELECT
+            a.day_group,
+            sum(a.exam_number) exam_number
+        FROM
+            (
+                SELECT
+                    DATE_FORMAT(create_date, '%Y-%m-%d') day_group,
+                    count(test_paper_info_id) exam_number,
+                    test_paper_info_id
+                FROM
+                    exam_info
+                    <where>
+                        <if test="startTime != null and startTime != ''">
+                            and create_date &gt;= #{startTime}
+                        </if>
+
+                        <if test="startTime != null and startTime != ''">
+                            and create_date &lt;= #{endTime}
+                        </if>
+                    </where>
+                GROUP BY
+                    day_group,
+                    test_paper_info_id
+            )
+        a GROUP BY a.day_group
+    </select>
 </mapper>

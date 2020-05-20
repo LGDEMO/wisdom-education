@@ -2,6 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.education.mapper.system.SystemMenuMapper">
 
+    <insert id="save" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        insert into system_menu
+        <foreach collection="params.keys" item="key" open="(" close=")" separator="," >
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params.values"  item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="map">
+        update system_menu
+        <foreach collection="params.keys" item="key" open="set" separator="," >
+            ${key} = #{params[${key}]}
+        </foreach>
+        where id = #{params.id}
+    </update>
+
     <select id="treeList" resultType="modelBeanMap">
         select a.name as label, a.id as value, a.url, a.type, a.parent_id, a.permissions, a.icon, b.name as parent_name from system_menu a left join (select id, name from system_menu) b
         on a.parent_id = b.id order by sort desc
@@ -12,7 +31,7 @@
        on a.parent_id = b.id order by sort desc
     </select>
 
-    <select id="findById" parameterType="Integer">
+    <select id="findById" parameterType="Integer" resultType="modelBeanMap">
         select * from system_menu where id = #{id}
     </select>
 

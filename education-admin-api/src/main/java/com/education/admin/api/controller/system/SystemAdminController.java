@@ -39,7 +39,7 @@ public class SystemAdminController extends BaseController {
     @ParamsValidate(params = {
         @Param(name = "offset", message = "请传递当前页参数"),
         @Param(name = "limit", message = "请输入每页显示条数")
-    }, paramsType = ParamsType.JSON_DATA)
+    })
     public Result list(@RequestParam Map params) {
         return systemAdminService.pagination(params);
     }
