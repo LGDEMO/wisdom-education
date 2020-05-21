@@ -28,6 +28,7 @@ public class SystemMenuService extends BaseService<SystemMenuMapper> {
 
     public Result findById(Integer id) {
         Map menuMap = mapper.findById(id); //
+        List<ModelBeanMap> menuList = mapper.queryList(new HashMap());
         int parentId = (Integer)menuMap.get("parent_id");
         List<Integer> parentIds = new ArrayList<>();
         parentIds = getParentIds(parentId, parentIds);

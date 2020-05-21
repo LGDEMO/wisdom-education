@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
+/**
+ * Semaphore 限流
+ */
 public class SemaphoreApiLock extends ApiLock {
 
     private static final Map<String, Semaphore> semaphoreCache = new ConcurrentHashMap<>();
