@@ -23,8 +23,13 @@ public class HomeController extends BaseController {
     @Autowired
     private HomeService homeService;
 
-    @GetMapping
+    @GetMapping("headDataCount")
     public Result headDataCount() {
         return homeService.homeData();
+    }
+
+    @GetMapping("getRegionInfoData")
+    public Result getRegionInfoData() {
+        return homeService.getRegionInfoData();
     }
 }

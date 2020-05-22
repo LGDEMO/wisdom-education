@@ -41,4 +41,8 @@
     <delete id="deleteById" parameterType="map">
 
     </delete>
+
+    <select id="getSchoolRegionInfo" resultType="modelBeanMap">
+        SELECT r.name, count(s.id) as value from school_info s LEFT JOIN system_region r on  s.province_code = r.code GROUP BY s.province_code
+    </select>
 </mapper>

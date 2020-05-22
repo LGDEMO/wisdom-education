@@ -6,6 +6,7 @@ import com.education.common.utils.ObjectUtils;
 import com.education.common.utils.Result;
 import com.education.common.utils.ResultCode;
 import com.education.service.course.ExamInfoService;
+import com.education.service.school.SchoolService;
 import com.education.service.school.StudentInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class HomeService {
     private StudentInfoService studentInfoService;
     @Autowired
     private ExamInfoService examInfoService;
+    @Autowired
+    private SchoolService schoolService;
 
     public Result homeData() {
         Result result = new Result();
@@ -93,5 +96,11 @@ public class HomeService {
             resultDataList.add(item);
         });
         resultMap.put("examInfoData", resultDataList);
+    }
+
+
+    public Result getRegionInfoData() {
+        List<ModelBeanMap> data = schoolService.getSchoolRegionInfo();
+        return Result.success(data);
     }
 }

@@ -11,6 +11,7 @@ import com.education.service.BaseService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author zengjintao
@@ -30,14 +31,15 @@ public class SystemMenuService extends BaseService<SystemMenuMapper> {
         Map menuMap = mapper.findById(id); //
         List<ModelBeanMap> menuList = mapper.queryList(new HashMap());
         int parentId = (Integer)menuMap.get("parent_id");
-        List<Integer> parentIds = new ArrayList<>();
-        parentIds = getParentIds(parentId, parentIds);
-        Collections.reverse(parentIds); // 对集合倒序排序
+        List<ModelBeanMap> parentMenuList = MapTreeUtils.getParentList(menuList, parentId);
+        List<Integer> parentIds = parentMenuList.stream()
+                .map(item -> item.getInt("id"))
+                .collect(Collectors.toList());
         menuMap.put("parentArrayId", parentIds);
         return Result.success(menuMap);
     }
 
-    private List<Integer> getParentIds(int parentId, List<Integer> parentIds) {
+   /* private List<Integer> getParentIds(int parentId, List<Integer> parentIds) {
         if (parentId != ResultCode.FAIL) {
             Map parentMap = mapper.findById(parentId);
             if (ObjectUtils.isNotEmpty(parentMap)) {
@@ -48,7 +50,7 @@ public class SystemMenuService extends BaseService<SystemMenuMapper> {
         }
         return parentIds;
     }
-
+*/
     public List<ModelBeanMap> getMenuByUser() {
         AdminUserSession userSession = getAdminUserSession();
         List<ModelBeanMap> menuList = userSession.getMenuList();

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -124,5 +125,9 @@ public class SchoolService extends BaseService<SchoolInfoMapper> {
             params.put("role_id", roleMap.get("id"));
             systemAdminRoleMapper.save(params);// 关联校长账号角色权限
         }
+    }
+
+    public List<ModelBeanMap> getSchoolRegionInfo() {
+        return mapper.getSchoolRegionInfo();
     }
 }

@@ -55,6 +55,7 @@ public class PositionListener implements TaskListener {
                 + taskParam.get("lng") + "&key=" + this.lbsKey);
         JSONObject jsonObject = JSONObject.parseObject(result);
         Map params = new HashMap<>();
+        params.put("id", taskParam.getInt("id"));
         try {
             if (jsonObject != null && jsonObject.containsKey("result")) {
                 JSONObject location = JSONObject.parseObject(jsonObject.getString("result"));
@@ -82,7 +83,7 @@ public class PositionListener implements TaskListener {
                                 params.put("city_code", cityCode);
                             }
                         }
-                        params.put("town_code", districtCode);
+                        params.put("county_code", districtCode);
                     }
                 }
                 taskParam.remove("key");
