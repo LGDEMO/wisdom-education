@@ -13,25 +13,39 @@ import java.util.Date;
  * @version 1.0
  * @create_at 2019/4/20 21:22
  */
-public class StudentInfo extends BaseExcelModel implements Serializable {
+public class StudentInfo extends BaseExcelModel {
 
     @Excel(name = "学生姓名")
     @NotNull(message = "学生姓名不能为空")
     private String name;
+
+    @Excel(name = "学员照片", type = 2)
+    private String headImage;
+
     @Excel(name = "手机号")
+    @NotNull(message = "手机号不能为空")
     private String mobile;
+
     @Excel(name = "年龄")
     private int age;
+
     @Excel(name = "性别")
+    @NotNull(message = "性别不能为空")
     private String sex;
+
     @Excel(name = "父亲姓名")
     private String fatherName;
+
     @Excel(name = "母亲姓名")
     private String motherName;
+
     @Excel(name = "家庭住址")
+    @NotNull(message = "家庭住址不能为空")
     private String address;
+
     @Excel(name = "就读学校")
     private String school;
+
     @Excel(name = "就读年级")
     @NotNull(message = "就读年级不能为空")
     private String gradeType;
@@ -53,6 +67,14 @@ public class StudentInfo extends BaseExcelModel implements Serializable {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
     }
 
     public void setPassword(String password) {

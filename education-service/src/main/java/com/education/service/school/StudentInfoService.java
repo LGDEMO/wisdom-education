@@ -85,7 +85,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
         List<Map> dataList = mapper.queryList(params);
         dataList.forEach(student -> {
             Integer gradeType = (Integer) student.get("grade_type");
-            String gradeName = null; //systemDictValueService.getDictNameByValue(SystemDictService.GRADE_TYPE, gradeType);
+            String gradeName = systemDictValueService.getDictNameByValue(SystemDictService.GRADE_TYPE, gradeType);
             student.put("grade_type", gradeName);
             Integer sex = (Integer) student.get("sex");
             student.put("sex", sex == EnumConstants.Sex.MAN.getValue() ? "男" : "女");
@@ -107,7 +107,7 @@ public class StudentInfoService extends BaseService<StudentInfoMapper> {
             studentInfo.setSchoolId(schoolId);
             String gradeName = studentInfo.getGradeType();
             studentInfo.setSexId("男".equals(studentInfo.getSex()) ? ResultCode.SUCCESS : ResultCode.FAIL);
-            Integer gradeTypeId = null; //systemDictValueService.getDictValueByName(SystemDictService.GRADE_TYPE, gradeName);
+            Integer gradeTypeId = systemDictValueService.getDictValueByName(SystemDictService.GRADE_TYPE, gradeName);
             studentInfo.setGradeTypeId(gradeTypeId);
             String name = studentInfo.getName();
             String loginName = SpellUtils.getSpellHeadChar(name); // 获取登录名

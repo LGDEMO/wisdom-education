@@ -33,11 +33,11 @@
     </insert>
 
     <insert id="batchSaveStudent" parameterType="list">
-        insert into student_info(name, login_name, password, encrypt, age, sex, address, mobile, school_id, mother_name, father_name, grade_type, create_date)
+        insert into student_info(name, head_img, login_name, password, encrypt, age, sex, address, mobile, school_id, mother_name, father_name, grade_type, create_date)
         values
         <foreach collection="list" separator="," item="item">
             (
-                #{item.name}, #{item.loginName}, #{item.password}, #{item.encrypt}, #{item.age},
+                #{item.name}, #{item.headImage}, #{item.loginName}, #{item.password}, #{item.encrypt}, #{item.age},
                 #{item.sexId}, #{item.address}, #{item.mobile}, #{item.schoolId},
                 #{item.motherName}, #{item.fatherName}, #{item.gradeTypeId}, #{item.createDate}
             )
