@@ -1,6 +1,5 @@
 package com.education.common.lock;
 
-import com.education.common.exception.BusinessException;
 
 /**
  * api 限流锁

@@ -2,8 +2,10 @@ package com.education.common.lock;
 
 import com.education.common.disabled.RateLimitLock;
 import com.google.common.util.concurrent.RateLimiter;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * RateLimiter 限流
+ */
 public class RateLimiterApiLock extends ApiLock {
 
     public RateLimiterApiLock(RateLimitLock rateLimitLock) {
