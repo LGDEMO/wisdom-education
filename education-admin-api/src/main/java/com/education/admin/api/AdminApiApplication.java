@@ -16,9 +16,7 @@ import org.springframework.core.env.Environment;
  */
 @SpringBootApplication(scanBasePackages =
    {
-       "com.education.admin.api",
-       "com.education.common",
-       "com.education.service",
+       "com.education"
    }
 )
 @MapperScan("com.education.mapper")

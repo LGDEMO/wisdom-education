@@ -4,8 +4,11 @@ package com.education.admin.api;
 import com.education.common.cache.EhcacheBean;
 import com.education.common.cache.CacheBean;
 import com.education.common.model.AdminUserSession;
+import com.education.common.model.ModelBeanMap;
 import com.education.common.utils.IpUtils;
+import com.education.common.utils.MapTreeUtils;
 import com.education.common.utils.ObjectUtils;
+import com.education.mapper.system.SystemMenuMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.management.modelmbean.ModelMBean;
 import java.util.*;
 
 
@@ -26,10 +31,15 @@ public class EducationAdminApiApplicationTests {
     static final String cacheName = "user:cache";
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private SystemMenuMapper systemMenuMapper;
 
     @Test
     public void remove() {
-        redisTemplate.delete(redisTemplate.keys("*"));
+        List<ModelBeanMap> dataList = systemMenuMapper.treeList();
+       // List<ModelBeanMap> parentList = MapTreeUtils.getParentList(dataList, 2);
+       // System.out.println(parentList);
+      //  redisTemplate.delete(redisTemplate.keys("*"));
     }
 
 

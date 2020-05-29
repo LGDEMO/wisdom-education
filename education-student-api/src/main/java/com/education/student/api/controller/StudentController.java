@@ -28,7 +28,6 @@ import java.util.Map;
 public class StudentController extends BaseController {
 
     @Autowired
-    @Pattern(regexp = "")
     private StudentInfoService studentInfoService;
     @Autowired
     private SubjectInfoService subjectInfoService;
@@ -46,8 +45,8 @@ public class StudentController extends BaseController {
      */
     @PostMapping("login")
     @ParamsValidate(params = {
-            @Param(name = "userName", message = "用户名不能为空"),
-            @Param(name = "password", message = "密码不能为空"),
+        @Param(name = "userName", message = "用户名不能为空"),
+        @Param(name = "password", message = "密码不能为空"),
     }, paramsType = ParamsType.JSON_DATA)
     @ApiOperation("学员登录接口")
     public Result login(@RequestBody Map params) {

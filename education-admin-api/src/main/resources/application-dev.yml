@@ -27,11 +27,11 @@ spring:
       minimum-idle: 10
       # 此属性控制池中连接的最长生命周期，值0表示无限生命周期
       max-lifetime: 6000
-    ## 文件上传大小限制
-    servlet:
-      multipart:
-        max-file-size: 200MB
-        max-request-size: 200MB
+  ## 文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
 ueditor:
   configFileName: config-dev.json
 # 微信公众号配置
@@ -41,7 +41,7 @@ weChat:
   appSecret: e03f5ab03906d4d943675c233d4c3cb3
 ## 文件上传根路径
 file:
-  uploadPath: E:\\uploads\\
+  uploadPath: f:\\uploads\\
 lbs:
   key: MYOBZ-OOEW3-KYC3G-YWDXA-DMQJ6-SPBMH
 
