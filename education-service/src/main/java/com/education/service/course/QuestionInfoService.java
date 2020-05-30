@@ -291,7 +291,7 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
                 continue;
             }
             Map params = new HashMap<>();
-            Integer questionType = null; //systemDictValueService.getDictValueByName("question_type", questionInfo.getQuestionType());
+            Integer questionType = systemDictValueService.getDictValueByName(SystemDictService.QUESTION_TYPE, questionInfo.getQuestionType());
             params.put("question_type", questionType); // 获取试题类型
             String answer = questionInfo.getAnswer();
             if (questionType == EnumConstants.QuestionType.JUDGMENT_QUESTION.getValue()) {
@@ -303,7 +303,7 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
             params.put("options", questionInfo.getOptions());
             params.put("analysis", questionInfo.getAnalysis());
             String gradeName = questionInfo.getGradeInfoName();
-            ModelBeanMap gradeTypeInfo = null; //systemDictValueService.getDictValueForMapByName(SystemDictService.GRADE_TYPE, gradeName);
+            ModelBeanMap gradeTypeInfo = systemDictValueService.getDictValueForMapByName(SystemDictService.GRADE_TYPE, gradeName);
             Integer gradeType = gradeTypeInfo.getInt("code");
             params.put("grade_type", gradeTypeInfo.get("code"));
             params.put("school_type", gradeTypeInfo.get("parent_id"));
@@ -337,10 +337,6 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
 
     public Map findById(Integer questionInfoId) {
         ModelBeanMap questionInfo = mapper.findById(questionInfoId);
-        List<Integer> parentIds = languagePointsService.getParentId(questionInfo.getInt("language_points_id"));
-        parentIds.add(questionInfo.getInt("language_points_id"));
-      //  Collections.reverse(parentIds);
-        questionInfo.put("languagePointsIds", parentIds);
         // 获取科目列表
         Map params = new HashMap<>();
         params.put("grade_type", questionInfo.get("grade_type"));
@@ -349,7 +345,10 @@ public class QuestionInfoService extends BaseService<QuestionInfoMapper> {
         questionInfo.put("subjectList", result.getData().get("dataList"));
         // 获取知识点列表
         result = languagePointsService.pagination(params);
-        questionInfo.put("languagePointsList", MapTreeUtils.buildTreeData((List<ModelBeanMap>) result.getData().get("dataList")));
+        List<ModelBeanMap> languagePointsList = (List<ModelBeanMap>) result.getData().get("dataList");
+        questionInfo.put("languagePointsList", MapTreeUtils.buildTreeData(languagePointsList));
+        List<Integer> parentIds = MapTreeUtils.getParentIds(languagePointsList, questionInfo.getInt("language_points_id"));
+        questionInfo.put("languagePointsIds", parentIds);
         return questionInfo;
     }
 
